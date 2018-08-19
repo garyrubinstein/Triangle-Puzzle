@@ -10,10 +10,11 @@ import SpriteKit
 
 class GameScene: SKScene {
     var gamestate = [1, 2, 3, 4, 5, 6]
+    var inaction: Bool = false
     var nodelist: [SKShapeNode] = []
     var sidelen: CGFloat = 200
     var triside: CGFloat = 50
-    var toppoint: CGFloat = 150
+    var toppoint: CGFloat = 75
     var buttonsize: CGFloat = 20
     // let button1 = SKShapeNode(circleOfRadius: 50)
     // let triangle = SKShapeNode()
@@ -33,11 +34,13 @@ class GameScene: SKScene {
         var i=0
         while i<6 {
             let tritext = SKLabelNode(text: String(i+1))
-            tritext.fontColor = UIColor.black
+            tritext.fontColor = UIColor.white
+            tritext.fontName = "AvenirNext-Bold"
             let triangle = SKShapeNode()
             triangle.name = "triangle"+String(i+1)
             triangle.path = path.cgPath
             triangle.lineWidth = 10.0
+            // triangle.alpha = 0.3
             triangle.strokeColor = UIColor.green
             triangle.fillColor = UIColor.yellow
             // triangle.position = CGPoint(x: 0, y: -150.0-50*Double(i))
@@ -98,17 +101,26 @@ class GameScene: SKScene {
             let nodes = self.nodes(at: location)
             for node in nodes {
                 print(node.name!)
-                if node.name! == "button1" {
-                    move1()
+                if !inaction && node.name! == "button1" {
+                    // move1()
+                    inaction = true
+                    genericmove(button: 1, top: 0, bottomleft: 1, bottomright: 2)
                     print(gamestate)
                 }
-                else if node.name! == "button2" {
-                    move2()
+                else if !inaction && node.name! == "button2" {
+                    // move2()
+                    inaction = true
+                    genericmove(button:2, top: 1, bottomleft: 3, bottomright: 4)
                     print(gamestate)
                 }
-                else if node.name! == "button3" {
-                    move3()
+                else if !inaction && node.name! == "button3" {
+                    // move3()
+                    inaction = true
+                    genericmove(button: 3, top: 2, bottomleft: 4, bottomright: 5)
                     print(gamestate)
+                }
+                else {
+                    print("not a button node")
                 }
             }
         }
@@ -120,57 +132,63 @@ class GameScene: SKScene {
         }
     }
     
-    func move1() {
-        print("move1")
-        let temp = gamestate[2]
-        gamestate[2]=gamestate[0]
-        gamestate[0]=gamestate[1]
-        gamestate[1]=temp
+    func genericmove(button: Int, top: Int, bottomleft: Int, bottomright: Int) {
+        let buttonname = "button"+String(button)
+        print("generic move")
+        let temp = gamestate[bottomright]
+        gamestate[bottomright]=gamestate[top]
+        gamestate[top]=gamestate[bottomleft]
+        gamestate[bottomleft]=temp
         
-        let temppos = nodelist[2].position
-        nodelist[2].position = nodelist[1].position
-        nodelist[1].position = nodelist[0].position
-        nodelist[0].position = temppos
+        let temp1 = nodelist[bottomright]
+        nodelist[bottomright]=nodelist[top]
+        nodelist[top]=nodelist[bottomleft]
+        nodelist[bottomleft]=temp1
+        
+        let buttonx: CGFloat = (childNode(withName: buttonname)?.position.x)!
+        let buttony: CGFloat = (childNode(withName: buttonname)?.position.y)!
+        
+        nodelist[top].removeFromParent()
+        nodelist[top].position = CGPoint(x: nodelist[top].position.x-buttonx, y: nodelist[top].position.y-buttony)
+        
+        childNode(withName: buttonname)?.addChild(nodelist[top])
+        
+        nodelist[bottomleft].removeFromParent()
+        nodelist[bottomleft].position = CGPoint(x: nodelist[bottomleft].position.x-buttonx, y: nodelist[bottomleft].position.y-buttony)
+        childNode(withName: buttonname)?.addChild(nodelist[bottomleft])
+        
+        nodelist[bottomright].removeFromParent()
+        nodelist[bottomright].position = CGPoint(x: nodelist[bottomright].position.x-buttonx, y: nodelist[bottomright].position.y-buttony)
+        childNode(withName: buttonname)?.addChild(nodelist[bottomright])
+        childNode(withName: buttonname)?.zPosition = 5
+        
+        let spinaction = SKAction.rotate(byAngle: -3.14*2/3, duration: 0.5)
+        // childNode(withName: "button1")?.run(spinaction)
+        if let mybutton = childNode(withName: buttonname) as? SKShapeNode {
+            mybutton.run(spinaction, completion: {
+                self.childNode(withName: buttonname)?.zPosition = 0
+                self.inaction = false
+                self.nodelist[top].removeFromParent()
+                self.nodelist[top].position = CGPoint(x: self.nodelist[top].position.x+buttonx, y: self.nodelist[top].position.y+buttony)
+                
+                self.addChild(self.nodelist[top])
+                
+                self.nodelist[bottomleft].removeFromParent()
+                self.nodelist[bottomleft].position = CGPoint(x: self.nodelist[bottomleft].position.x+buttonx, y: self.nodelist[bottomleft].position.y+buttony)
+                self.addChild(self.nodelist[bottomleft])
+                
+                self.nodelist[bottomright].removeFromParent()
+                self.nodelist[bottomright].position = CGPoint(x: self.nodelist[bottomright].position.x+buttonx, y: self.nodelist[bottomright].position.y+buttony)
+                self.addChild(self.nodelist[bottomright])
+                let temppos = self.nodelist[bottomright].position
+                self.nodelist[bottomright].position = self.nodelist[bottomleft].position
+                self.nodelist[bottomleft].position = self.nodelist[top].position
+                self.nodelist[top].position = temppos
+                
+                mybutton.run(SKAction.rotate(byAngle: 3.14*2/3, duration: 0))
+                
+            })
+        }
 
-        let temp1 = nodelist[2]
-        nodelist[2]=nodelist[0]
-        nodelist[0]=nodelist[1]
-        nodelist[1]=temp1
-    }
-    
-    func move2() {
-        print("move2")
-        let temp = gamestate[4]
-        gamestate[4]=gamestate[1]
-        gamestate[1]=gamestate[3]
-        gamestate[3]=temp
-        
-        let temppos = nodelist[4].position
-        nodelist[4].position = nodelist[3].position
-        nodelist[3].position = nodelist[1].position
-        nodelist[1].position = temppos
-        
-        let temp1 = nodelist[4]
-        nodelist[4]=nodelist[1]
-        nodelist[1]=nodelist[3]
-        nodelist[3]=temp1
-    }
-    
-    func move3() {
-        print("move3")
-        let temp = gamestate[5]
-        gamestate[5]=gamestate[2]
-        gamestate[2]=gamestate[4]
-        gamestate[4]=temp
-        
-        let temppos = nodelist[5].position
-        nodelist[5].position = nodelist[4].position
-        nodelist[4].position = nodelist[2].position
-        nodelist[2].position = temppos
-        
-        let temp1 = nodelist[5]
-        nodelist[5]=nodelist[2]
-        nodelist[2]=nodelist[4]
-        nodelist[4]=temp1
     }
 }
