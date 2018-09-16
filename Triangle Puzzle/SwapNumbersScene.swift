@@ -10,9 +10,14 @@ import SpriteKit
 
 class SwapNumbersScene: SKScene {
     var framesize = 0
-    let puzzleSize = 5
+    let puzzleSize = 4
+    var board: [Int] = []
+    var nodelist: [SKShapeNode] = []
+    var chosennumbers: [Int] = []
+    var nodesselected = 0
     override func didMove(to view: SKView) {
-        print("hi")
+        chosennumbers.append(0)
+        chosennumbers.append(0)
         let screenSize: CGRect = UIScreen.main.bounds
         let screenWidth = screenSize.width
         let screenHeight = screenSize.height
@@ -23,30 +28,17 @@ class SwapNumbersScene: SKScene {
         let myframe = SKShapeNode(rect: CGRect(x: -framesize/2, y: -framesize/2, width: framesize, height: framesize))
         myframe.fillColor = UIColor.red
         myframe.zPosition = 3
+        myframe.name = "frame"
         self.addChild(myframe)
-        /*
-        // let testcircle = SKShapeNode(circleOfRadius: 50)
-        let testcircle = SKShapeNode(rect: CGRect(x: 0.5, y: 0.5, width: 100, height: 100))
-        testcircle.fillColor = UIColor.green
-        
-        testcircle.zPosition = 4
-        let tritext = SKLabelNode(text: "10")
-        tritext.fontColor = UIColor.black
-        tritext.fontName = "AvenirNext-Bold"
-        tritext.fontSize = 64
-        tritext.zPosition = 5
-        testcircle.addChild(tritext)
-        myframe.addChild(testcircle)
-        testcircle.position = CGPoint(x: 150, y: 0)
-        */
         for i in 0...(puzzleSize*puzzleSize-1) {
             print(i)
+            board.append(Int(i+1))
             let row = Int(i/puzzleSize)
             let column = i%puzzleSize
-            print(row)
-            print(column)
+            // print(row)
+            // print(column)
             let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: framesize/puzzleSize, height: framesize/puzzleSize))
-            gamePiece.name = "piece"+String(i)
+            gamePiece.name = "piece,"+String(i)
             gamePiece.fillColor = UIColor.yellow
             gamePiece.strokeColor = UIColor.black
             gamePiece.zPosition = 4
@@ -61,16 +53,61 @@ class SwapNumbersScene: SKScene {
             tritext.horizontalAlignmentMode = .center
             tritext.verticalAlignmentMode = .center
             tritext.position = CGPoint(x: framesize/(puzzleSize*2), y: framesize/(puzzleSize*2))
+            tritext.name = "text"+String(i+1)
             tritext.zPosition = 5
             gamePiece.addChild(tritext)
+            nodelist.append(gamePiece)
             myframe.addChild(gamePiece)
             // tritext.position = CGPoint(x: 0, y: 0)
             
             
         }
+        print(board)
         //self.addChild(myframe)
     }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("touch")
+        // print("touch")
+        if let touch = touches.first {
+            let location = touch.location(in: self)
+            // print(location)
+            let nodes = self.nodes(at: location)
+            for node in nodes {
+                // print(node.name!)
+                if Array(node.name!)[0] == "p" {
+                    let n=Int(node.name!.components(separatedBy: ",")[1])!
+                    print(n)
+                    if nodesselected == 0 {
+                        chosennumbers[0] = n
+                        // let firstnode = childNode(withName: "piece,1") as! SKShapeNode
+                        //  = UIColor.green
+                        nodelist[n].fillColor = UIColor.green
+                        
+                        nodesselected = 1
+                    }
+                    else if nodesselected == 1 && chosennumbers[0] != n {
+                        chosennumbers[1] = n
+                        nodelist[n].fillColor = UIColor.green
+                        makemove(firstnum: chosennumbers[0],secondnum: chosennumbers[1])
+                    }
+                    else {
+                        nodesselected = 0
+                        chosennumbers[0] = 0
+                        nodelist[n].fillColor = UIColor.yellow
+                    }
+                }
+            }
+        }
+
+    }
+    
+    func makemove(firstnum: Int, secondnum: Int) {
+        print("makemove \(firstnum) \(secondnum) ")
+
+        nodelist[0].run(SKAction.fadeAlpha(to: 1, duration: 1), completion: {        self.nodelist[firstnum].fillColor = UIColor.yellow
+            self.nodelist[secondnum].fillColor = UIColor.yellow})
+        chosennumbers[0]=0
+        chosennumbers[1]=0
+        nodesselected = 0
     }
 }
