@@ -63,7 +63,17 @@ class SwapNumbersScene: SKScene {
             
         }
         print(board)
+        mix(nummoves: 50)
         //self.addChild(myframe)
+    }
+    
+    func mix(nummoves: Int) {
+
+        for i in 0...nummoves {
+            let number1 = Int.random(in: 0 ..< puzzleSize*puzzleSize)
+            let number2 = Int.random(in: 0 ..< puzzleSize*puzzleSize)
+            makemove(firstnum: number1, secondnum: number2, howLong: 0.05)
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -88,7 +98,7 @@ class SwapNumbersScene: SKScene {
                     else if nodesselected == 1 && chosennumbers[0] != n {
                         chosennumbers[1] = n
                         nodelist[n].fillColor = UIColor.green
-                        makemove(firstnum: chosennumbers[0],secondnum: chosennumbers[1])
+                        makemove(firstnum: chosennumbers[0],secondnum: chosennumbers[1], howLong: 0.5)
                     }
                     else {
                         nodesselected = 0
@@ -101,11 +111,21 @@ class SwapNumbersScene: SKScene {
 
     }
     
-    func makemove(firstnum: Int, secondnum: Int) {
+    func makemove(firstnum: Int, secondnum: Int, howLong: TimeInterval) {
         print("makemove \(firstnum) \(secondnum) ")
 
-        nodelist[0].run(SKAction.fadeAlpha(to: 1, duration: 1), completion: {        self.nodelist[firstnum].fillColor = UIColor.yellow
-            self.nodelist[secondnum].fillColor = UIColor.yellow})
+        nodelist[0].run(SKAction.fadeAlpha(to: 1, duration: howLong), completion: {        self.nodelist[firstnum].fillColor = UIColor.yellow
+            self.nodelist[secondnum].fillColor = UIColor.yellow
+            let temppos = self.nodelist[secondnum].position
+            self.nodelist[secondnum].position = self.nodelist[firstnum].position
+            self.nodelist[firstnum].position = temppos
+
+
+        })
+        let tempint = board[secondnum]
+        board[secondnum] = board[firstnum]
+        board[firstnum] = tempint
+        print(board)
         chosennumbers[0]=0
         chosennumbers[1]=0
         nodesselected = 0
