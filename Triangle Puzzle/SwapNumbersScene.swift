@@ -11,7 +11,7 @@ import SpriteKit
 class SwapNumbersScene: SKScene {
     var framesize = 0
     let puzzleSize = 4
-    let moveSize = 2
+    let moveSize = 3
     var board: [Int] = []
     var nodelist: [SKShapeNode] = []
     var chosennumbers: [Int] = []
@@ -20,11 +20,17 @@ class SwapNumbersScene: SKScene {
         // chosennumbers.append(0)
         // chosennumbers.append(0)
         let screenSize: CGRect = UIScreen.main.bounds
-        let screenWidth = screenSize.width
-        let screenHeight = screenSize.height
+        let screenWidth = self.size.width //screenSize.width
+        let screenHeight = self.size.height // screenSize.height
         print(screenWidth)
         print(screenHeight)
-        framesize = Int(4/3*screenWidth)
+        print("self.size")
+        print(self.size.height)
+        print(self.size.width)
+        let theSize = min(screenWidth,screenHeight)
+        print("theSize")
+        print(theSize)
+        framesize = Int(2/3*theSize)
         
         let myframe = SKShapeNode(rect: CGRect(x: -framesize/2, y: -framesize/2, width: framesize, height: framesize))
         myframe.fillColor = UIColor.red
@@ -69,13 +75,29 @@ class SwapNumbersScene: SKScene {
     }
     
     func mix(nummoves: Int) {
-
+        // makemove(myarray: [0,4,5], howLong: 0.05)
         for _ in 0...nummoves {
+            var movearray: [Int] = []
+            var numbers: [Int] = []
+            for i in 1...puzzleSize*puzzleSize {
+                numbers.append(i)
+            }
+            numbers.shuffle()
+            print("in mix")
+    //        print(numbers)
+            // let subarray = numbers[0...2]
+            for i in 0..<moveSize {
+                movearray.append(numbers[i]-1)
+            }
+            print(movearray)
+            makemove(myarray: movearray, howLong: 0.05)
+        }
+        /* for _ in 0...nummoves {
             let number1 = Int.random(in: 0 ..< puzzleSize*puzzleSize)
             let number2 = Int.random(in: 0 ..< puzzleSize*puzzleSize)
             makemove(myarray: [number1, number2], howLong: 0.05)
             // makemove(firstnum: number1, secondnum: number2, howLong: 0.05)
-        }
+        } */
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -88,6 +110,7 @@ class SwapNumbersScene: SKScene {
                 // print(node.name!)
                 if Array(node.name!)[0] == "p" {
                     let n=Int(node.name!.components(separatedBy: ",")[1])!
+                    print("nodeclicked")
                     print(n)
                     print(chosennumbers.count)
                     print(chosennumbers)
@@ -97,7 +120,7 @@ class SwapNumbersScene: SKScene {
                             nodelist[n].fillColor = UIColor.green
                         }
                         if chosennumbers.count == moveSize {
-                            takesarray(myarray: chosennumbers)
+                            // takesarray(myarray: chosennumbers)
                             makemove(myarray: chosennumbers, howLong: 0.5)
                             // makemove(firstnum: chosennumbers[0],secondnum: chosennumbers[1], howLong: 0.5)
                         }
@@ -135,20 +158,46 @@ class SwapNumbersScene: SKScene {
     }
     
     func makemove(myarray: [Int], howLong: TimeInterval) {
+        // print("makemove \(myarray)")
     //func makemove(firstnum: Int, secondnum: Int, howLong: TimeInterval) {
         // print("makemove \(firstnum) \(secondnum) ")
+        // print("in makemove")
+        // print(myarray)
 
-        nodelist[0].run(SKAction.fadeAlpha(to: 1, duration: howLong), completion: {        self.nodelist[myarray[0]].fillColor = UIColor.yellow
-            self.nodelist[myarray[1]].fillColor = UIColor.yellow
-            let temppos = self.nodelist[myarray[1]].position
-            self.nodelist[myarray[1]].position = self.nodelist[myarray[0]].position
-            self.nodelist[myarray[0]].position = temppos
+        nodelist[0].run(SKAction.fadeAlpha(to: 1, duration: howLong), completion: {
+            let temppos = self.nodelist[myarray[0]].position
+            self.nodelist[myarray[0]].fillColor = UIColor.yellow
+            for j in 0..<myarray.count-1 {
+                // print("in makemove j= \(j)")
+                self.nodelist[myarray[j]].fillColor = UIColor.yellow
+                self.nodelist[myarray[j]].position = self.nodelist[myarray[j+1]].position
+            }
+            // self.nodelist[myarray[1]].fillColor = UIColor.yellow
+            self.nodelist[myarray[myarray.count-1]].position = temppos
+            self.nodelist[myarray[myarray.count-1]].fillColor = UIColor.yellow
 
 
         })
-        let tempint = board[myarray[1]]
-        board[myarray[1]] = board[myarray[0]]
-        board[myarray[0]] = tempint
+        // need to fix this to update board
+        // make a new ray with the positions of each of the numbers in the move
+        var posarray: [Int] = []
+        for j in 0..<moveSize {
+            // print(1+myarray[j])
+            // print(board.firstIndex(of: 1+myarray[j]))
+            posarray.append(board.firstIndex(of: 1+myarray[j])!)
+        }
+        print("posarray")
+        print(posarray)
+        let tempint = board[posarray[posarray.count-1]]
+        for j in 0..<myarray.count-1 {
+            // print("moving \(j) to \(j+1)")
+            board[posarray[j+1]] = myarray[j]+1
+            // print(board)
+        }
+        // board[myarray[1]] = board[myarray[0]]
+        board[posarray[0]] = tempint
+        // print(board)
+        
         print(board)
         // chosennumbers[0]=0
         // chosennumbers[1]=0

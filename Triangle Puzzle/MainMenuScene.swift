@@ -32,7 +32,7 @@ class MainMenuScene: SKScene {
             scenename = "GameScene"
         }
         let scene = SKScene(fileNamed: scenename)
-        scene!.scaleMode = .aspectFill
+        scene!.scaleMode = .aspectFit
         self.view?.presentScene(scene)
     }
 }
