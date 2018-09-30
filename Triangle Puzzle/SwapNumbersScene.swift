@@ -20,6 +20,7 @@ class SwapNumbersScene: SKScene {
     var screenHeight: CGFloat = 0
     var theSize: CGFloat = 0
     var frameOffset: Int = 100
+    // new comment
     override func didMove(to view: SKView) {
         // chosennumbers.append(0)
         // chosennumbers.append(0)
