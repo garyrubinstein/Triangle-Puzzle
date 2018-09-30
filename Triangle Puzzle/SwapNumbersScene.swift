@@ -11,34 +11,53 @@ import SpriteKit
 class SwapNumbersScene: SKScene {
     var framesize = 0
     let puzzleSize = 4
-    let moveSize = 3
+    var moveSize = 2
     var board: [Int] = []
     var nodelist: [SKShapeNode] = []
     var chosennumbers: [Int] = []
     var nodesselected = 0
+    var screenWidth: CGFloat = 0
+    var screenHeight: CGFloat = 0
+    var theSize: CGFloat = 0
+    var frameOffset: Int = 100
     override func didMove(to view: SKView) {
         // chosennumbers.append(0)
         // chosennumbers.append(0)
+        if let mode = self.userData?.value(forKey: "mode") {
+            print("mode is \(mode)")
+            moveSize = mode as! Int
+        }
+        
         let screenSize: CGRect = UIScreen.main.bounds
-        let screenWidth = self.size.width //screenSize.width
-        let screenHeight = self.size.height // screenSize.height
+        screenWidth = self.size.width //screenSize.width
+        screenHeight = self.size.height // screenSize.height
         print(screenWidth)
         print(screenHeight)
         print("self.size")
         print(self.size.height)
         print(self.size.width)
-        let theSize = min(screenWidth,screenHeight)
+        theSize = min(screenWidth,screenHeight)
         print("theSize")
         print(theSize)
+        addMoveList()
         framesize = Int(2/3*theSize)
-        
-        let myframe = SKShapeNode(rect: CGRect(x: -framesize/2, y: -framesize/2, width: framesize, height: framesize))
+        let backButton = SKShapeNode(circleOfRadius: 50)
+        backButton.fillColor = UIColor.green
+        backButton.position = CGPoint(x: -100, y: -500)
+        backButton.name="back"
+        self.addChild(backButton)
+        let moveButton = SKShapeNode(circleOfRadius: 50)
+        moveButton.fillColor = UIColor.blue
+        moveButton.position = CGPoint(x: -100, y: 400)
+        moveButton.name="move"
+        // self.addChild(moveButton)
+        let myframe = SKShapeNode(rect: CGRect(x: -framesize/2, y: -framesize/2-frameOffset, width: framesize, height: framesize))
         myframe.fillColor = UIColor.red
         myframe.zPosition = 3
         myframe.name = "frame"
         self.addChild(myframe)
         for i in 0...(puzzleSize*puzzleSize-1) {
-            print(i)
+            // print(i)
             board.append(Int(i+1))
             let row = Int(i/puzzleSize)
             let column = i%puzzleSize
@@ -49,7 +68,7 @@ class SwapNumbersScene: SKScene {
             gamePiece.fillColor = UIColor.yellow
             gamePiece.strokeColor = UIColor.black
             gamePiece.zPosition = 4
-            gamePiece.position = CGPoint(x: -framesize/2+column*framesize/puzzleSize, y: framesize/2-framesize/puzzleSize-row*framesize/puzzleSize)
+            gamePiece.position = CGPoint(x: -framesize/2+column*framesize/puzzleSize, y: framesize/2-framesize/puzzleSize-row*framesize/puzzleSize-frameOffset)
          
             
             
@@ -69,9 +88,41 @@ class SwapNumbersScene: SKScene {
             
             
         }
-        print(board)
+        // print(board)
         mix(nummoves: 50)
         //self.addChild(myframe)
+    }
+    
+    func addMoveList() {
+        let numMoves = 3
+        framesize = Int(2/3*theSize)
+        let boxWidth = 3/4*screenWidth
+        let boxHeight = 0.25*screenHeight
+        let boxCenter: CGPoint = CGPoint(x: 0, y: screenHeight/2-boxHeight/2-50)
+        let moveBox = SKSpriteNode(color: UIColor.blue, size: CGSize(width: boxWidth, height: boxHeight))
+        // let moveBox = SKShapeNode(rect: CGRect(x: boxCenter.x-boxWidth/2, y: boxCenter.y+boxHeight/2, width: boxWidth, height: boxHeight))
+        // moveBox.fillColor = UIColor.blue
+        moveBox.position = boxCenter
+        moveBox.zPosition = 3
+        
+        moveBox.name = "movebox"
+        
+        // add buttons to movebox
+        let buttonWidth: CGFloat = 0.3*boxWidth
+        let buttonHeight: CGFloat = 0.15*boxHeight
+        for i in 0..<12 {
+            let moveButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight))
+            // let moveButton = SKShapeNode(rect: CGRect(x: CGFloat(i*20)+buttonWidth/2, y: CGFloat(i*20)-buttonHeight/2, width: buttonWidth, height: buttonHeight))
+            moveButton.fillColor = UIColor.orange
+            moveButton.zPosition = 5
+            // moveButton.position = convert(moveButton.position, from: moveBox)
+            moveBox.addChild(moveButton)
+            moveButton.position = CGPoint(x: -CGFloat(boxWidth)/3+CGFloat(boxWidth/3)*CGFloat(i%3), y: CGFloat(boxHeight)/3-boxHeight/4*CGFloat(Int(i/3)))
+            // moveButton.position.x = 100
+            // moveButton.position.y = 100
+        }
+        self.addChild(moveBox)
+        
     }
     
     func mix(nummoves: Int) {
@@ -83,13 +134,13 @@ class SwapNumbersScene: SKScene {
                 numbers.append(i)
             }
             numbers.shuffle()
-            print("in mix")
+            // print("in mix")
     //        print(numbers)
             // let subarray = numbers[0...2]
             for i in 0..<moveSize {
                 movearray.append(numbers[i]-1)
             }
-            print(movearray)
+            // print(movearray)
             makemove(myarray: movearray, howLong: 0.05)
         }
         /* for _ in 0...nummoves {
@@ -107,13 +158,19 @@ class SwapNumbersScene: SKScene {
             // print(location)
             let nodes = self.nodes(at: location)
             for node in nodes {
-                // print(node.name!)
+                if let thename = node.name {
+                    print(thename)
+                    if thename == "move" {
+                        // need to make it so the positions are given
+                        makemoves(myarray: [[board[1]-1,board[2]-1],[board[3]-1,board[4]-1,board[5]-1]])
+                    }
+                }
                 if Array(node.name!)[0] == "p" {
                     let n=Int(node.name!.components(separatedBy: ",")[1])!
-                    print("nodeclicked")
-                    print(n)
-                    print(chosennumbers.count)
-                    print(chosennumbers)
+                    // print("nodeclicked")
+                    // print(n)
+                    // print(chosennumbers.count)
+                    // print(chosennumbers)
                     if chosennumbers.count < moveSize {
                         if !chosennumbers.contains(n) {
                             chosennumbers.append(n)
@@ -124,29 +181,14 @@ class SwapNumbersScene: SKScene {
                             makemove(myarray: chosennumbers, howLong: 0.5)
                             // makemove(firstnum: chosennumbers[0],secondnum: chosennumbers[1], howLong: 0.5)
                         }
-                        // chosennumbers[0] = n
-                        // let firstnode = childNode(withName: "piece,1") as! SKShapeNode
-                        //  = UIColor.green
-
-                        
-                        // nodesselected = 1
-                        
                     }
-                    /*
-                    else if nodesselected == 1 && chosennumbers[0] != n {
-                        chosennumbers[1] = n
-                        nodelist[n].fillColor = UIColor.green
-                        makemove(firstnum: chosennumbers[0],secondnum: chosennumbers[1], howLong: 0.5)
-                    }
-                    */
-                    /*
-                    else {
-                        nodesselected = 0
-                        chosennumbers[0] = 0
-                        nodelist[n].fillColor = UIColor.yellow
-                    }
-                    */
                 }
+                else if Array(node.name!)[0] == "b" {
+                    let scene = MainMenuScene(fileNamed: "MainMenuScene")
+                    scene!.scaleMode = .aspectFit
+                    self.view?.presentScene(scene)
+                }
+
             }
         }
 
@@ -157,8 +199,22 @@ class SwapNumbersScene: SKScene {
         print(myarray.count)
     }
     
+    func takesarrayofarrays(myarray: [[Int]]) {
+        for i in myarray {
+            for j in i {
+                print(j)
+            }
+        }
+    }
+    
+    func makemoves(myarray: [[Int]]) {
+        for i in myarray {
+                makemove(myarray: i, howLong: 0.5)
+            }
+    }
+    
     func makemove(myarray: [Int], howLong: TimeInterval) {
-        // print("makemove \(myarray)")
+        print("makemove \(myarray)")
     //func makemove(firstnum: Int, secondnum: Int, howLong: TimeInterval) {
         // print("makemove \(firstnum) \(secondnum) ")
         // print("in makemove")
@@ -181,13 +237,13 @@ class SwapNumbersScene: SKScene {
         // need to fix this to update board
         // make a new ray with the positions of each of the numbers in the move
         var posarray: [Int] = []
-        for j in 0..<moveSize {
+        for j in 0..<myarray.count {
             // print(1+myarray[j])
             // print(board.firstIndex(of: 1+myarray[j]))
             posarray.append(board.firstIndex(of: 1+myarray[j])!)
         }
-        print("posarray")
-        print(posarray)
+        // print("posarray")
+        // print(posarray)
         let tempint = board[posarray[posarray.count-1]]
         for j in 0..<myarray.count-1 {
             // print("moving \(j) to \(j+1)")
@@ -198,7 +254,7 @@ class SwapNumbersScene: SKScene {
         board[posarray[0]] = tempint
         // print(board)
         
-        print(board)
+        // print(board)
         // chosennumbers[0]=0
         // chosennumbers[1]=0
         chosennumbers.removeAll()
