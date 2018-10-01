@@ -13,6 +13,7 @@ class SwapNumbersScene: SKScene {
     let puzzleSize = 4
     var moveSize = 2
     var board: [Int] = []
+    var moveArray: [[[Int]]] = []
     var nodelist: [SKShapeNode] = []
     var chosennumbers: [Int] = []
     var nodesselected = 0
@@ -30,6 +31,9 @@ class SwapNumbersScene: SKScene {
             moveSize = mode as! Int
         }
         
+        initializeMoves()
+        // test changes array
+
         let screenSize: CGRect = UIScreen.main.bounds
         screenWidth = self.size.width //screenSize.width
         screenHeight = self.size.height // screenSize.height
@@ -50,9 +54,9 @@ class SwapNumbersScene: SKScene {
         self.addChild(backButton)
         let moveButton = SKShapeNode(circleOfRadius: 50)
         moveButton.fillColor = UIColor.blue
-        moveButton.position = CGPoint(x: -100, y: 400)
+        moveButton.position = CGPoint(x: -100, y: -400)
         moveButton.name="move"
-        // self.addChild(moveButton)
+        self.addChild(moveButton)
         let myframe = SKShapeNode(rect: CGRect(x: -framesize/2, y: -framesize/2-frameOffset, width: framesize, height: framesize))
         myframe.fillColor = UIColor.red
         myframe.zPosition = 3
@@ -92,9 +96,18 @@ class SwapNumbersScene: SKScene {
         }
         // print(board)
         mix(nummoves: 50)
+        let testArray = [[1,2,3],[4,5]]
+        print("test array")
+        print(testArray)
+        let newarray = changesarray(myarray: testArray)
+        print(newarray)
         //self.addChild(myframe)
     }
     
+    func initializeMoves() {
+        moveArray.append([[1,2,3],[4,5]])
+        moveArray.append([[6,8,9]])
+    }
     func addMoveList() {
         let numMoves = 3
         framesize = Int(2/3*theSize)
@@ -116,6 +129,7 @@ class SwapNumbersScene: SKScene {
             let moveButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight))
             // let moveButton = SKShapeNode(rect: CGRect(x: CGFloat(i*20)+buttonWidth/2, y: CGFloat(i*20)-buttonHeight/2, width: buttonWidth, height: buttonHeight))
             moveButton.fillColor = UIColor.orange
+            moveButton.name = "movebutton,"+String(i+1)
             moveButton.zPosition = 5
             // moveButton.position = convert(moveButton.position, from: moveBox)
             moveBox.addChild(moveButton)
@@ -164,7 +178,20 @@ class SwapNumbersScene: SKScene {
                     print(thename)
                     if thename == "move" {
                         // need to make it so the positions are given
-                        makemoves(myarray: [[board[1]-1,board[2]-1],[board[3]-1,board[4]-1,board[5]-1]])
+                        print(changesarray(myarray: [[1,2],[3,4,5]]))
+                        // makemoves(myarray: [[board[1]-1,board[2]-1],[board[3]-1,board[4]-1,board[5]-1]])
+                        makemoves(myarray: changesarray(myarray: [[1,2],[3,4,5]]))
+                    }
+                    if thename.hasPrefix("movebutton") {
+                        print("found a movebutton!")
+                        let thenumberstring = Int(thename.components(separatedBy: ",")[1])
+                        let thenumber = Int(thenumberstring!)
+                        print("move number \(thenumber)")
+                        // print(moveArray[Int(thenumber) ?? 1-1])
+                        if thenumber <= moveArray.count {
+                            print(moveArray[thenumber-1])
+                            makemoves(myarray: changesarray(myarray: moveArray[thenumber-1]))
+                        }
                     }
                 }
                 if Array(node.name!)[0] == "p" {
@@ -194,6 +221,20 @@ class SwapNumbersScene: SKScene {
             }
         }
 
+    }
+    
+    func changesarray(myarray: [[Int]]) -> [[Int]] {
+        var returnarray: [[Int]] = []
+        for i in 0..<myarray.count {
+            var subarray: [Int] = []
+            for j in 0..<myarray[i].count {
+                print("\(i) and \(j)")
+                print(myarray[i][j])
+                subarray.append(board[myarray[i][j]]-1)
+            }
+            returnarray.append(subarray)
+        }
+        return(returnarray)
     }
     
     func takesarray(myarray: [Int]) {
