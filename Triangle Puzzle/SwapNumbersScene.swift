@@ -21,6 +21,7 @@ class SwapNumbersScene: SKScene {
     var screenHeight: CGFloat = 0
     var theSize: CGFloat = 0
     var frameOffset: Int = 100
+    var theMode: Int = 0
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -28,6 +29,7 @@ class SwapNumbersScene: SKScene {
         // chosennumbers.append(0)
         if let mode = self.userData?.value(forKey: "mode") {
             print("mode is \(mode)")
+            theMode = mode as! Int
             moveSize = mode as! Int
         }
         
@@ -56,7 +58,7 @@ class SwapNumbersScene: SKScene {
         moveButton.fillColor = UIColor.blue
         moveButton.position = CGPoint(x: -100, y: -400)
         moveButton.name="move"
-        self.addChild(moveButton)
+        // self.addChild(moveButton)
         let myframe = SKShapeNode(rect: CGRect(x: -framesize/2, y: -framesize/2-frameOffset, width: framesize, height: framesize))
         myframe.fillColor = UIColor.red
         myframe.zPosition = 3
@@ -105,8 +107,39 @@ class SwapNumbersScene: SKScene {
     }
     
     func initializeMoves() {
-        moveArray.append([[1,2,3],[4,5]])
-        moveArray.append([[6,8,9]])
+        if theMode == 0 {
+            moveSize = 2
+        }
+        if theMode == 1 {
+            moveSize = 3
+        }
+        if theMode == 2 {
+            // moveSize = 0
+            moveArray.append([[1,2,3],[4,5]])
+            moveArray.append([[6,8,9]])
+        }
+        if theMode == 3 {
+            // moveSize = 0
+            moveArray.append([[1,2,3],[4,5]])
+            moveArray.append([[6,8,9]])
+        }
+        else if theMode == 4 {
+            // moveSize = 0
+            moveArray.append([[1,2,3],[4,5]])
+            moveArray.append([[6,8,9]])
+        }
+        else if theMode == 5 {
+            // moveSize = 0
+            moveArray.append([[0,3],[4,7]])
+            moveArray.append([[3,7],[8,10,9,12],[11,15]])
+            moveArray.append([[3,7],[12,9,10,8],[15,11]])
+
+        }
+        else if theMode == 6 {
+            moveSize = 0
+            moveArray.append([[1,6]])
+            // moveArray.append([[6,8,9]])
+        }
     }
     func addMoveList() {
         let numMoves = 3

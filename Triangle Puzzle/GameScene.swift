@@ -93,6 +93,12 @@ class GameScene: SKScene {
         button3.position = CGPoint(x: sidelen*0.25, y: toppoint-sidelen*0.77)
         button3.name = "button3"
         addChild(button3)
+        let backButton = SKShapeNode(circleOfRadius: 20)
+        backButton.fillColor = UIColor.white
+        backButton.position = CGPoint(x: 0, y: -200)
+        backButton.name="back"
+        backButton.zPosition = 5
+        addChild(backButton)
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
@@ -100,7 +106,10 @@ class GameScene: SKScene {
             print(location)
             let nodes = self.nodes(at: location)
             for node in nodes {
-                print(node.name!)
+                if let nodeName = node.name {
+                    print(nodeName)
+                }
+                // print(node.name!)
                 if !inaction && node.name! == "button1" {
                     // move1()
                     inaction = true
@@ -118,6 +127,11 @@ class GameScene: SKScene {
                     inaction = true
                     genericmove(button: 3, top: 2, bottomleft: 4, bottomright: 5)
                     print(gamestate)
+                }
+                else if node.name! == "back" {
+                    let scene = MainMenuScene(fileNamed: "MainMenuScene")
+                    scene!.scaleMode = .aspectFit
+                    self.view?.presentScene(scene)
                 }
                 else {
                     print("not a button node")
