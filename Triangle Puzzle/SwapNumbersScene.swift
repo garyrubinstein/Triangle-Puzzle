@@ -10,10 +10,12 @@ import SpriteKit
 
 class SwapNumbersScene: SKScene {
     var framesize = 0
+    var shuffleStart = false
     let puzzleSize = 4
     var moveSize = 2
     var board: [Int] = []
     var moveArray: [[[Int]]] = []
+    var startPosition: [[Int]] = []
     var nodelist: [SKShapeNode] = []
     var chosennumbers: [Int] = []
     var nodesselected = 0
@@ -97,7 +99,12 @@ class SwapNumbersScene: SKScene {
             
         }
         // print(board)
-        mix(nummoves: 50)
+        if shuffleStart {
+            mix(nummoves: 50)
+        }
+        else {
+            makemoves(myarray: startPosition)
+        }
         let testArray = [[1,2,3],[4,5]]
         print("test array")
         print(testArray)
@@ -109,9 +116,11 @@ class SwapNumbersScene: SKScene {
     func initializeMoves() {
         if theMode == 0 {
             moveSize = 2
+            shuffleStart = true
         }
         if theMode == 1 {
             moveSize = 3
+            shuffleStart = true
         }
         if theMode == 2 {
             // moveSize = 0
@@ -130,6 +139,7 @@ class SwapNumbersScene: SKScene {
         }
         else if theMode == 5 {
             // moveSize = 0
+            startPosition = [[0,4],[3,7]]
             moveArray.append([[0,3],[4,7]])
             moveArray.append([[3,7],[8,10,9,12],[11,15]])
             moveArray.append([[3,7],[12,9,10,8],[15,11]])
