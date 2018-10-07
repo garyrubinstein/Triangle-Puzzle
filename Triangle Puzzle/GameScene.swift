@@ -104,31 +104,36 @@ class GameScene: SKScene {
         if let touch = touches.first {
             let location = touch.location(in: self)
             print(location)
+            var theNodeName: String = ""
             let nodes = self.nodes(at: location)
             for node in nodes {
                 if let nodeName = node.name {
                     print(nodeName)
+                    theNodeName = nodeName
+                }
+                else {
+                    theNodeName = "noname"
                 }
                 // print(node.name!)
-                if !inaction && node.name! == "button1" {
+                if !inaction && theNodeName == "button1" {
                     // move1()
                     inaction = true
                     genericmove(button: 1, top: 0, bottomleft: 1, bottomright: 2)
                     print(gamestate)
                 }
-                else if !inaction && node.name! == "button2" {
+                else if !inaction && theNodeName == "button2" {
                     // move2()
                     inaction = true
                     genericmove(button:2, top: 1, bottomleft: 3, bottomright: 4)
                     print(gamestate)
                 }
-                else if !inaction && node.name! == "button3" {
+                else if !inaction && theNodeName == "button3" {
                     // move3()
                     inaction = true
                     genericmove(button: 3, top: 2, bottomleft: 4, bottomright: 5)
                     print(gamestate)
                 }
-                else if node.name! == "back" {
+                else if theNodeName == "back" {
                     let scene = MainMenuScene(fileNamed: "MainMenuScene")
                     scene!.scaleMode = .aspectFit
                     self.view?.presentScene(scene)

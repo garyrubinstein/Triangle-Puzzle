@@ -10,7 +10,7 @@ import SpriteKit
 
 class SwapNumbersScene: SKScene {
     var framesize = 0
-    var shuffleStart = false
+    var shuffleStart = true
     let puzzleSize = 4
     var moveSize = 2
     var board: [Int] = []
@@ -24,6 +24,7 @@ class SwapNumbersScene: SKScene {
     var theSize: CGFloat = 0
     var frameOffset: Int = 100
     var theMode: Int = 0
+    var menuMoves: Bool = true
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -32,10 +33,12 @@ class SwapNumbersScene: SKScene {
         if let mode = self.userData?.value(forKey: "mode") {
             print("mode is \(mode)")
             theMode = mode as! Int
+            theMode = theMode-2
             moveSize = mode as! Int
         }
         
         initializeMoves()
+        print("shuffleStart is \(shuffleStart)")
         // test changes array
 
         let screenSize: CGRect = UIScreen.main.bounds
@@ -51,11 +54,24 @@ class SwapNumbersScene: SKScene {
         print(theSize)
         addMoveList()
         framesize = Int(2/3*theSize)
-        let backButton = SKShapeNode(circleOfRadius: 50)
+        let menuButtonSize: CGFloat = 50
+        let menuButtonY: CGFloat = -520
+        let backButton = SKShapeNode(circleOfRadius: menuButtonSize)
         backButton.fillColor = UIColor.green
-        backButton.position = CGPoint(x: -100, y: -500)
+        backButton.position = CGPoint(x: -100, y: menuButtonY)
         backButton.name="back"
         self.addChild(backButton)
+        let solveButton = SKShapeNode(circleOfRadius: menuButtonSize)
+        solveButton.fillColor = UIColor.blue
+        solveButton.position = CGPoint(x: 0, y: menuButtonY)
+        solveButton.name="solve"
+        self.addChild(solveButton)
+        let shuffleButton = SKShapeNode(circleOfRadius: menuButtonSize)
+        shuffleButton.fillColor = UIColor.orange
+        shuffleButton.position = CGPoint(x: 100, y: menuButtonY)
+        shuffleButton.name="shuffle"
+        self.addChild(shuffleButton)
+        
         let moveButton = SKShapeNode(circleOfRadius: 50)
         moveButton.fillColor = UIColor.blue
         moveButton.position = CGPoint(x: -100, y: -400)
@@ -114,31 +130,39 @@ class SwapNumbersScene: SKScene {
     }
     
     func initializeMoves() {
+        print("in initializeMoves theMode is \(theMode)")
+        print("shuffleStart was \(self.shuffleStart)")
         if theMode == 0 {
             moveSize = 2
-            shuffleStart = true
+            self.shuffleStart = true
+            menuMoves = false
         }
         if theMode == 1 {
             moveSize = 3
-            shuffleStart = true
+            self.shuffleStart = true
+            menuMoves = false
         }
         if theMode == 2 {
             // moveSize = 0
+            self.shuffleStart = false
             moveArray.append([[1,2,3],[4,5]])
             moveArray.append([[6,8,9]])
         }
         if theMode == 3 {
             // moveSize = 0
+            self.shuffleStart = false
             moveArray.append([[1,2,3],[4,5]])
             moveArray.append([[6,8,9]])
         }
         else if theMode == 4 {
             // moveSize = 0
+            self.shuffleStart = false
             moveArray.append([[1,2,3],[4,5]])
             moveArray.append([[6,8,9]])
         }
         else if theMode == 5 {
             // moveSize = 0
+            self.shuffleStart = false
             startPosition = [[0,4],[3,7]]
             moveArray.append([[0,3],[4,7]])
             moveArray.append([[3,7],[8,10,9,12],[11,15]])
@@ -147,9 +171,11 @@ class SwapNumbersScene: SKScene {
         }
         else if theMode == 6 {
             moveSize = 0
+            self.shuffleStart = false
             moveArray.append([[1,6]])
             // moveArray.append([[6,8,9]])
         }
+        print("ending initialize shuffleStart is now \(self.shuffleStart)")
     }
     func addMoveList() {
         let numMoves = 3
@@ -237,7 +263,7 @@ class SwapNumbersScene: SKScene {
                         }
                     }
                 }
-                if Array(node.name!)[0] == "p" {
+                if !menuMoves && Array(node.name!)[0] == "p" {
                     let n=Int(node.name!.components(separatedBy: ",")[1])!
                     // print("nodeclicked")
                     // print(n)
