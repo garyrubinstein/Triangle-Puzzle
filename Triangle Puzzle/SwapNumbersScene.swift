@@ -12,12 +12,13 @@ class SwapNumbersScene: SKScene {
     var framesize = 0
     var shuffleStart = true
     let puzzleSize = 4
-    var moveSize = 2
+    var moveSize = 0
     var board: [Int] = []
     var moveArray: [[[Int]]] = []
     var startPosition: [[Int]] = []
     var nodelist: [SKShapeNode] = []
     var chosennumbers: [Int] = []
+    var originalPositions: [CGPoint] = []
     var nodesselected = 0
     var screenWidth: CGFloat = 0
     var screenHeight: CGFloat = 0
@@ -28,6 +29,8 @@ class SwapNumbersScene: SKScene {
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
+        print("testing makeinverse")
+        print(makeInverse(myarray: [[1,2,3],[4,5]]))
         // chosennumbers.append(0)
         // chosennumbers.append(0)
         if let mode = self.userData?.value(forKey: "mode") {
@@ -94,6 +97,8 @@ class SwapNumbersScene: SKScene {
             gamePiece.fillColor = UIColor.yellow
             gamePiece.strokeColor = UIColor.black
             gamePiece.zPosition = 4
+            let gamePiecePosition = CGPoint(x: -framesize/2+column*framesize/puzzleSize, y: framesize/2-framesize/puzzleSize-row*framesize/puzzleSize-frameOffset)
+            originalPositions.append(gamePiecePosition)
             gamePiece.position = CGPoint(x: -framesize/2+column*framesize/puzzleSize, y: framesize/2-framesize/puzzleSize-row*framesize/puzzleSize-frameOffset)
          
             
@@ -194,7 +199,7 @@ class SwapNumbersScene: SKScene {
         // add buttons to movebox
         let buttonWidth: CGFloat = 0.3*boxWidth
         let buttonHeight: CGFloat = 0.15*boxHeight
-        for i in 0..<12 {
+        for i in 0..<moveArray.count {
             let moveButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight))
             // let moveButton = SKShapeNode(rect: CGRect(x: CGFloat(i*20)+buttonWidth/2, y: CGFloat(i*20)-buttonHeight/2, width: buttonWidth, height: buttonHeight))
             moveButton.fillColor = UIColor.orange
@@ -213,20 +218,26 @@ class SwapNumbersScene: SKScene {
     func mix(nummoves: Int) {
         // makemove(myarray: [0,4,5], howLong: 0.05)
         for _ in 0...nummoves {
-            var movearray: [Int] = []
-            var numbers: [Int] = []
-            for i in 1...puzzleSize*puzzleSize {
-                numbers.append(i)
+            if !menuMoves {
+                var movearray: [Int] = []
+                var numbers: [Int] = []
+                for i in 1...puzzleSize*puzzleSize {
+                    numbers.append(i)
+                }
+                numbers.shuffle()
+                // print("in mix")
+        //        print(numbers)
+                // let subarray = numbers[0...2]
+                for i in 0..<moveSize {
+                    movearray.append(numbers[i]-1)
+                }
+                // print(movearray)
+                makemove(myarray: movearray, howLong: 0.05)
             }
-            numbers.shuffle()
-            // print("in mix")
-    //        print(numbers)
-            // let subarray = numbers[0...2]
-            for i in 0..<moveSize {
-                movearray.append(numbers[i]-1)
+            else {
+                makemoves(myarray: moveArray.randomElement()!)
+                // makemove(myarray: moveArray.randomElement(), howLong: 0.05)
             }
-            // print(movearray)
-            makemove(myarray: movearray, howLong: 0.05)
         }
         /* for _ in 0...nummoves {
             let number1 = Int.random(in: 0 ..< puzzleSize*puzzleSize)
@@ -251,7 +262,25 @@ class SwapNumbersScene: SKScene {
                         // makemoves(myarray: [[board[1]-1,board[2]-1],[board[3]-1,board[4]-1,board[5]-1]])
                         makemoves(myarray: changesarray(myarray: [[1,2],[3,4,5]]))
                     }
-                    if thename.hasPrefix("movebutton") {
+                    else if thename == "shuffle" {
+                        mix(nummoves: 50)
+                    }
+                    else if thename == "solve" {
+                        print("solving")
+                        for i in 0..<puzzleSize*puzzleSize {
+                            // self.nodelist[i].position = originalPositions[self.nodelist[i]]
+                            print(i)
+                            print(board[i])
+                            print(self.nodelist[board[i]-1].position)
+                            print(originalPositions[board[i]-1])
+                            self.nodelist[board[i]-1].position = self.originalPositions[board[i]-1]
+                        }
+                        for i in 0...(puzzleSize*puzzleSize-1) {
+                            // print(i)
+                            board[i]=i
+                        }
+                    }
+                    else if thename.hasPrefix("movebutton") {
                         print("found a movebutton!")
                         let thenumberstring = Int(thename.components(separatedBy: ",")[1])
                         let thenumber = Int(thenumberstring!)
@@ -292,6 +321,27 @@ class SwapNumbersScene: SKScene {
 
     }
     
+    func makeInverse(myarray: [[Int]]) -> [[Int]] {
+        // makes the inverse of a given permutation
+        // for example
+        // makeInverse([[1,2],[3,4,5]]) will return [[5,4,3],[2,1]]
+        var reversedArray: [[Int]] = []
+        for i in 0..<myarray.count {
+            // print(i)
+            // print(myarray[myarray.count-1-i])
+            var tempArray: [Int] = []
+            for j in 0..<myarray[myarray.count-1-i].count {
+                print(myarray[myarray.count-1-i][j])
+                tempArray.insert(myarray[myarray.count-1-i][j], at: 0)
+            }
+            // print(tempArray)
+            reversedArray.append(tempArray)
+        }
+        // print("finished")
+        // print(reversedArray)
+        return reversedArray
+    }
+    
     func changesarray(myarray: [[Int]]) -> [[Int]] {
         var returnarray: [[Int]] = []
         for i in 0..<myarray.count {
@@ -326,7 +376,7 @@ class SwapNumbersScene: SKScene {
     }
     
     func makemove(myarray: [Int], howLong: TimeInterval) {
-        print("makemove \(myarray)")
+        // print("makemove \(myarray)")
     //func makemove(firstnum: Int, secondnum: Int, howLong: TimeInterval) {
         // print("makemove \(firstnum) \(secondnum) ")
         // print("in makemove")

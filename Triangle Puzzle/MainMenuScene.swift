@@ -83,7 +83,7 @@ class MainMenuScene: SKScene {
             moveButton.zPosition = 5
             // moveButton.position = convert(moveButton.position, from: moveBox)
             moveBox.addChild(moveButton)
-            moveButton.position = CGPoint(x: -CGFloat(boxWidth)/3+CGFloat(boxWidth/3)*CGFloat(i%3), y: CGFloat(boxHeight)/3-boxHeight/4*CGFloat(Int(i/3)))
+            moveButton.position = CGPoint(x: -CGFloat(boxWidth)/3+CGFloat(boxWidth/3)*CGFloat(i%3), y: CGFloat(boxHeight)/3-boxHeight/4*CGFloat(Int(i/3))+boxHeight/16)
             let buttonText = SKLabelNode(text: String(i+1))
             buttonText.fontName = "AvenirNext-Bold"
             buttonText.fontColor=UIColor.white
