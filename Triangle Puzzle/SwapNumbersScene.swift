@@ -75,6 +75,12 @@ class SwapNumbersScene: SKScene {
         shuffleButton.name="shuffle"
         self.addChild(shuffleButton)
         
+        let startOverButton = SKShapeNode(circleOfRadius: menuButtonSize)
+        startOverButton.fillColor = UIColor.purple
+        startOverButton.position = CGPoint(x: 200, y: menuButtonY)
+        startOverButton.name="startover"
+        self.addChild(startOverButton)
+        
         let moveButton = SKShapeNode(circleOfRadius: 50)
         moveButton.fillColor = UIColor.blue
         moveButton.position = CGPoint(x: -100, y: -400)
@@ -188,7 +194,7 @@ class SwapNumbersScene: SKScene {
         let boxWidth = 3/4*screenWidth
         let boxHeight = 0.25*screenHeight
         let boxCenter: CGPoint = CGPoint(x: 0, y: screenHeight/2-boxHeight/2-50)
-        let moveBox = SKSpriteNode(color: UIColor.blue, size: CGSize(width: boxWidth, height: boxHeight))
+        let moveBox = SKSpriteNode(color: UIColor.clear, size: CGSize(width: boxWidth, height: boxHeight))
         // let moveBox = SKShapeNode(rect: CGRect(x: boxCenter.x-boxWidth/2, y: boxCenter.y+boxHeight/2, width: boxWidth, height: boxHeight))
         // moveBox.fillColor = UIColor.blue
         moveBox.position = boxCenter
@@ -211,6 +217,7 @@ class SwapNumbersScene: SKScene {
             // moveButton.position.x = 100
             // moveButton.position.y = 100
         }
+        // moveBox.alpha = 0.0
         self.addChild(moveBox)
         
     }
@@ -265,8 +272,9 @@ class SwapNumbersScene: SKScene {
                     else if thename == "shuffle" {
                         mix(nummoves: 50)
                     }
-                    else if thename == "solve" {
+                    else if thename == "solve" || thename == "startover" {
                         print("solving")
+                        print(board)
                         for i in 0..<puzzleSize*puzzleSize {
                             // self.nodelist[i].position = originalPositions[self.nodelist[i]]
                             print(i)
@@ -275,9 +283,12 @@ class SwapNumbersScene: SKScene {
                             print(originalPositions[board[i]-1])
                             self.nodelist[board[i]-1].position = self.originalPositions[board[i]-1]
                         }
-                        for i in 0...(puzzleSize*puzzleSize-1) {
+                        for i in 1...(puzzleSize*puzzleSize) {
                             // print(i)
-                            board[i]=i
+                            board[i-1]=i
+                        }
+                        if thename == "startover" {
+                            makemoves(myarray: startPosition)
                         }
                     }
                     else if thename.hasPrefix("movebutton") {
