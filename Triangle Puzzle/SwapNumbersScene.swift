@@ -65,22 +65,51 @@ class SwapNumbersScene: SKScene {
         backButton.fillColor = UIColor.green
         backButton.position = CGPoint(x: -100, y: menuButtonY)
         backButton.name="back"
+        let menuText = SKLabelNode(text: "MENU")
+        menuText.name = "textmenu"
+        menuText.fontName = "AvenirNext-Bold"
+        menuText.fontSize = 18.0
+        // startOverText.color = UIColor.black
+        menuText.zPosition = 6
+        backButton.addChild(menuText)
         self.addChild(backButton)
         let solveButton = SKShapeNode(circleOfRadius: menuButtonSize)
         solveButton.fillColor = UIColor.blue
         solveButton.position = CGPoint(x: 0, y: menuButtonY)
         solveButton.name="solve"
+        let solveText = SKLabelNode(text: "SOLVE")
+        solveText.name = "textsolve"
+        solveText.fontName = "AvenirNext-Bold"
+        solveText.fontSize = 18.0
+        // startOverText.color = UIColor.black
+        solveText.zPosition = 6
+        solveButton.addChild(solveText)
         self.addChild(solveButton)
         let shuffleButton = SKShapeNode(circleOfRadius: menuButtonSize)
         shuffleButton.fillColor = UIColor.orange
         shuffleButton.position = CGPoint(x: 100, y: menuButtonY)
         shuffleButton.name="shuffle"
+        let shuffleText = SKLabelNode(text: "MIX")
+        shuffleText.fontName = "AvenirNext-Bold"
+        shuffleText.fontSize = 18.0
+        shuffleText.name = "textshuffle"
+        // startOverText.color = UIColor.black
+        shuffleText.zPosition = 6
+        shuffleButton.addChild(shuffleText)
         self.addChild(shuffleButton)
         
         let startOverButton = SKShapeNode(circleOfRadius: menuButtonSize)
         startOverButton.fillColor = UIColor.purple
+        // startOverButton.alpha = 0.5
         startOverButton.position = CGPoint(x: 200, y: menuButtonY)
         startOverButton.name="startover"
+        let startOverText = SKLabelNode(text: "RESTART")
+        startOverText.name = "textstartover"
+        startOverText.fontName = "AvenirNext-Bold"
+        startOverText.fontSize = 18.0
+        // startOverText.color = UIColor.black
+        startOverText.zPosition = 6
+        startOverButton.addChild(startOverText)
         self.addChild(startOverButton)
         
         let moveButton = SKShapeNode(circleOfRadius: 50)
@@ -183,7 +212,7 @@ class SwapNumbersScene: SKScene {
             moveArray.append([[3,7],[12,9,10,8],[15,11]])
 
         }
-        else if theMode == 6 {
+        else if theMode > 5 {
             moveSize = 0
             self.shuffleStart = false
             moveArray.append([[1,6]])
