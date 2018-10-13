@@ -14,6 +14,7 @@ class SwapNumbersScene: SKScene {
     let puzzleSize = 4
     var moveSize = 0
     var board: [Int] = []
+    var restartboard: [Int] = []
     var moveArray: [[[Int]]] = []
     var startPosition: [[Int]] = []
     var nodelist: [SKShapeNode] = []
@@ -23,14 +24,15 @@ class SwapNumbersScene: SKScene {
     var screenWidth: CGFloat = 0
     var screenHeight: CGFloat = 0
     var theSize: CGFloat = 0
+    var numShuffle: Int = 50
     var frameOffset: Int = 100
     var theMode: Int = 0
     var menuMoves: Bool = true
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
-        print("testing makeinverse")
-        print(makeInverse(myarray: [[1,2,3],[4,5]]))
+        // print("testing makeinverse")
+        // print(makeInverse(myarray: [[1,2,3],[4,5]]))
         // chosennumbers.append(0)
         // chosennumbers.append(0)
         if let mode = self.userData?.value(forKey: "mode") {
@@ -127,16 +129,17 @@ class SwapNumbersScene: SKScene {
         }
         // print(board)
         if shuffleStart {
-            mix(nummoves: 50)
+            mix(nummoves: numShuffle)
+            restartboard = Array(board)
         }
         else {
             makemoves(myarray: startPosition)
         }
-        let testArray = [[1,2,3],[4,5]]
-        print("test array")
-        print(testArray)
-        let newarray = changesarray(myarray: testArray)
-        print(newarray)
+        // let testArray = [[1,2,3],[4,5]]
+        // print("test array")
+        // print(testArray)
+        // let newarray = changesarray(myarray: testArray)
+        // print(newarray)
         //self.addChild(myframe)
     }
     
@@ -238,8 +241,12 @@ class SwapNumbersScene: SKScene {
                 for i in 0..<moveSize {
                     movearray.append(numbers[i]-1)
                 }
-                // print(movearray)
-                makemove(myarray: movearray, howLong: 0.05)
+                print("about to make move \(movearray)")
+                makemove(myarray: movearray, howLong: 0.05) //0.05)
+                print("in mix")
+                print("after makemove")
+                print("the board is now \(board)")
+                print("the restartboard is now \(restartboard)")
             }
             else {
                 makemoves(myarray: moveArray.randomElement()!)
@@ -270,25 +277,57 @@ class SwapNumbersScene: SKScene {
                         makemoves(myarray: changesarray(myarray: [[1,2],[3,4,5]]))
                     }
                     else if thename == "shuffle" {
-                        mix(nummoves: 50)
+                        print("board before shuffle is")
+                        print(board)
+                        restartboard = Array(board)
+                        print("restart board before shuffle is")
+                        print(restartboard)
+                        mix(nummoves: numShuffle)
+                        print("board after shuffle is")
+                        print(board)
+                        restartboard = Array(board)
+                        print("restartboard after shuffle is")
+                        print(restartboard)
                     }
                     else if thename == "solve" || thename == "startover" {
-                        print("solving")
+                        print(thename)
                         print(board)
                         for i in 0..<puzzleSize*puzzleSize {
                             // self.nodelist[i].position = originalPositions[self.nodelist[i]]
-                            print(i)
-                            print(board[i])
-                            print(self.nodelist[board[i]-1].position)
-                            print(originalPositions[board[i]-1])
+                            // print(i)
+                            // print(board[i])
+                            // print(self.nodelist[board[i]-1].position)
+                            // print(originalPositions[board[i]-1])
                             self.nodelist[board[i]-1].position = self.originalPositions[board[i]-1]
                         }
                         for i in 1...(puzzleSize*puzzleSize) {
                             // print(i)
                             board[i-1]=i
                         }
+                        print("the board should be new now")
+                        print(board)
                         if thename == "startover" {
-                            makemoves(myarray: startPosition)
+                            if shuffleStart {
+                                print(restartboard)
+                                for i in 0..<puzzleSize*puzzleSize {
+                                    // self.nodelist[i].position = originalPositions[self.nodelist[i]]
+                                    // print(i)
+                                    // print(board[i])
+                                    // print(self.nodelist[board[i]-1].position)
+                                    // print(originalPositions[board[i]-1])
+                                    // self.nodelist[board[i]-1].position = self.originalPositions[board[i]-1]
+                                    // go through the restart [4,2,7, etc], get
+                                    // nodelist[restart[i]] and change position to
+                                    // nodelist[i] so when i=0, node 4 goes to position 0.
+                                    // print(i)
+                                    // print(restartboard[i]-1)
+                                    self.nodelist[restartboard[i]-1].position = self.originalPositions[i]
+                                }
+                                board = Array(restartboard)
+                            }
+                            else {
+                                makemoves(myarray: startPosition)
+                            }
                         }
                     }
                     else if thename.hasPrefix("movebutton") {
