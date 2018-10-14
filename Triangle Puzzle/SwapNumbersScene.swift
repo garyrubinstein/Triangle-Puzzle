@@ -12,6 +12,8 @@ class SwapNumbersScene: SKScene {
     var framesize = 0
     var shuffleStart = true
     let puzzleSize = 4
+    var puzzleWidth = 4
+    var puzzleHeight = 4
     var moveSize = 0
     var board: [Int] = []
     var restartboard: [Int] = []
@@ -25,6 +27,7 @@ class SwapNumbersScene: SKScene {
     var screenHeight: CGFloat = 0
     var theSize: CGFloat = 0
     var numShuffle: Int = 50
+    var scalePieces: CGFloat = 1.0
     var frameOffset: Int = 100
     var theMode: Int = 0
     var menuMoves: Bool = true
@@ -58,7 +61,7 @@ class SwapNumbersScene: SKScene {
         print("theSize")
         print(theSize)
         addMoveList()
-        framesize = Int(2/3*theSize)
+        framesize = Int(2/3*theSize*scalePieces)
         let menuButtonSize: CGFloat = 50
         let menuButtonY: CGFloat = -520
         let backButton = SKShapeNode(circleOfRadius: menuButtonSize)
@@ -122,13 +125,15 @@ class SwapNumbersScene: SKScene {
         myframe.zPosition = 3
         myframe.name = "frame"
         self.addChild(myframe)
-        for i in 0...(puzzleSize*puzzleSize-1) {
+        for i in 0...(puzzleWidth*puzzleHeight-1) {
             // print(i)
             board.append(Int(i+1))
-            let row = Int(i/puzzleSize)
-            let column = i%puzzleSize
+            let row = Int(i/puzzleWidth)
+            let column = i%puzzleWidth
             // print(row)
             // print(column)
+            // let pieceWidth = scalePieces*CGFloat(framesize/puzzleWidth)
+            // let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: pieceWidth, height: pieceWidth))
             let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: framesize/puzzleSize, height: framesize/puzzleSize))
             gamePiece.name = "piece,"+String(i)
             gamePiece.fillColor = UIColor.yellow
@@ -199,6 +204,10 @@ class SwapNumbersScene: SKScene {
         }
         else if theMode == 4 {
             // moveSize = 0
+            self.frameOffset = -270
+            self.scalePieces = 0.80
+            self.puzzleWidth = 3
+            self.puzzleHeight = 9
             self.shuffleStart = false
             moveArray.append([[1,2,3],[4,5]])
             moveArray.append([[6,8,9]])
@@ -260,7 +269,7 @@ class SwapNumbersScene: SKScene {
             if !menuMoves {
                 var movearray: [Int] = []
                 var numbers: [Int] = []
-                for i in 1...puzzleSize*puzzleSize {
+                for i in 1...puzzleWidth*puzzleHeight {
                     numbers.append(i)
                 }
                 numbers.shuffle()
@@ -321,7 +330,7 @@ class SwapNumbersScene: SKScene {
                     else if thename == "solve" || thename == "startover" {
                         print(thename)
                         print(board)
-                        for i in 0..<puzzleSize*puzzleSize {
+                        for i in 0..<puzzleWidth*puzzleHeight {
                             // self.nodelist[i].position = originalPositions[self.nodelist[i]]
                             // print(i)
                             // print(board[i])
@@ -329,7 +338,7 @@ class SwapNumbersScene: SKScene {
                             // print(originalPositions[board[i]-1])
                             self.nodelist[board[i]-1].position = self.originalPositions[board[i]-1]
                         }
-                        for i in 1...(puzzleSize*puzzleSize) {
+                        for i in 1...(puzzleWidth*puzzleHeight) {
                             // print(i)
                             board[i-1]=i
                         }
@@ -338,7 +347,7 @@ class SwapNumbersScene: SKScene {
                         if thename == "startover" {
                             if shuffleStart {
                                 print(restartboard)
-                                for i in 0..<puzzleSize*puzzleSize {
+                                for i in 0..<puzzleWidth*puzzleHeight {
                                     // self.nodelist[i].position = originalPositions[self.nodelist[i]]
                                     // print(i)
                                     // print(board[i])
