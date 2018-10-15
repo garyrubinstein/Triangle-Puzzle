@@ -31,6 +31,7 @@ class SwapNumbersScene: SKScene {
     var frameOffset: Int = 100
     var theMode: Int = 0
     var menuMoves: Bool = true
+    var LShape: Bool = false // for the L shape 15 like puzzle
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -191,10 +192,12 @@ class SwapNumbersScene: SKScene {
             menuMoves = false
         }
         if theMode == 2 {
-            // moveSize = 0
-            self.shuffleStart = false
-            moveArray.append([[1,2,3],[4,5]])
-            moveArray.append([[6,8,9]])
+            moveSize = 3
+            self.shuffleStart = true
+            menuMoves = false
+            self.LShape = true
+            // moveArray.append([[1,2,3],[4,5]])
+            // moveArray.append([[6,8,9]])
         }
         if theMode == 3 {
             // moveSize = 0
@@ -266,7 +269,19 @@ class SwapNumbersScene: SKScene {
     func mix(nummoves: Int) {
         // makemove(myarray: [0,4,5], howLong: 0.05)
         for _ in 0...nummoves {
-            if !menuMoves {
+            if LShape {
+                let n = Int.random(in: 1...16)
+                if let pos = board.firstIndex(of: n) {
+                    if pos/4 < 3 && pos%4 != 3 {
+                        // nodelist[n].fillColor = UIColor.green
+                        // nodelist[board[pos+1]-1].fillColor = UIColor.green
+                        // nodelist[board[pos+4]-1].fillColor = UIColor.green
+                        makemove(myarray: [board[pos]-1,board[pos+1]-1,board[pos+4]-1], howLong: 0.5)
+                        
+                    }
+                }
+            }
+            else if !menuMoves {
                 var movearray: [Int] = []
                 var numbers: [Int] = []
                 for i in 1...puzzleWidth*puzzleHeight {
@@ -386,7 +401,27 @@ class SwapNumbersScene: SKScene {
                     // print(n)
                     // print(chosennumbers.count)
                     // print(chosennumbers)
-                    if chosennumbers.count < moveSize {
+                    if LShape {
+                        if let pos = board.firstIndex(of: n+1) {
+                            if pos/4 < 3 && pos%4 != 3 {
+                                nodelist[n].fillColor = UIColor.green
+                                nodelist[board[pos+1]-1].fillColor = UIColor.green
+                                nodelist[board[pos+4]-1].fillColor = UIColor.green
+                                makemove(myarray: [board[pos]-1,board[pos+1]-1,board[pos+4]-1], howLong: 0.5)
+
+                            }
+                            
+
+                            // print("pos \(pos) n \(n)")
+                            // print(board)
+                            // print("\(board[pos]-1) and \(board[pos+1]-1) and \(board[pos+4]-1)")
+                            // makemove(myarray: [board[pos]-1,board[pos+1]-1,board[pos+4]-1], howLong: 0.5)
+                        }
+                        
+                        
+
+                    }
+                    else if chosennumbers.count < moveSize {
                         if !chosennumbers.contains(n) {
                             chosennumbers.append(n)
                             nodelist[n].fillColor = UIColor.green
