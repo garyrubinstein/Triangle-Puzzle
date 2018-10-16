@@ -32,6 +32,7 @@ class SwapNumbersScene: SKScene {
     var theMode: Int = 0
     var menuMoves: Bool = true
     var LShape: Bool = false // for the L shape 15 like puzzle
+    var fifteen: Bool = false // for 15 game
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -138,6 +139,9 @@ class SwapNumbersScene: SKScene {
             let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: framesize/puzzleSize, height: framesize/puzzleSize))
             gamePiece.name = "piece,"+String(i)
             gamePiece.fillColor = UIColor.yellow
+            if fifteen && i==15 {
+                gamePiece.fillColor = UIColor.black
+            }
             gamePiece.strokeColor = UIColor.black
             gamePiece.zPosition = 4
             let gamePiecePosition = CGPoint(x: -framesize/2+column*framesize/puzzleSize, y: framesize/2-framesize/puzzleSize-row*framesize/puzzleSize-frameOffset)
@@ -200,10 +204,12 @@ class SwapNumbersScene: SKScene {
             // moveArray.append([[6,8,9]])
         }
         if theMode == 3 {
-            // moveSize = 0
-            self.shuffleStart = false
-            moveArray.append([[1,2,3],[4,5]])
-            moveArray.append([[6,8,9]])
+            moveSize = 3
+            self.fifteen = true
+            self.shuffleStart = true
+            menuMoves = false
+            // moveArray.append([[1,2,3],[4,5]])
+            // moveArray.append([[6,8,9]])
         }
         else if theMode == 4 {
             // moveSize = 0
@@ -416,10 +422,53 @@ class SwapNumbersScene: SKScene {
                             // print(board)
                             // print("\(board[pos]-1) and \(board[pos+1]-1) and \(board[pos+4]-1)")
                             // makemove(myarray: [board[pos]-1,board[pos+1]-1,board[pos+4]-1], howLong: 0.5)
-                        }
+                        } // if let pos
                         
                         
 
+                    } // if LShape
+                    else if fifteen {
+                        // check if the 16 is adjacent to it
+                        if let pos = board.firstIndex(of: n+1) {
+                            var up: Int = -1
+                            var down: Int = -1
+                            var right: Int = -1
+                            var left: Int = -1
+                            if pos>3 {
+                                up = pos-4
+                                // print(board[up])
+                                if board[up]==16 {
+                                    makemove(myarray: [n,15], howLong: 0.05)
+                                }
+                            }
+                            // print(board[up])
+                            if pos<12 {
+                                down = pos+4
+                                if board[down]==16 {
+                                    makemove(myarray: [n,15], howLong: 0.05)
+                                }
+                                //print(board[down])
+                            }
+                            // print(board[down])
+                            if pos%4<3 {
+                                right = pos+1
+                                if board[right]==16 {
+                                    makemove(myarray: [n,15], howLong: 0.05)
+                                }
+
+                                //print(board[right])
+                            }
+                            // print(board[right])
+                            if pos%4>0 {
+                                left = pos-1
+                                if board[left]==16 {
+                                    makemove(myarray: [n,15], howLong: 0.05)
+                                }
+
+                                // print(board[left])
+                            }
+//                            print(board[left])
+                        }
                     }
                     else if chosennumbers.count < moveSize {
                         if !chosennumbers.contains(n) {
@@ -504,18 +553,27 @@ class SwapNumbersScene: SKScene {
         // print("makemove \(firstnum) \(secondnum) ")
         // print("in makemove")
         // print(myarray)
-
-        nodelist[0].run(SKAction.fadeAlpha(to: 1, duration: howLong), completion: {
+        var customHowLong = howLong
+        if self.fifteen {
+            customHowLong = 0.05
+        }
+        nodelist[0].run(SKAction.fadeAlpha(to: 1, duration: customHowLong), completion: {
             let temppos = self.nodelist[myarray[0]].position
-            self.nodelist[myarray[0]].fillColor = UIColor.yellow
+            if !self.fifteen {
+                self.nodelist[myarray[0]].fillColor = UIColor.yellow
+            }
             for j in 0..<myarray.count-1 {
                 // print("in makemove j= \(j)")
-                self.nodelist[myarray[j]].fillColor = UIColor.yellow
+                if !self.fifteen {
+                    self.nodelist[myarray[j]].fillColor = UIColor.yellow
+                }
                 self.nodelist[myarray[j]].position = self.nodelist[myarray[j+1]].position
             }
             // self.nodelist[myarray[1]].fillColor = UIColor.yellow
             self.nodelist[myarray[myarray.count-1]].position = temppos
-            self.nodelist[myarray[myarray.count-1]].fillColor = UIColor.yellow
+            if !self.fifteen {
+                self.nodelist[myarray[myarray.count-1]].fillColor = UIColor.yellow
+            }
 
 
         })
