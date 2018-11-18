@@ -29,10 +29,12 @@ class SwapNumbersScene: SKScene {
     var numShuffle: Int = 50
     var scalePieces: CGFloat = 1.0
     var frameOffset: Int = 100
+    var frameOffsetX: Int = 0
     var theMode: Int = 0
     var menuMoves: Bool = true
     var LShape: Bool = false // for the L shape 15 like puzzle
     var fifteen: Bool = false // for 15 game
+    var numcube: Bool = false // for number cube
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -122,41 +124,61 @@ class SwapNumbersScene: SKScene {
         moveButton.position = CGPoint(x: -100, y: -400)
         moveButton.name="move"
         // self.addChild(moveButton)
-        let myframe = SKShapeNode(rect: CGRect(x: -framesize/2, y: -framesize/2-frameOffset, width: framesize, height: framesize))
+        let myframe = SKShapeNode(rect: CGRect(x: -framesize/2-frameOffsetX, y: -framesize/2-frameOffset, width: framesize, height: framesize))
         myframe.fillColor = UIColor.red
         myframe.zPosition = 3
         myframe.name = "frame"
         self.addChild(myframe)
+        print("framesize \(framesize)")
         for i in 0...(puzzleWidth*puzzleHeight-1) {
             // print(i)
             board.append(Int(i+1))
             let row = Int(i/puzzleWidth)
             let column = i%puzzleWidth
+            var squareWidth: CGFloat = CGFloat(framesize/puzzleWidth)
+            var squareHeight: CGFloat = CGFloat(framesize/puzzleWidth)
             // print(row)
             // print(column)
             // let pieceWidth = scalePieces*CGFloat(framesize/puzzleWidth)
             // let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: pieceWidth, height: pieceWidth))
-            let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: framesize/puzzleSize, height: framesize/puzzleSize))
+            // let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: framesize/puzzleSize, height: framesize/puzzleSize))
+            let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: squareWidth, height: squareWidth))
+            // let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: framesize/puzzleWidth, height: framesize/puzzleHeight))
             gamePiece.name = "piece,"+String(i)
-            gamePiece.fillColor = UIColor.yellow
+            if !(theMode==4) {
+                gamePiece.fillColor = UIColor.yellow
+            }
+            else {
+                gamePiece.fillColor = UIColor.white
+            }
             if fifteen && i==15 {
                 gamePiece.fillColor = UIColor.black
             }
             gamePiece.strokeColor = UIColor.black
             gamePiece.zPosition = 4
-            let gamePiecePosition = CGPoint(x: -framesize/2+column*framesize/puzzleSize, y: framesize/2-framesize/puzzleSize-row*framesize/puzzleSize-frameOffset)
+            // let gamePiecePosition = CGPoint(x: -framesize/2+column*framesize/puzzleSize, y: framesize/2-framesize/puzzleSize-row*framesize/puzzleSize-frameOffset)
+            let gamePiecePosition = CGPoint(x: -framesize/2+column*framesize/puzzleWidth-frameOffsetX, y: framesize/2-framesize/puzzleHeight-row*framesize/puzzleWidth-frameOffset)
+            
+            
             originalPositions.append(gamePiecePosition)
-            gamePiece.position = CGPoint(x: -framesize/2+column*framesize/puzzleSize, y: framesize/2-framesize/puzzleSize-row*framesize/puzzleSize-frameOffset)
+            // gamePiece.position = CGPoint(x: -framesize/2+column*framesize/puzzleSize, y: framesize/2-framesize/puzzleSize-row*framesize/puzzleSize-frameOffset)
+            gamePiece.position = gamePiecePosition
          
             
             
             let tritext = SKLabelNode(text: String(i+1))
             tritext.fontColor = UIColor.black
+            if numcube && [1,3,7,9,19,21,25,27].contains(i+1) {
+                tritext.fontColor = UIColor.red
+            }
+            if numcube && [2,4,6,8,10,12,16,18,20,22,24,26].contains(i+1) {
+                tritext.fontColor = UIColor.blue
+            }
             tritext.fontName = "AvenirNext-Bold"
             tritext.fontSize = 64
             tritext.horizontalAlignmentMode = .center
             tritext.verticalAlignmentMode = .center
-            tritext.position = CGPoint(x: framesize/(puzzleSize*2), y: framesize/(puzzleSize*2))
+            tritext.position = CGPoint(x: framesize/(puzzleWidth*2), y: framesize/(puzzleWidth*2))
             tritext.name = "text"+String(i+1)
             tritext.zPosition = 5
             gamePiece.addChild(tritext)
@@ -214,10 +236,12 @@ class SwapNumbersScene: SKScene {
         else if theMode == 4 {
             // moveSize = 0
             self.frameOffset = -270
-            self.scalePieces = 0.80
+            self.frameOffsetX = 100
+            self.scalePieces = 0.60
             self.puzzleWidth = 3
             self.puzzleHeight = 9
             self.shuffleStart = false
+            self.numcube = true
             moveArray.append([[1,2,3],[4,5]])
             moveArray.append([[6,8,9]])
         }
