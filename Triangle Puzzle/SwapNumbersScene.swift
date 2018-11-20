@@ -35,6 +35,10 @@ class SwapNumbersScene: SKScene {
     var LShape: Bool = false // for the L shape 15 like puzzle
     var fifteen: Bool = false // for 15 game
     var numcube: Bool = false // for number cube
+    var squareColor: UIColor = UIColor.yellow
+    var cornerSquares: [Int] = []
+    var edgeSquares: [Int] = []
+    var rotateCorners: Bool = false
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -146,10 +150,10 @@ class SwapNumbersScene: SKScene {
             // let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: framesize/puzzleWidth, height: framesize/puzzleHeight))
             gamePiece.name = "piece,"+String(i)
             if !(theMode==4) {
-                gamePiece.fillColor = UIColor.yellow
+                gamePiece.fillColor = squareColor
             }
             else {
-                gamePiece.fillColor = UIColor.white
+                gamePiece.fillColor = squareColor
             }
             if fifteen && i==15 {
                 gamePiece.fillColor = UIColor.black
@@ -234,7 +238,9 @@ class SwapNumbersScene: SKScene {
             // moveArray.append([[6,8,9]])
         }
         else if theMode == 4 {
-            // moveSize = 0
+            moveSize = 3
+            menuMoves = false
+            squareColor = UIColor.white
             self.frameOffset = -270
             self.frameOffsetX = 100
             self.scalePieces = 0.60
@@ -242,8 +248,10 @@ class SwapNumbersScene: SKScene {
             self.puzzleHeight = 9
             self.shuffleStart = false
             self.numcube = true
-            moveArray.append([[1,2,3],[4,5]])
-            moveArray.append([[6,8,9]])
+            self.cornerSquares = [1,3,7,9,19,21,25,27]
+            self.edgeSquares = [2,4,6,8,10,12,16,18,20,22,24,26]
+            // moveArray.append([[1,2,3],[4,5]])
+            // moveArray.append([[6,8,9]])
         }
         else if theMode == 5 {
             // moveSize = 0
@@ -494,10 +502,33 @@ class SwapNumbersScene: SKScene {
 //                            print(board[left])
                         }
                     }
-                    else if chosennumbers.count < moveSize {
+                    else if !numcube && chosennumbers.count < moveSize {
                         if !chosennumbers.contains(n) {
                             chosennumbers.append(n)
                             nodelist[n].fillColor = UIColor.green
+                        }
+                        if chosennumbers.count == moveSize {
+                            // takesarray(myarray: chosennumbers)
+                            makemove(myarray: chosennumbers, howLong: 0.5)
+                            // makemove(firstnum: chosennumbers[0],secondnum: chosennumbers[1], howLong: 0.5)
+                        }
+                    }
+                    else if numcube && chosennumbers.count < moveSize {
+                        if chosennumbers.count==0 && !chosennumbers.contains(n) && (cornerSquares.contains(n+1) || edgeSquares.contains(n+1)) {
+                            chosennumbers.append(n)
+                            nodelist[n].fillColor = UIColor.green
+                            if cornerSquares.contains(n+1) {
+                                rotateCorners = true
+                            }
+                            else {
+                                rotateCorners = false
+                            }
+                        }
+                        else if chosennumbers.count<moveSize && !chosennumbers.contains(n) {
+                            if (rotateCorners && cornerSquares.contains(n+1)) || (!rotateCorners && edgeSquares.contains(n+1)) {
+                                chosennumbers.append(n)
+                                nodelist[n].fillColor = UIColor.green
+                            }
                         }
                         if chosennumbers.count == moveSize {
                             // takesarray(myarray: chosennumbers)
@@ -584,19 +615,19 @@ class SwapNumbersScene: SKScene {
         nodelist[0].run(SKAction.fadeAlpha(to: 1, duration: customHowLong), completion: {
             let temppos = self.nodelist[myarray[0]].position
             if !self.fifteen {
-                self.nodelist[myarray[0]].fillColor = UIColor.yellow
+                self.nodelist[myarray[0]].fillColor = self.squareColor
             }
             for j in 0..<myarray.count-1 {
                 // print("in makemove j= \(j)")
                 if !self.fifteen {
-                    self.nodelist[myarray[j]].fillColor = UIColor.yellow
+                    self.nodelist[myarray[j]].fillColor = self.squareColor
                 }
                 self.nodelist[myarray[j]].position = self.nodelist[myarray[j+1]].position
             }
             // self.nodelist[myarray[1]].fillColor = UIColor.yellow
             self.nodelist[myarray[myarray.count-1]].position = temppos
             if !self.fifteen {
-                self.nodelist[myarray[myarray.count-1]].fillColor = UIColor.yellow
+                self.nodelist[myarray[myarray.count-1]].fillColor = self.squareColor
             }
 
 
