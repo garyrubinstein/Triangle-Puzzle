@@ -509,6 +509,11 @@ class SwapNumbersScene: SKScene {
                         }
                         if chosennumbers.count == moveSize {
                             // takesarray(myarray: chosennumbers)
+                            // print("about to make move")
+                            // print(chosennumbers)
+                            // print(board.firstIndex(of: chosennumbers[0]))
+                            // print(board.firstIndex(of: chosennumbers[1]))
+                            // print(board.firstIndex(of: chosennumbers[2]))
                             makemove(myarray: chosennumbers, howLong: 0.5)
                             // makemove(firstnum: chosennumbers[0],secondnum: chosennumbers[1], howLong: 0.5)
                         }
@@ -532,6 +537,26 @@ class SwapNumbersScene: SKScene {
                         }
                         if chosennumbers.count == moveSize {
                             // takesarray(myarray: chosennumbers)
+                            if rotateCorners {
+                                let cornerNums: [Int] = [1, 3, 7, 9, 19, 21, 25, 27]
+                                print("about to make move")
+                                print(board)
+                                print(chosennumbers)
+                                print(cornerNums.firstIndex(of: 1+board.firstIndex(of: chosennumbers[0]+1)!)!+1)
+                                print(cornerNums.firstIndex(of: 1+board.firstIndex(of: chosennumbers[1]+1)!)!+1)
+                                print(cornerNums.firstIndex(of: 1+board.firstIndex(of: chosennumbers[2]+1)!)!+1)
+
+                            }
+                            else {
+                                let edgeNums: [Int] = [2,4,6,8,10,12,16,18,20,22,24,26]
+                                print("about to make move")
+                                print(board)
+                                print(chosennumbers)
+                                print(edgeNums.firstIndex(of: 1+board.firstIndex(of: chosennumbers[0]+1)!)!+1)
+                                print(edgeNums.firstIndex(of: 1+board.firstIndex(of: chosennumbers[1]+1)!)!+1)
+                                print(edgeNums.firstIndex(of: 1+board.firstIndex(of: chosennumbers[2]+1)!)!+1)
+                                
+                            }
                             makemove(myarray: chosennumbers, howLong: 0.5)
                             // makemove(firstnum: chosennumbers[0],secondnum: chosennumbers[1], howLong: 0.5)
                         }
