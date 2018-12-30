@@ -35,6 +35,7 @@ class SwapNumbersScene: SKScene {
     var LShape: Bool = false // for the L shape 15 like puzzle
     var fifteen: Bool = false // for 15 game
     var numcube: Bool = false // for number cube
+    var swapWithOne: Bool = false
     var squareColor: UIColor = UIColor.yellow
     var cornerSquares: [Int] = []
     var edgeSquares: [Int] = []
@@ -222,6 +223,24 @@ class SwapNumbersScene: SKScene {
             menuMoves = false
         }
         if theMode == 2 {
+            self.shuffleStart = false
+            moveSize = 2
+            menuMoves = false
+            startPosition = [[0,1,2]]
+        }
+        if theMode == 3 {
+            self.shuffleStart = false
+            menuMoves = false
+            moveSize = 3
+            startPosition = [[0,1],[2,3]]
+        }
+        if theMode == 4 {
+            moveSize = 2
+            self.shuffleStart = true
+            menuMoves = false
+            swapWithOne = true
+        }
+        if theMode == 6 {
             moveSize = 3
             self.shuffleStart = true
             menuMoves = false
@@ -229,7 +248,7 @@ class SwapNumbersScene: SKScene {
             // moveArray.append([[1,2,3],[4,5]])
             // moveArray.append([[6,8,9]])
         }
-        if theMode == 3 {
+        if theMode == 7 {
             moveSize = 3
             self.fifteen = true
             self.shuffleStart = true
@@ -237,7 +256,7 @@ class SwapNumbersScene: SKScene {
             // moveArray.append([[1,2,3],[4,5]])
             // moveArray.append([[6,8,9]])
         }
-        else if theMode == 4 {
+/*        else if theMode == 4 {
             moveSize = 3
             menuMoves = false
             squareColor = UIColor.white
@@ -268,6 +287,7 @@ class SwapNumbersScene: SKScene {
             moveArray.append([[1,6]])
             // moveArray.append([[6,8,9]])
         }
+ */
         print("ending initialize shuffleStart is now \(self.shuffleStart)")
     }
     func addMoveList() {
@@ -459,6 +479,28 @@ class SwapNumbersScene: SKScene {
                         
 
                     } // if LShape
+                    else if swapWithOne {
+                        if chosennumbers.count == 0 {
+                            chosennumbers.append(n)
+                            nodelist[n].fillColor = UIColor.green
+                        }
+                        else if chosennumbers.count == 1 {
+                            // print("chosen[0] firstindex chosen[0] firstindex(n)")
+                            // print(chosennumbers[0]+1)
+                            // print(board.firstIndex(of: chosennumbers[0]+1))
+                            // print(board.firstIndex(of: n+1))
+                            if board.firstIndex(of: chosennumbers[0]+1) != 0 && board.firstIndex(of: n+1) == 0 {
+                                chosennumbers.append(n)
+                                nodelist[n].fillColor = UIColor.green
+                                makemove(myarray: chosennumbers, howLong: 0.5)
+                            }
+                            else if board.firstIndex(of: chosennumbers[0]+1) == 0 && board.firstIndex(of: n+1) != 0 {
+                                chosennumbers.append(n)
+                                nodelist[n].fillColor = UIColor.green
+                                makemove(myarray: chosennumbers, howLong: 0.5)
+                            }
+                        }
+                    }
                     else if fifteen {
                         // check if the 16 is adjacent to it
                         if let pos = board.firstIndex(of: n+1) {
