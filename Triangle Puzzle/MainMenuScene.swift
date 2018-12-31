@@ -79,7 +79,7 @@ class MainMenuScene: SKScene {
         // add buttons to movebox
         let buttonWidth: CGFloat = 0.3*boxWidth
         let buttonHeight: CGFloat = 0.15*boxHeight
-        for i in 0..<27 {
+        for i in 0..<26 {
             let moveButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight))
             // let moveButton = SKShapeNode(rect: CGRect(x: CGFloat(i*20)+buttonWidth/2, y: CGFloat(i*20)-buttonHeight/2, width: buttonWidth, height: buttonHeight))
             moveButton.fillColor = UIColor.orange

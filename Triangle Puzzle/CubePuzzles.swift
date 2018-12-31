@@ -82,6 +82,7 @@ class CubePuzzles: SKScene {
     var moveOneEdge: Bool = false
     var centerState: [Int] = []
     var showMixButton: Bool = true
+    var instructionsNode: SKNode = SKNode()
     
     
     // can access any of the small cubies in this array
@@ -102,6 +103,9 @@ class CubePuzzles: SKScene {
             instructionsText.fontColor = UIColor.white
             instructionsText.fontSize = 64
             instructionsText.fontName = "Helvetica"
+            let instructionText: String = makeInstructions()[theMode-1]
+            
+            instructionsNode = createMultiLineText(textToPrint: instructionText, color: UIColor.white, fontSize: 48, fontName: "Helvetica", fontPosition: CGPoint(x: 0.0, y: 400.0), fontLineSpace: 0.0)
             
             if theMode == 12 {
                 colors = true
@@ -234,12 +238,13 @@ class CubePuzzles: SKScene {
             
         }
         // make control buttons
-        let inBox: SKShapeNode = SKShapeNode(rectOf: CGSize(width: 600, height: 600))
+        let inBox: SKShapeNode = SKShapeNode(rectOf: CGSize(width: 600, height: 1000))
         inBox.fillColor = UIColor.purple
         instructionsBox = inBox
         instructionsBox.zPosition = 10
-        instructionsBox.addChild(instructionsText)
-        self.addChild(instructionsBox)
+        // instructionsBox.addChild(instructionsText)
+        instructionsBox.addChild(instructionsNode)
+        // self.addChild(instructionsBox)
         let colorsList = makeColors()
         let centerArray: [Int] = [15,17,5,13,11,23,14]
         for i in 1...7 {
@@ -534,7 +539,7 @@ class CubePuzzles: SKScene {
                         for i in 0...5 {
                             if stickersArray[k-1].contains(i) {
                                 // print("in middle \(k)")
-                                if !(flipOneCorner || moveOneEdge || moveOneCorner) || [].contains(k){
+                                if !(flipOneCorner || moveOneEdge || moveOneCorner) || [11,13,15,17].contains(k){
                                     materialArray.append(imageMaterial)
                                 }
                                 else {
@@ -702,7 +707,7 @@ class CubePuzzles: SKScene {
         if !(startPattern == "") {
             rotateLayer(face: doPattern(moves: startPattern), pauseTime: 0.0, rotateTime: 0.0)
         }
-        
+        self.addChild(instructionsBox)
     }
     
     // end of didMoveTo
@@ -2259,15 +2264,8 @@ class CubePuzzles: SKScene {
         return [greenMaterial,  redMaterial,    blueMaterial,
                 orangeMaterial, WhiteMaterial, yellowMaterial]
     }
-    func makeInstructions()->[String] {
-        var instructions: [String] = []
-        instructions.append("first")
-        instructions.append("second")
-        for i in 0...20 {
-            instructions.append("this is for \(i)")
-        }
-        return instructions
-    }
+
+    
     func makeColors()->[UIColor] {
         // try to color the faces
         var returnColors: [UIColor] = []
@@ -2813,7 +2811,7 @@ class CubePuzzles: SKScene {
             tritext.verticalAlignmentMode = .center
             tritext.position = CGPoint(x: framesize/(puzzleWidth*2), y: framesize/(puzzleWidth*2))
             tritext.name = "text"+String(i+1)
-            tritext.zPosition = 5
+            tritext.zPosition = 1
             gamePiece.addChild(tritext)
             nodetextlist.append(tritext)
             if [1,3,7,9,19,21,25,27].contains(i+1) {
@@ -3604,5 +3602,49 @@ class CubePuzzles: SKScene {
         print(pattern)
         flipButtonList[1].fillColor = UIColor.red
         rotateLayer(face: doPattern(moves: pattern), pauseTime: 0.25, rotateTime: 0.25)
+    }
+    
+    func createMultiLineText(textToPrint:String, color:UIColor, fontSize:CGFloat, fontName:String, fontPosition:CGPoint, fontLineSpace:CGFloat)->SKNode{
+        
+        // create node to hold the text block
+        var textBlock = SKNode()
+        
+        //create array to hold each line
+        let textArr = textToPrint.components(separatedBy: "\n")
+        
+        // loop through each line and place it in an SKNode
+        var lineNode: SKLabelNode
+        for line: String in textArr {
+            lineNode = SKLabelNode(fontNamed: fontName)
+            lineNode.text = line
+            lineNode.fontSize = fontSize
+            lineNode.fontColor = color
+            lineNode.fontName = fontName
+            lineNode.position = CGPoint(x: fontPosition.x, y: fontPosition.y - CGFloat(textBlock.children.count ) * fontSize + fontLineSpace)
+            textBlock.addChild(lineNode)
+        }
+        
+        // return the sknode with all of the text in it
+        return textBlock
+    }
+    
+    func makeInstructions()->[String] {
+        var instructions: [String] = []
+        instructions.append("Select any three blue\nnumbers to cycle the\nedges.  Select any\nthree red numbers to\ncycle the corners.\nSelect any green\nnumber to do a face\nrotation.")
+        instructions.append("Select any three blue\nnumbers to cycle the\nedges.  Select any\nthree red numbers to\ncycle the corners.\nSelect any green\nnumber to do a face\nrotation.\nSelect the blue square\nand then any two\nblue numbers to flip them.\nSelect the red square\nand then any two\nred numbers to\nrotate one clockwise\nand the other\ncounterclockwise")
+        instructions.append("Find moves to\nmove the 27 next\nto the 26\nwithout disturbing\nthe other pieces\nin the bottom\nlayer")
+        instructions.append("Find moves to\nmove the 26 between\nthe 25 and 27\nwithout disturbing\nthe other pieces\nin the bottom\nlayer")
+        instructions.append("Fix the three\ncorners (9,27,25)")
+        instructions.append("Fix the three\nedges (12,26,24)")
+        instructions.append("Fix the red,\nwhite, green corner")
+        instructions.append("Fix the green\nand white edge")
+        instructions.append("Fix the two\ncorners")
+        instructions.append("Fix the two\nedges")
+        instructions.append("Solve the number cube")
+        instructions.append("Solve the color cube")
+        for i in 0...20 {
+            instructions.append("this is for \(i)")
+        }
+        return instructions
     }
 }
