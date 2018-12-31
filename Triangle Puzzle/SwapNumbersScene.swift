@@ -227,13 +227,15 @@ class SwapNumbersScene: SKScene {
             self.shuffleStart = false
             moveSize = 2
             menuMoves = false
-            startPosition = [[0,1,2]]
+            var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13,15].shuffled()
+            startPosition = [[shuffled[0],shuffled[1],shuffled[2]]]
         }
         if theMode == 3 {
             self.shuffleStart = false
             menuMoves = false
             moveSize = 3
-            startPosition = [[0,1],[2,3]]
+            var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13,15].shuffled()
+            startPosition = [[shuffled[0],shuffled[1]],[shuffled[2],shuffled[3]]]
         }
         if theMode == 4 {
             moveSize = 2
@@ -243,9 +245,11 @@ class SwapNumbersScene: SKScene {
         }
         if theMode == 5 {
             moveSize = 2
-            self.shuffleStart = true
+            self.shuffleStart = false
             menuMoves = false
             swap111215 = true
+            var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13,15].shuffled()
+            startPosition = [[shuffled[0],shuffled[1],shuffled[2]]]
         }
         if theMode == 6 {
             moveSize = 3
@@ -262,6 +266,35 @@ class SwapNumbersScene: SKScene {
             menuMoves = false
             // moveArray.append([[1,2,3],[4,5]])
             // moveArray.append([[6,8,9]])
+        }
+        else if theMode == 8 {
+            // moveSize = 0
+            self.shuffleStart = false
+            startPosition = [[1,1]]
+            // moveArray.append([[0,3],[4,7]])
+            // moveArray.append([[0,3],[4,7]])
+            // moveArray.append([[3,7],[8,10,9,12],[11,15]])
+            moveArray.append([[1,3,10],[2,7],[5,8,11,13]])
+        }
+        else if theMode == 10 {
+            // moveSize = 0
+            self.shuffleStart = false
+            startPosition = [[3,12,15]]
+            moveArray.append([[3,15],[1,4,8,9],[2,11,5]])
+            moveArray.append([[3,15],[1,9,8,4],[2,5,11]])
+            moveArray.append([[15,14,13,12]])
+            moveArray.append([[15,12,13,14]])
+            
+        }
+        else if theMode == 11 {
+            // moveSize = 0
+            self.shuffleStart = false
+            startPosition = [[0,4],[3,7]]
+            moveArray.append([[0,3],[4,7]])
+            moveArray.append([[0,3],[4,7]])
+            moveArray.append([[3,7],[8,10,9,12],[11,15]])
+            moveArray.append([[3,7],[12,9,10,8],[15,11]])
+            
         }
 /*        else if theMode == 4 {
             moveSize = 3

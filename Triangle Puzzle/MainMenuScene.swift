@@ -21,10 +21,14 @@ class MainMenuScene: SKScene {
         initialize()
     }
     func initialize() {
-        for _ in 0...10 {
+        for _ in 0...11 {
             sceneNames.append("SwapNumbersScene")
         }
         sceneNames.append("GameScene")
+        sceneNames.append("GameScene")
+        for _ in 0...9 {
+            sceneNames.append("CubePuzzles")
+        }
         
         let button1 = SKShapeNode(rectOf: CGSize(width: 200.0, height: 100.0))
         button1.fillColor = UIColor.red
