@@ -130,6 +130,7 @@ class CubePuzzles: SKScene {
                 rotateFlat = false
                 showSolveButton = false
                 hasFlat = true
+                showFlipButtons = false
             }
             else if theMode == 5 {
                 colors = true
@@ -302,21 +303,24 @@ class CubePuzzles: SKScene {
         middlebackNode.name = "middleback"
         middlebackNode.position = CGPoint(x: -200, y: 0)
         // self.addChild(middlebackNode)
-        let flipedgebutton = SKShapeNode(rectOf: CGSize(width: 60.0, height: 60.0)) // SKShapeNode(circleOfRadius: 30.0)
+        let sizeFlipButton: CGFloat = 100.0
+        let xFlipButton: CGFloat = 310
+        let yFlipButton: CGFloat = 0
+        let flipedgebutton = SKShapeNode(rectOf: CGSize(width: sizeFlipButton, height: sizeFlipButton)) // SKShapeNode(circleOfRadius: 30.0)
         flipedgebutton.fillColor = UIColor.blue
         flipedgebutton.name = "flipedge"
-        flipedgebutton.position = CGPoint(x: -200, y: -300)
+        flipedgebutton.position = CGPoint(x: xFlipButton, y: yFlipButton)
         flipButtonList.append(flipedgebutton)
-        if hasFlat {
+        if showFlipButtons {
             self.addChild(flipedgebutton)
         }
         
-        let flipcornerbutton = SKShapeNode(rectOf: CGSize(width: 60.0, height: 60.0))
+        let flipcornerbutton = SKShapeNode(rectOf: CGSize(width: sizeFlipButton, height: sizeFlipButton))
         flipcornerbutton.fillColor = UIColor.red
         flipcornerbutton.name = "flipcorner"
-        flipcornerbutton.position = CGPoint(x: -200, y: -400)
+        flipcornerbutton.position = CGPoint(x: xFlipButton, y: yFlipButton+150)
         flipButtonList.append(flipcornerbutton)
-        if hasFlat {
+        if showFlipButtons {
             self.addChild(flipcornerbutton)
         }
         
@@ -2673,7 +2677,7 @@ class CubePuzzles: SKScene {
         //var nodelist: [SKShapeNode] = []
         var frameOffset: Int = -25
         var theMode: Int = 4
-        var frameOffsetX: Int = 0
+        var frameOffsetX: Int = -90
         var puzzleWidth: Int = 3
         var puzzleHeight: Int = 9
         var numcube: Bool = true
@@ -2730,6 +2734,9 @@ class CubePuzzles: SKScene {
             }
             if numcube && [2,4,6,8,10,12,16,18,20,22,24,26].contains(i+1) {
                 tritext.fontColor = UIColor.blue
+            }
+            if numcube && [5,11,13,15,17,23].contains(i+1) {
+                tritext.fontColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
             }
             tritext.fontName = "AvenirNext-Bold"
             tritext.fontSize = 64

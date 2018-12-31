@@ -41,6 +41,7 @@ class SwapNumbersScene: SKScene {
     var cornerSquares: [Int] = []
     var edgeSquares: [Int] = []
     var rotateCorners: Bool = false
+    var moveArrayStrings: [String] = []
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -275,6 +276,18 @@ class SwapNumbersScene: SKScene {
             // moveArray.append([[0,3],[4,7]])
             // moveArray.append([[3,7],[8,10,9,12],[11,15]])
             moveArray.append([[1,3,10],[2,7],[5,8,11,13]])
+            moveArrayStrings.append("A=(2,4,11)(3,8)(6,9,12,14)")
+        }
+        // need to change this one it is the same as 8
+        else if theMode == 9 {
+            // moveSize = 0
+            self.shuffleStart = false
+            startPosition = [[1,1]]
+            // moveArray.append([[0,3],[4,7]])
+            // moveArray.append([[0,3],[4,7]])
+            // moveArray.append([[3,7],[8,10,9,12],[11,15]])
+            moveArray.append([[1,3,10],[2,7],[5,8,11,13]])
+            moveArrayStrings.append("A=(2,4,11)(3,8)(6,9,12,14)")
         }
         else if theMode == 10 {
             // moveSize = 0
@@ -284,6 +297,10 @@ class SwapNumbersScene: SKScene {
             moveArray.append([[3,15],[1,9,8,4],[2,5,11]])
             moveArray.append([[15,14,13,12]])
             moveArray.append([[15,12,13,14]])
+            moveArrayStrings.append("A=(4,16)(2,5,9,10)(3,12,6)")
+            moveArrayStrings.append("A inv")
+            moveArrayStrings.append("B=(16,15,14,13)")
+            moveArrayStrings.append("B inv")
             
         }
         else if theMode == 11 {
@@ -294,6 +311,10 @@ class SwapNumbersScene: SKScene {
             moveArray.append([[0,3],[4,7]])
             moveArray.append([[3,7],[8,10,9,12],[11,15]])
             moveArray.append([[3,7],[12,9,10,8],[15,11]])
+            moveArrayStrings.append("A=(1,4),(5,8)")
+            moveArrayStrings.append("A inv")
+            moveArrayStrings.append("B=(4,8)(9,11,10,13)(12,16)")
+            moveArrayStrings.append("B inv")
             
         }
 /*        else if theMode == 4 {
@@ -333,10 +354,10 @@ class SwapNumbersScene: SKScene {
     func addMoveList() {
         let numMoves = 3
         framesize = Int(2/3*theSize)
-        let boxWidth = 3/4*screenWidth
-        let boxHeight = 0.25*screenHeight
+        let boxWidth = 0.8*screenWidth
+        let boxHeight = 0.3*screenHeight
         let boxCenter: CGPoint = CGPoint(x: 0, y: screenHeight/2-boxHeight/2-50)
-        let moveBox = SKSpriteNode(color: UIColor.clear, size: CGSize(width: boxWidth, height: boxHeight))
+        let moveBox = SKSpriteNode(color: UIColor.blue, size: CGSize(width: boxWidth, height: boxHeight))
         // let moveBox = SKShapeNode(rect: CGRect(x: boxCenter.x-boxWidth/2, y: boxCenter.y+boxHeight/2, width: boxWidth, height: boxHeight))
         // moveBox.fillColor = UIColor.blue
         moveBox.position = boxCenter
@@ -345,17 +366,38 @@ class SwapNumbersScene: SKScene {
         moveBox.name = "movebox"
         
         // add buttons to movebox
-        let buttonWidth: CGFloat = 0.3*boxWidth
-        let buttonHeight: CGFloat = 0.15*boxHeight
+        let buttonWidth: CGFloat = 0.65*boxWidth
+        let buttonHeight: CGFloat = 0.2*boxHeight
+        let shortbuttonWidth = 0.2*boxWidth
         for i in 0..<moveArray.count {
-            let moveButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight))
+            var bw: CGFloat = 0
+            if i%2==0 {
+                bw = buttonWidth
+            }
+            else {
+                bw = shortbuttonWidth
+            }
+            let moveButton = SKShapeNode(rectOf: CGSize(width: bw, height: buttonHeight))
             // let moveButton = SKShapeNode(rect: CGRect(x: CGFloat(i*20)+buttonWidth/2, y: CGFloat(i*20)-buttonHeight/2, width: buttonWidth, height: buttonHeight))
             moveButton.fillColor = UIColor.orange
             moveButton.name = "movebutton,"+String(i+1)
             moveButton.zPosition = 5
             // moveButton.position = convert(moveButton.position, from: moveBox)
+            let buttonText: SKLabelNode = SKLabelNode(text: moveArrayStrings[i])
+            buttonText.fontSize = 24
+            buttonText.fontName = "AvenirNext-Bold"
+            buttonText.fontColor = UIColor.black
+            buttonText.name = "ignore"
+            moveButton.addChild(buttonText)
             moveBox.addChild(moveButton)
-            moveButton.position = CGPoint(x: -CGFloat(boxWidth)/3+CGFloat(boxWidth/3)*CGFloat(i%3), y: CGFloat(boxHeight)/3-boxHeight/4*CGFloat(Int(i/3)))
+            if i%2==0 {
+                moveButton.position = CGPoint(x: -0.1*boxWidth, y: CGFloat(boxHeight)/3-boxHeight/4*CGFloat(Int(i/2)))
+            }
+            else {
+                moveButton.position = CGPoint(x: 0.35*boxWidth, y: CGFloat(boxHeight)/3-boxHeight/4*CGFloat(Int(i/2)))
+                // moveButton.position = CGPoint(x: -CGFloat(boxWidth)/3+CGFloat(boxWidth/3)*CGFloat(i%3), y: CGFloat(boxHeight)/3-boxHeight/4*CGFloat(Int(i/3)))
+
+            }
             // moveButton.position.x = 100
             // moveButton.position.y = 100
         }

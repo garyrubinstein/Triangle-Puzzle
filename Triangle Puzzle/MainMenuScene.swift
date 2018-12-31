@@ -68,7 +68,7 @@ class MainMenuScene: SKScene {
         let boxWidth = 3/4*screenWidth
         let boxHeight = 0.4*screenHeight
         let boxCenter: CGPoint = CGPoint(x: 0, y: screenHeight/2-boxHeight/2-50)
-        let moveBox = SKSpriteNode(color: UIColor.blue, size: CGSize(width: boxWidth, height: boxHeight))
+        let moveBox = SKSpriteNode(color: UIColor.clear , size: CGSize(width: boxWidth, height: boxHeight))
         // let moveBox = SKShapeNode(rect: CGRect(x: boxCenter.x-boxWidth/2, y: boxCenter.y+boxHeight/2, width: boxWidth, height: boxHeight))
         // moveBox.fillColor = UIColor.blue
         moveBox.position = boxCenter
@@ -79,7 +79,7 @@ class MainMenuScene: SKScene {
         // add buttons to movebox
         let buttonWidth: CGFloat = 0.3*boxWidth
         let buttonHeight: CGFloat = 0.15*boxHeight
-        for i in 0..<24 {
+        for i in 0..<27 {
             let moveButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight))
             // let moveButton = SKShapeNode(rect: CGRect(x: CGFloat(i*20)+buttonWidth/2, y: CGFloat(i*20)-buttonHeight/2, width: buttonWidth, height: buttonHeight))
             moveButton.fillColor = UIColor.orange
@@ -99,6 +99,7 @@ class MainMenuScene: SKScene {
             // moveButton.position.y = 100
         }
         self.addChild(moveBox)
+        // moveBox.alpha = 0.0
         
     }
     
