@@ -31,6 +31,8 @@ class SwapNumbersScene: SKScene {
     var frameOffset: Int = 100
     var frameOffsetX: Int = 0
     var theMode: Int = 0
+    var instructionsNode: SKNode = SKNode()
+    var instructionsBox = SKShapeNode()
     var menuMoves: Bool = true
     var LShape: Bool = false // for the L shape 15 like puzzle
     var fifteen: Bool = false // for 15 game
@@ -56,6 +58,16 @@ class SwapNumbersScene: SKScene {
             moveSize = mode as! Int
         }
         
+        let instructionText: String = makeInstructions()[theMode]
+        
+        instructionsNode = createMultiLineText(textToPrint: instructionText, color: UIColor.white, fontSize: 48, fontName: "Helvetica", fontPosition: CGPoint(x: 0.0, y: 400.0), fontLineSpace: 0.0)
+        let inBox: SKShapeNode = SKShapeNode(rectOf: CGSize(width: 600, height: 1000))
+        inBox.fillColor = UIColor.purple
+        instructionsBox = inBox
+        instructionsBox.zPosition = 10
+        // instructionsBox.addChild(instructionsText)
+        instructionsBox.addChild(instructionsNode)
+        
         initializeMoves()
         print("shuffleStart is \(shuffleStart)")
         // test changes array
@@ -76,7 +88,7 @@ class SwapNumbersScene: SKScene {
         let menuButtonSize: CGFloat = 50
         let menuButtonY: CGFloat = -520
         let backButton = SKShapeNode(circleOfRadius: menuButtonSize)
-        backButton.fillColor = UIColor.green
+        backButton.fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) //UIColor.green
         backButton.position = CGPoint(x: -100, y: menuButtonY)
         backButton.name="back"
         let menuText = SKLabelNode(text: "MENU")
@@ -187,7 +199,7 @@ class SwapNumbersScene: SKScene {
             tritext.verticalAlignmentMode = .center
             tritext.position = CGPoint(x: framesize/(puzzleWidth*2), y: framesize/(puzzleWidth*2))
             tritext.name = "text"+String(i+1)
-            tritext.zPosition = 5
+            tritext.zPosition = 1
             gamePiece.addChild(tritext)
             nodelist.append(gamePiece)
             myframe.addChild(gamePiece)
@@ -209,6 +221,7 @@ class SwapNumbersScene: SKScene {
         // let newarray = changesarray(myarray: testArray)
         // print(newarray)
         //self.addChild(myframe)
+        self.addChild(instructionsBox)
     }
     
     func initializeMoves() {
@@ -476,6 +489,9 @@ class SwapNumbersScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // print("touch")
+        if instructionsBox.isHidden == false {
+            instructionsBox.isHidden = true
+        }
         if let touch = touches.first {
             let location = touch.location(in: self)
             // print(location)
@@ -854,5 +870,48 @@ class SwapNumbersScene: SKScene {
         // chosennumbers[1]=0
         chosennumbers.removeAll()
         nodesselected = 0
+    }
+    func createMultiLineText(textToPrint:String, color:UIColor, fontSize:CGFloat, fontName:String, fontPosition:CGPoint, fontLineSpace:CGFloat)->SKNode{
+        
+        // create node to hold the text block
+        var textBlock = SKNode()
+        
+        //create array to hold each line
+        let textArr = textToPrint.components(separatedBy: "\n")
+        
+        // loop through each line and place it in an SKNode
+        var lineNode: SKLabelNode
+        for line: String in textArr {
+            lineNode = SKLabelNode(fontNamed: fontName)
+            lineNode.text = line
+            lineNode.fontSize = fontSize
+            lineNode.fontColor = color
+            lineNode.fontName = fontName
+            lineNode.position = CGPoint(x: fontPosition.x, y: fontPosition.y - CGFloat(textBlock.children.count ) * fontSize + fontLineSpace)
+            textBlock.addChild(lineNode)
+        }
+        
+        // return the sknode with all of the text in it
+        return textBlock
+    }
+    
+    func makeInstructions()->[String] {
+        var instructions: [String] = []
+        instructions.append("Select any two numbers\nto swap them")
+        instructions.append("Select any three numbers\nto cycle them")
+        instructions.append("Use swaps to solve\na 3-cycle")
+        instructions.append("Use 3-cycles to solve\ntwo swaps")
+        instructions.append("Select two numbers to\nswap.  One must\nbe a 1")
+        instructions.append("Select position 16\nand it will cycle\npositions 11, 12, 15.\nSelect the number in\nposition 11, 12, or\n15 and then any\nother position besides\n11, 12, or 15\nand it will swap them.")
+        instructions.append("Select a position\nthat is not on the\nright edge or\nthe bottom edge\nand it will 3-cycle with\nthe position to the\nright and the\nposition below.")
+        instructions.append("Select a sqare that is\neither above, below,\nleft, or right of\nthe black space and\nit will move to\nthe black space")
+        instructions.append("Push the orange button\nover and over.\nHow many times does\nit take to get back\nto the starting position?\nWhat happens if\nyou only push it\nhalf as many times?")
+        instructions.append("Solve the puzzle\nusing the four possible\nmoves")
+        instructions.append("Try to make a 3-cycle\nof (4,16,13) by\nusing just the four\navailable moves.")
+        instructions.append("Try to make two swaps\n(1,5) (4,8) with\njust the four\navailable moves.")
+        for i in 0...20 {
+            instructions.append("this is for \(i)")
+        }
+        return instructions
     }
 }
