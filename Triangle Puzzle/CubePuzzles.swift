@@ -76,6 +76,8 @@ class CubePuzzles: SKScene {
     var flipTwoCorners: Bool = false
     var startPattern: String = ""
     var flipOneEdge: Bool = false
+    var moveOneCorner: Bool = false
+    var moveOneEdge: Bool = false
     var centerState: [Int] = []
     var showMixButton: Bool = true
     
@@ -91,7 +93,8 @@ class CubePuzzles: SKScene {
         if let mode = self.userData?.value(forKey: "mode") {
             print("mode is \(mode)")
             var theMode = mode as! Int
-            theMode = theMode - 13 // to makeup for the fact that it is number 14 on the menu
+            theMode = theMode - 15 // to makeup for the fact that it is number 14 on the menu
+            print("cubemode \(theMode)")
             if theMode == 1 {
                 colors = true
                 winPosx = 0
@@ -178,6 +181,26 @@ class CubePuzzles: SKScene {
                 winPosy = 0
                 // flipOneCorner = true
                 startPattern = "dfEFDfeF" // fEFdfeFD"
+                showMixButton = false
+            }
+            // put one corner in place
+            else if theMode == 11 {
+                colors = false
+                moveOneCorner = true
+                winPosx = 0
+                winPosy = 0
+                // flipOneCorner = true
+                startPattern =  "Rur" //"FUdlluuDDRU" //"rUUddlluDfu"
+                showMixButton = false
+            }
+            // put one edge in place
+            else if theMode == 12 {
+                colors = false
+                winPosx = 0
+                winPosy = 0
+                moveOneEdge = true
+                // flipOneCorner = true
+                startPattern =  "EfeF" //"FUdlluuDDRU" //"rUUddlluDfu"
                 showMixButton = false
             }
             // theMode = theMode-2
@@ -380,7 +403,9 @@ class CubePuzzles: SKScene {
             
             
             var k = 0
-            
+            let grayMaterial = SCNMaterial()
+            grayMaterial.diffuse.contents = UIColor.gray // UIImage(named: "y")
+            grayMaterial.locksAmbientWithDiffuse = true;
             // make top layer
             for i in -1...1 {
                 for j in -1...1 {
@@ -402,7 +427,14 @@ class CubePuzzles: SKScene {
                         var materialArray: [SCNMaterial] = []
                         for i in 0...5 {
                             if stickersArray[k-1].contains(i) {
-                                materialArray.append(makeColorArray()[i])
+                                if !moveOneEdge && !moveOneCorner {
+                                    materialArray.append(makeColorArray()[i])
+
+                                }
+                                else {
+                                    materialArray.append(grayMaterial)
+
+                                }
                             }
                             else {
                                 materialArray.append(blackMaterial)
@@ -417,8 +449,15 @@ class CubePuzzles: SKScene {
                         imageMaterial.diffuse.contents = image
                         var materialArray: [SCNMaterial] = []
                         for i in 0...5 {
-                            if stickersArray[k-1].contains(i) {
-                                materialArray.append(imageMaterial)
+                            if stickersArray[k-1].contains(i)  {
+                                if !moveOneEdge && !moveOneCorner {
+                                    materialArray.append(imageMaterial)
+                                    
+                                }
+                                else {
+                                    materialArray.append(grayMaterial)
+                                    
+                                }
                             }
                             else {
                                 materialArray.append(blackMaterial)
@@ -434,9 +473,7 @@ class CubePuzzles: SKScene {
                     
                 }
             }
-            let grayMaterial = SCNMaterial()
-            grayMaterial.diffuse.contents = UIColor.gray // UIImage(named: "y")
-            grayMaterial.locksAmbientWithDiffuse = true;
+
             // make middle layer
             for i in -1...1 {
                 for j in -1...1 {
@@ -458,7 +495,7 @@ class CubePuzzles: SKScene {
                         for i in 0...5 {
                             if stickersArray[k-1].contains(i) {
                                 // print("in middle \(k)")
-                                if !flipOneCorner || [11,13,15,17].contains(k){
+                                if !(flipOneCorner || moveOneEdge || moveOneCorner) || [11,13,15,17].contains(k){
                                     materialArray.append(makeColorArray()[i])
                                 }
                                 else {
@@ -482,7 +519,14 @@ class CubePuzzles: SKScene {
                         var materialArray: [SCNMaterial] = []
                         for i in 0...5 {
                             if stickersArray[k-1].contains(i) {
-                                materialArray.append(imageMaterial)
+                                // print("in middle \(k)")
+                                if !(flipOneCorner || moveOneEdge || moveOneCorner) || [].contains(k){
+                                    materialArray.append(imageMaterial)
+                                }
+                                else {
+                                    materialArray.append(grayMaterial)
+                                }
+                                
                             }
                             else {
                                 materialArray.append(blackMaterial)
