@@ -36,6 +36,7 @@ class SwapNumbersScene: SKScene {
     var fifteen: Bool = false // for 15 game
     var numcube: Bool = false // for number cube
     var swapWithOne: Bool = false
+    var swap111215: Bool = false
     var squareColor: UIColor = UIColor.yellow
     var cornerSquares: [Int] = []
     var edgeSquares: [Int] = []
@@ -239,6 +240,12 @@ class SwapNumbersScene: SKScene {
             self.shuffleStart = true
             menuMoves = false
             swapWithOne = true
+        }
+        if theMode == 5 {
+            moveSize = 2
+            self.shuffleStart = true
+            menuMoves = false
+            swap111215 = true
         }
         if theMode == 6 {
             moveSize = 3
@@ -479,6 +486,34 @@ class SwapNumbersScene: SKScene {
                         
 
                     } // if LShape
+                    else if swap111215 {
+                        if chosennumbers.count == 0 {
+                            // chosennumbers.append(n)
+                            // nodelist[n].fillColor = UIColor.green
+                            if board.firstIndex(of: n+1)==15 {
+                                nodelist[board[10]-1].fillColor = UIColor.green
+                                nodelist[board[11]-1].fillColor = UIColor.green
+                                nodelist[board[14]-1].fillColor = UIColor.green
+                                makemoves(myarray: [[board[10]-1,board[11]-1,board[14]-1]])
+                            }
+                            else {
+                                chosennumbers.append(n)
+                                nodelist[n].fillColor = UIColor.green
+                            }
+                        }
+                        else if chosennumbers.count == 1 {
+                            if !([10,11,14].contains(board.firstIndex(of: chosennumbers[0]+1)))  && [10,11,14].contains(board.firstIndex(of: n+1)) {
+                                chosennumbers.append(n)
+                                nodelist[n].fillColor = UIColor.green
+                                makemove(myarray: chosennumbers, howLong: 0.5)
+                            }
+                            else if [10,11,14].contains(board.firstIndex(of: chosennumbers[0]+1))  && !([10,11,14].contains(board.firstIndex(of: n+1)))  {
+                                chosennumbers.append(n)
+                                nodelist[n].fillColor = UIColor.green
+                                makemove(myarray: chosennumbers, howLong: 0.5)
+                            }
+                        }
+                    }  // if swap111215
                     else if swapWithOne {
                         if chosennumbers.count == 0 {
                             chosennumbers.append(n)
