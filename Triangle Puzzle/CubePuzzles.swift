@@ -42,6 +42,8 @@ class CubePuzzles: SKScene {
     var cycleText: String = ""
     var cycleArray: [Int] = []
     var cameraText1 = SKLabelNode()
+    var instructionsText = SKLabelNode()
+    var instructionsBox = SKShapeNode()
     var showPatternButtons = false
     var winPosx: CGFloat = 300
     var winPosy: CGFloat = 300
@@ -95,6 +97,12 @@ class CubePuzzles: SKScene {
             var theMode = mode as! Int
             theMode = theMode - 15 // to makeup for the fact that it is number 14 on the menu
             print("cubemode \(theMode)")
+            
+            instructionsText.text = makeInstructions()[theMode-1]
+            instructionsText.fontColor = UIColor.white
+            instructionsText.fontSize = 64
+            instructionsText.fontName = "Helvetica"
+            
             if theMode == 12 {
                 colors = true
                 winPosx = 0
@@ -226,6 +234,12 @@ class CubePuzzles: SKScene {
             
         }
         // make control buttons
+        let inBox: SKShapeNode = SKShapeNode(rectOf: CGSize(width: 600, height: 600))
+        inBox.fillColor = UIColor.purple
+        instructionsBox = inBox
+        instructionsBox.zPosition = 10
+        instructionsBox.addChild(instructionsText)
+        self.addChild(instructionsBox)
         let colorsList = makeColors()
         let centerArray: [Int] = [15,17,5,13,11,23,14]
         for i in 1...7 {
@@ -693,6 +707,9 @@ class CubePuzzles: SKScene {
     
     // end of didMoveTo
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if self.instructionsBox.isHidden == false {
+            self.instructionsBox.isHidden = true
+        }
         var faceToRotate: Int = -1
         var clockwise: Bool = true
         // var rotateCorners: Bool = true
@@ -2242,7 +2259,15 @@ class CubePuzzles: SKScene {
         return [greenMaterial,  redMaterial,    blueMaterial,
                 orangeMaterial, WhiteMaterial, yellowMaterial]
     }
-    
+    func makeInstructions()->[String] {
+        var instructions: [String] = []
+        instructions.append("first")
+        instructions.append("second")
+        for i in 0...20 {
+            instructions.append("this is for \(i)")
+        }
+        return instructions
+    }
     func makeColors()->[UIColor] {
         // try to color the faces
         var returnColors: [UIColor] = []
