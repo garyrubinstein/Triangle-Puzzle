@@ -95,17 +95,17 @@ class CubePuzzles: SKScene {
             var theMode = mode as! Int
             theMode = theMode - 15 // to makeup for the fact that it is number 14 on the menu
             print("cubemode \(theMode)")
-            if theMode == 1 {
+            if theMode == 12 {
                 colors = true
                 winPosx = 0
                 winPosy = 0
             }
-            else if theMode == 2 {
+            else if theMode == 11 {
                 colors = false
                 winPosx = 0
                 winPosy = 0
             }
-            else if theMode == 3 {
+            else if theMode == 2 {
                 colors = true
                 winPosx = 200
                 winPosy = 500
@@ -120,7 +120,7 @@ class CubePuzzles: SKScene {
                 showSolveButton = false
                 hasFlat = true
             }
-            else if theMode == 4 {
+            else if theMode == 1 {
                 colors = false
                 winPosx = 200
                 winPosy = 500
@@ -135,7 +135,7 @@ class CubePuzzles: SKScene {
                 hasFlat = true
                 showFlipButtons = false
             }
-            else if theMode == 5 {
+            else if theMode == 7 {
                 colors = true
                 winPosx = 0
                 winPosy = 0
@@ -143,7 +143,7 @@ class CubePuzzles: SKScene {
                 startPattern = "FdfrdR"
                 showMixButton = false
             }
-            else if theMode == 6 {
+            else if theMode == 9 {
                 colors = true
                 winPosx = 0
                 winPosy = 0
@@ -151,7 +151,7 @@ class CubePuzzles: SKScene {
                 startPattern = "FdfrdRurDRFDfU"
                 showMixButton = false
             }
-            else if theMode == 7 {
+            else if theMode == 5 {
                 colors = false
                 winPosx = 0
                 winPosy = 0
@@ -167,7 +167,7 @@ class CubePuzzles: SKScene {
                 startPattern =  "urddUULLDuf" //"FUdlluuDDRU" //"rUUddlluDfu"
                 showMixButton = false
             }
-            else if theMode == 9 {
+            else if theMode == 10 {
                 colors = true
                 winPosx = 0
                 winPosy = 0
@@ -175,7 +175,7 @@ class CubePuzzles: SKScene {
                 startPattern = "FUdlluuDDRUrUUddlluDfu"
                 showMixButton = false
             }
-            else if theMode == 10 {
+            else if theMode == 6 {
                 colors = false
                 winPosx = 0
                 winPosy = 0
@@ -184,7 +184,7 @@ class CubePuzzles: SKScene {
                 showMixButton = false
             }
             // put one corner in place
-            else if theMode == 11 {
+            else if theMode == 3 {
                 colors = false
                 moveOneCorner = true
                 winPosx = 0
@@ -194,7 +194,7 @@ class CubePuzzles: SKScene {
                 showMixButton = false
             }
             // put one edge in place
-            else if theMode == 12 {
+            else if theMode == 4 {
                 colors = false
                 winPosx = 0
                 winPosy = 0

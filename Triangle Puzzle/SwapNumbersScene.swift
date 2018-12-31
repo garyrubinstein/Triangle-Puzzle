@@ -275,19 +275,37 @@ class SwapNumbersScene: SKScene {
             // moveArray.append([[0,3],[4,7]])
             // moveArray.append([[0,3],[4,7]])
             // moveArray.append([[3,7],[8,10,9,12],[11,15]])
+            menuMoves = true
             moveArray.append([[1,3,10],[2,7],[5,8,11,13]])
             moveArrayStrings.append("A=(2,4,11)(3,8)(6,9,12,14)")
         }
         // need to change this one it is the same as 8
         else if theMode == 9 {
             // moveSize = 0
-            self.shuffleStart = false
-            startPosition = [[1,1]]
+            self.shuffleStart = true
+            // startPosition = [[1,1]]
             // moveArray.append([[0,3],[4,7]])
             // moveArray.append([[0,3],[4,7]])
             // moveArray.append([[3,7],[8,10,9,12],[11,15]])
-            moveArray.append([[1,3,10],[2,7],[5,8,11,13]])
-            moveArrayStrings.append("A=(2,4,11)(3,8)(6,9,12,14)")
+            menuMoves = true
+            moveArray.append([[5,6,9,10]])
+            moveArray.append([[5,10,9,6]])
+            moveArray.append([[0,1,2,3,7,11,15,14,13,12,8,4]])
+            moveArray.append([[0,4,8,12,13,14,15,11,7,3,2,1]])
+            moveArray.append([[0,5,10,15]])
+            moveArray.append([[0,15,10,5]])
+            moveArray.append([[12,9,6,3]])
+            moveArray.append([[12,3,6,9]])
+            moveArrayStrings.append("A=(5,6,9,10)")
+            moveArrayStrings.append("A inv")
+            moveArrayStrings.append("B=(0,1,2,3,7,11,15,14,13,12,8,4)")
+            moveArrayStrings.append("B inv")
+            moveArrayStrings.append("C=(0,5,10,15)")
+            moveArrayStrings.append("C inv")
+            moveArrayStrings.append("D=(12,9,6,3)")
+            moveArrayStrings.append("D inv")
+
+
         }
         else if theMode == 10 {
             // moveSize = 0
@@ -301,6 +319,7 @@ class SwapNumbersScene: SKScene {
             moveArrayStrings.append("A inv")
             moveArrayStrings.append("B=(16,15,14,13)")
             moveArrayStrings.append("B inv")
+            menuMoves = true
             
         }
         else if theMode == 11 {
@@ -315,6 +334,7 @@ class SwapNumbersScene: SKScene {
             moveArrayStrings.append("A inv")
             moveArrayStrings.append("B=(4,8)(9,11,10,13)(12,16)")
             moveArrayStrings.append("B inv")
+            menuMoves = true
             
         }
 /*        else if theMode == 4 {
@@ -357,7 +377,7 @@ class SwapNumbersScene: SKScene {
         let boxWidth = 0.8*screenWidth
         let boxHeight = 0.3*screenHeight
         let boxCenter: CGPoint = CGPoint(x: 0, y: screenHeight/2-boxHeight/2-50)
-        let moveBox = SKSpriteNode(color: UIColor.blue, size: CGSize(width: boxWidth, height: boxHeight))
+        let moveBox = SKSpriteNode(color: UIColor.clear, size: CGSize(width: boxWidth, height: boxHeight))
         // let moveBox = SKShapeNode(rect: CGRect(x: boxCenter.x-boxWidth/2, y: boxCenter.y+boxHeight/2, width: boxWidth, height: boxHeight))
         // moveBox.fillColor = UIColor.blue
         moveBox.position = boxCenter
