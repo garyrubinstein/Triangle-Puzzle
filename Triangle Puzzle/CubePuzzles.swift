@@ -247,6 +247,15 @@ class CubePuzzles: SKScene {
         // self.addChild(instructionsBox)
         let colorsList = makeColors()
         let centerArray: [Int] = [15,17,5,13,11,23,14]
+        let ccwText: SKLabelNode = SKLabelNode(text: "Counter")
+        ccwText.fontSize = 36
+        ccwText.fontColor = UIColor.black
+        ccwText.fontName = "Helvetica"
+        ccwText.name = "ignore"
+        ccwText.position = CGPoint(x: -250, y: -500)
+        if showFaceMoves {
+            self.addChild(ccwText)
+        }
         for i in 1...7 {
             var redNode = SKSpriteNode(imageNamed: String(centerArray[i-1])+"pic.png")
             redNode.size = CGSize(width: 60.0, height: 60.0)
@@ -279,21 +288,45 @@ class CubePuzzles: SKScene {
         solveNode.fillColor = UIColor.blue
         solveNode.position = CGPoint(x: -200+buttonOffset, y: 600)
         solveNode.name = "solver"
+        let solveText = SKLabelNode(text: "SOLVE")
+        solveText.fontColor = UIColor.black
+        solveText.fontSize = 24
+        solveText.fontName = "Helvetica"
+        solveText.name = "ignore"
+        solveText.position = CGPoint(x: -200+buttonOffset, y: 600-60)
+
         if showSolveButton {
             self.addChild(solveNode)
+            self.addChild(solveText)
         }
         let mixNode = SKShapeNode(circleOfRadius: 35.0)
         mixNode.fillColor = UIColor.purple
         mixNode.position = CGPoint(x: -100+buttonOffset, y: 600)
         mixNode.name = "mixer"
+        let mixText = SKLabelNode(text: "MIX")
+        mixText.fontColor = UIColor.black
+        mixText.fontSize = 24
+        mixText.name = "ignore"
+        mixText.fontName = "Helvetica"
+        mixText.position = CGPoint(x: -100+buttonOffset, y: 600-60)
         if showMixButton {
             self.addChild(mixNode)
+            self.addChild(mixText)
         }
         let patternNode = SKShapeNode(circleOfRadius: 35.0)
         patternNode.fillColor = UIColor.black
         patternNode.position = CGPoint(x: 0+buttonOffset, y: 600)
         patternNode.name = "pattern"
+        
+        let menuText = SKLabelNode(text: "MENU")
+        menuText.fontColor = UIColor.black
+        menuText.fontSize = 24
+        menuText.name = "ignore"
+        menuText.fontName = "Helvetica"
+        menuText.position = CGPoint(x: 0+buttonOffset, y: 600-60)
+
         self.addChild(patternNode)
+        self.addChild(menuText)
         for i in 1...8 {
             let purpleNode = SKShapeNode(circleOfRadius: 35.0)
             purpleNode.fillColor = UIColor.white
@@ -384,6 +417,15 @@ class CubePuzzles: SKScene {
         }
         // let centerArray: [Int] = [17,15,5,11,13,23]
         // moves 7 to 12
+        let cwText: SKLabelNode = SKLabelNode(text: "Clockwise")
+        cwText.fontSize = 36
+        cwText.fontColor = UIColor.black
+        cwText.fontName = "Helvetica"
+        cwText.name = "ignore"
+        cwText.position = CGPoint(x: -250, y: -400)
+        if showFaceMoves {
+            self.addChild(cwText)
+        }
         for i in 1...7 {
             // let greenNode2 = SKShapeNode(rectOf: CGSize(width: 60.0, height: 60.0))
             // let greenNode = SKShapeNode(circleOfRadius: 35.0)

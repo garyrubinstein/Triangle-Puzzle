@@ -26,7 +26,7 @@ class MainMenuScene: SKScene {
         }
         sceneNames.append("GameScene")
         sceneNames.append("GameScene")
-        for _ in 0...9 {
+        for _ in 0...11 {
             sceneNames.append("CubePuzzles")
         }
         
