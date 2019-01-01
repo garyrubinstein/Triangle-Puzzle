@@ -16,10 +16,24 @@ class GameScene: SKScene {
     var triside: CGFloat = 50
     var toppoint: CGFloat = 75
     var buttonsize: CGFloat = 20
+    var gamemode: Int = 0
+    var startingPattern: [Int] = []
     // let button1 = SKShapeNode(circleOfRadius: 50)
     // let triangle = SKShapeNode()
     override func didMove(to view: SKView) {
         print("hello")
+        if let mode = self.userData?.value(forKey: "mode") {
+            print("mode is \(mode)")
+            var theMode = mode as! Int
+            gamemode = theMode - 13 // to makeup for the fact that it is number 14 on the menu
+            print("trianglegame \(gamemode)")
+        }
+        if gamemode == 1 {
+            startingPattern = [1,2,1,2,2,1,1]
+        }
+        else if gamemode == 2 {
+            startingPattern = [1,2,2,1,0]
+        }
         let screenSize: CGRect = UIScreen.main.bounds
         let screenWidth = screenSize.width
         let screenHeight = screenSize.height
@@ -94,11 +108,18 @@ class GameScene: SKScene {
         button3.name = "button3"
         addChild(button3)
         let backButton = SKShapeNode(circleOfRadius: 20)
-        backButton.fillColor = UIColor.white
+        backButton.fillColor = UIColor(red: 0.8784, green: 0.7098, blue: 0.3922, alpha: 1.0)
         backButton.position = CGPoint(x: 0, y: -200)
         backButton.name="back"
         backButton.zPosition = 5
         addChild(backButton)
+        let shuffleButton = SKShapeNode(circleOfRadius: 20)
+        shuffleButton.fillColor = UIColor.red
+        shuffleButton.position = CGPoint(x: -100, y: -200)
+        shuffleButton.name="shuffle"
+        shuffleButton.zPosition = 5
+        addChild(shuffleButton)
+        genericmoves(pattern: startingPattern)
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
@@ -114,6 +135,9 @@ class GameScene: SKScene {
                 else {
                     theNodeName = "noname"
                 }
+                // print(theNodeName)
+                // print(!inaction)
+                // print(theNodeName=="shuffle")
                 // print(node.name!)
                 if !inaction && theNodeName == "button1" {
                     // move1()
@@ -133,6 +157,14 @@ class GameScene: SKScene {
                     genericmove(button: 3, top: 2, bottomleft: 4, bottomright: 5)
                     print(gamestate)
                 }
+                else if !inaction && theNodeName == "shuffle" {
+                    var thePattern: [Int] = []
+                    for i in 0...10 {
+                        thePattern.append(Int.random(in: 0...2))
+                    }
+                    inaction = true
+                    genericmoves(pattern: thePattern)
+                }
                 else if theNodeName == "back" {
                     let scene = MainMenuScene(fileNamed: "MainMenuScene")
                     scene!.scaleMode = .aspectFit
@@ -151,9 +183,20 @@ class GameScene: SKScene {
         }
     }
     
+    func moves(pattern: [Int]) {
+        print("in moves")
+        print(pattern)
+        var thePattern = Array(pattern)
+        let maps: [[Int]] = [[0,1,2],[1,3,4],[2,4,5]]
+        if pattern.count > 0 {
+            genericmove(button: pattern[0]+1, top: maps[0][0], bottomleft: maps[0][1], bottomright: maps[0][2])
+            moves(pattern: [thePattern.removeFirst()])
+        }
+    }
+    
     func genericmove(button: Int, top: Int, bottomleft: Int, bottomright: Int) {
         let buttonname = "button"+String(button)
-        print("generic move")
+        // print("generic move")
         let temp = gamestate[bottomright]
         gamestate[bottomright]=gamestate[top]
         gamestate[top]=gamestate[bottomleft]
@@ -209,5 +252,78 @@ class GameScene: SKScene {
             })
         }
 
+    }
+    
+    func genericmoves(pattern: [Int]) { //button: Int, top: Int, bottomleft: Int, bottomright: Int) {
+        if pattern.count > 0 {
+            var thePattern: [Int] = Array(pattern)
+            let maps: [[Int]] = [[0,1,2],[1,3,4],[2,4,5]]
+            let button: Int = pattern[0]+1
+            let top: Int = maps[pattern[0]][0]
+            let bottomleft: Int = maps[pattern[0]][1]
+            let bottomright: Int = maps[pattern[0]][2]
+            let buttonname = "button"+String(button)
+            print("generic move")
+            let temp = gamestate[bottomright]
+            gamestate[bottomright]=gamestate[top]
+            gamestate[top]=gamestate[bottomleft]
+            gamestate[bottomleft]=temp
+            
+            let temp1 = nodelist[bottomright]
+            nodelist[bottomright]=nodelist[top]
+            nodelist[top]=nodelist[bottomleft]
+            nodelist[bottomleft]=temp1
+            
+            let buttonx: CGFloat = (childNode(withName: buttonname)?.position.x)!
+            let buttony: CGFloat = (childNode(withName: buttonname)?.position.y)!
+            
+            nodelist[top].removeFromParent()
+            nodelist[top].position = CGPoint(x: nodelist[top].position.x-buttonx, y: nodelist[top].position.y-buttony)
+            
+            childNode(withName: buttonname)?.addChild(nodelist[top])
+            
+            nodelist[bottomleft].removeFromParent()
+            nodelist[bottomleft].position = CGPoint(x: nodelist[bottomleft].position.x-buttonx, y: nodelist[bottomleft].position.y-buttony)
+            childNode(withName: buttonname)?.addChild(nodelist[bottomleft])
+            
+            nodelist[bottomright].removeFromParent()
+            nodelist[bottomright].position = CGPoint(x: nodelist[bottomright].position.x-buttonx, y: nodelist[bottomright].position.y-buttony)
+            childNode(withName: buttonname)?.addChild(nodelist[bottomright])
+            childNode(withName: buttonname)?.zPosition = 5
+            
+            let spinaction = SKAction.rotate(byAngle: -3.14*2/3, duration: 0.5)
+            // childNode(withName: "button1")?.run(spinaction)
+            if let mybutton = childNode(withName: buttonname) as? SKShapeNode {
+                mybutton.run(spinaction, completion: {
+                    self.childNode(withName: buttonname)?.zPosition = 0
+                    self.inaction = false
+                    self.nodelist[top].removeFromParent()
+                    self.nodelist[top].position = CGPoint(x: self.nodelist[top].position.x+buttonx, y: self.nodelist[top].position.y+buttony)
+                    
+                    self.addChild(self.nodelist[top])
+                    
+                    self.nodelist[bottomleft].removeFromParent()
+                    self.nodelist[bottomleft].position = CGPoint(x: self.nodelist[bottomleft].position.x+buttonx, y: self.nodelist[bottomleft].position.y+buttony)
+                    self.addChild(self.nodelist[bottomleft])
+                    
+                    self.nodelist[bottomright].removeFromParent()
+                    self.nodelist[bottomright].position = CGPoint(x: self.nodelist[bottomright].position.x+buttonx, y: self.nodelist[bottomright].position.y+buttony)
+                    self.addChild(self.nodelist[bottomright])
+                    let temppos = self.nodelist[bottomright].position
+                    self.nodelist[bottomright].position = self.nodelist[bottomleft].position
+                    self.nodelist[bottomleft].position = self.nodelist[top].position
+                    self.nodelist[top].position = temppos
+                    
+                    // mybutton.run(SKAction.rotate(byAngle: 3.14*2/3, duration: 0))
+                    
+                    mybutton.run(SKAction.rotate(byAngle: 3.14*2/3, duration: 0) , completion: {
+                        thePattern.removeFirst()
+                        self.genericmoves(pattern: thePattern)}
+                    )
+                })
+            }
+            
+        }
+    
     }
 }
