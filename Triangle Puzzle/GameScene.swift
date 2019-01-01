@@ -21,6 +21,7 @@ class GameScene: SKScene {
     var multiplier: CGFloat = 1.0
     var clockwise: Bool = true
     var startingPattern: [Int] = []
+    var instructionsBox: SKShapeNode = SKShapeNode()
     // let button1 = SKShapeNode(circleOfRadius: 50)
     // let triangle = SKShapeNode()
     override func didMove(to view: SKView) {
@@ -47,6 +48,17 @@ class GameScene: SKScene {
             }
             // startingPattern = [1,2,2,1,0]
         }
+        let instructionText: String = "The three red buttons\nrotate the triangles.\nPress the purple\nbutton to change\nto counterclockwise."
+        
+        let instructionsNode = createMultiLineText(textToPrint: instructionText, color: UIColor.white, fontSize: 24, fontName: "Helvetica", fontPosition: CGPoint(x: 0.0, y: 200.0), fontLineSpace: 0.0)
+        let inBox: SKShapeNode = SKShapeNode(rectOf: CGSize(width: 300, height: 500))
+        inBox.fillColor = UIColor.purple
+        instructionsBox = inBox
+        instructionsBox.zPosition = 10
+        // instructionsBox.addChild(instructionsText)
+        instructionsBox.addChild(instructionsNode)
+        
+        
         let screenSize: CGRect = UIScreen.main.bounds
         let screenWidth = screenSize.width
         let screenHeight = screenSize.height
@@ -161,6 +173,19 @@ class GameScene: SKScene {
         solveText.fontName = "Helvetica"
         solveText.position = CGPoint(x: solveButton.position.x, y: solveButton.position.y-35)
         self.addChild(solveText)
+        
+        let redoButton = SKShapeNode(circleOfRadius: 20)
+        redoButton.fillColor = UIColor.orange
+        redoButton.position = CGPoint(x: 175, y: -200)
+        redoButton.name="redo"
+        redoButton.zPosition = 5
+        addChild(redoButton)
+        let redoText = SKLabelNode(text: "redo")
+        redoText.fontColor = UIColor.black
+        redoText.fontSize = 24
+        redoText.fontName = "Helvetica"
+        redoText.position = CGPoint(x: redoButton.position.x, y: redoButton.position.y-35)
+        self.addChild(redoText)
 
         
         
@@ -189,9 +214,13 @@ class GameScene: SKScene {
 
         genericmoves(pattern: startingPattern, len: 0.0)
         // genericmoves(pattern: startingPattern)
+        self.addChild(instructionsBox)
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
+            if instructionsBox.isHidden == false {
+                instructionsBox.isHidden = true
+            }
             let location = touch.location(in: self)
             print(location)
             var theNodeName: String = ""
@@ -252,19 +281,35 @@ class GameScene: SKScene {
                     // print(gamestate)
                 }
                 else if !inaction && theNodeName == "solve" {
-                    print("solving")
-                    print(gamestate)
-                    print(originalPositionList)
+                    // print("solving")
+                    // print(gamestate)
+                    // print(originalPositionList)
                     var tempnodelist: [SKShapeNode] = []
                     for i in 1...6 {
-                        print(i)
+                        // print(i)
                         nodelist[gamestate.firstIndex(of: i)!].position = originalPositionList[i-1]
                         tempnodelist.append(nodelist[gamestate.firstIndex(of: i)!])
                     }
                     nodelist=Array(tempnodelist)
                     gamestate = Array([1,2,3,4,5,6])
-                    print("now gamestate is")
-                    print(gamestate)
+                    // print("now gamestate is")
+                    // print(gamestate)
+                }
+                else if !inaction && theNodeName == "redo" {
+                    // print("solving")
+                    // print(gamestate)
+                    // print(originalPositionList)
+                    var tempnodelist: [SKShapeNode] = []
+                    for i in 1...6 {
+                        // print(i)
+                        nodelist[gamestate.firstIndex(of: i)!].position = originalPositionList[i-1]
+                        tempnodelist.append(nodelist[gamestate.firstIndex(of: i)!])
+                    }
+                    nodelist=Array(tempnodelist)
+                    gamestate = Array([1,2,3,4,5,6])
+                    // print("now gamestate is")
+                    // print(gamestate)
+                    genericmoves(pattern: startingPattern, len: 0.0)
                 }
                 else if !inaction && theNodeName == "shuffle" {
                     var thePattern: [Int] = []
@@ -450,4 +495,28 @@ class GameScene: SKScene {
         }
     
     }
+    func createMultiLineText(textToPrint:String, color:UIColor, fontSize:CGFloat, fontName:String, fontPosition:CGPoint, fontLineSpace:CGFloat)->SKNode{
+        
+        // create node to hold the text block
+        var textBlock = SKNode()
+        
+        //create array to hold each line
+        let textArr = textToPrint.components(separatedBy: "\n")
+        
+        // loop through each line and place it in an SKNode
+        var lineNode: SKLabelNode
+        for line: String in textArr {
+            lineNode = SKLabelNode(fontNamed: fontName)
+            lineNode.text = line
+            lineNode.fontSize = fontSize
+            lineNode.fontColor = color
+            lineNode.fontName = fontName
+            lineNode.position = CGPoint(x: fontPosition.x, y: fontPosition.y - CGFloat(textBlock.children.count ) * fontSize + fontLineSpace)
+            textBlock.addChild(lineNode)
+        }
+        
+        // return the sknode with all of the text in it
+        return textBlock
+    }
+    
 }

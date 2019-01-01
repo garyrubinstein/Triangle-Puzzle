@@ -288,7 +288,7 @@ class CubePuzzles: SKScene {
         solveNode.fillColor = UIColor.blue
         solveNode.position = CGPoint(x: -200+buttonOffset, y: 600)
         solveNode.name = "solver"
-        let solveText = SKLabelNode(text: "SOLVE")
+        let solveText = SKLabelNode(text: "REDO")
         solveText.fontColor = UIColor.black
         solveText.fontSize = 24
         solveText.fontName = "Helvetica"
@@ -488,7 +488,7 @@ class CubePuzzles: SKScene {
                         var materialArray: [SCNMaterial] = []
                         for i in 0...5 {
                             if stickersArray[k-1].contains(i) {
-                                if !moveOneEdge && !moveOneCorner {
+                                if (!moveOneEdge && !moveOneCorner) || k==5 {
                                     materialArray.append(makeColorArray()[i])
 
                                 }
@@ -511,7 +511,7 @@ class CubePuzzles: SKScene {
                         var materialArray: [SCNMaterial] = []
                         for i in 0...5 {
                             if stickersArray[k-1].contains(i)  {
-                                if !moveOneEdge && !moveOneCorner {
+                                if (!moveOneEdge && !moveOneCorner) || k==5 {
                                     materialArray.append(imageMaterial)
                                     
                                 }
