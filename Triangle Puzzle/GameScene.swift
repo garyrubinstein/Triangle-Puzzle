@@ -17,6 +17,8 @@ class GameScene: SKScene {
     var toppoint: CGFloat = 75
     var buttonsize: CGFloat = 20
     var gamemode: Int = 0
+    var multiplier: CGFloat = 1.0
+    var clockwise: Bool = true
     var startingPattern: [Int] = []
     // let button1 = SKShapeNode(circleOfRadius: 50)
     // let triangle = SKShapeNode()
@@ -32,7 +34,17 @@ class GameScene: SKScene {
             startingPattern = [1,2,1,2,2,1,1]
         }
         else if gamemode == 2 {
-            startingPattern = [1,2,2,1,0]
+            for i in 1...12 {
+                var randnum = Int.random(in: 0...5)
+                if randnum < 3 {
+                    startingPattern.append(randnum)
+                }
+                else {
+                    startingPattern.append(randnum-3)
+                    startingPattern.append(randnum-3)
+                }
+            }
+            // startingPattern = [1,2,2,1,0]
         }
         let screenSize: CGRect = UIScreen.main.bounds
         let screenWidth = screenSize.width
@@ -55,7 +67,7 @@ class GameScene: SKScene {
             triangle.path = path.cgPath
             triangle.lineWidth = 10.0
             // triangle.alpha = 0.3
-            triangle.strokeColor = UIColor.green
+            triangle.strokeColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
             triangle.fillColor = UIColor.yellow
             // triangle.position = CGPoint(x: 0, y: -150.0-50*Double(i))
             // triangle.name = "triangle"
@@ -80,7 +92,7 @@ class GameScene: SKScene {
             }
             if tri.name == "triangle4" {
                 tri.position = CGPoint(x: 0-sidelen/2, y: toppoint-sidelen/2*1.73)
-                tri.fillColor = UIColor.green
+                tri.fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
             }
             if tri.name == "triangle5" {
                 tri.position = CGPoint(x: 0, y: toppoint-sidelen/2*1.73)
@@ -108,18 +120,56 @@ class GameScene: SKScene {
         button3.name = "button3"
         addChild(button3)
         let backButton = SKShapeNode(circleOfRadius: 20)
-        backButton.fillColor = UIColor(red: 0.8784, green: 0.7098, blue: 0.3922, alpha: 1.0)
+        backButton.fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
         backButton.position = CGPoint(x: 0, y: -200)
         backButton.name="back"
         backButton.zPosition = 5
         addChild(backButton)
+        let menuText = SKLabelNode(text: "menu")
+        menuText.fontColor = UIColor.black
+        menuText.fontSize = 24
+        menuText.fontName = "Helvetica"
+        menuText.position = CGPoint(x: backButton.position.x, y: backButton.position.y-35)
+        self.addChild(menuText)
+        
+        
         let shuffleButton = SKShapeNode(circleOfRadius: 20)
-        shuffleButton.fillColor = UIColor.red
+        shuffleButton.fillColor = UIColor.blue
         shuffleButton.position = CGPoint(x: -100, y: -200)
         shuffleButton.name="shuffle"
         shuffleButton.zPosition = 5
         addChild(shuffleButton)
-        genericmoves(pattern: startingPattern)
+        let mixText = SKLabelNode(text: "mix")
+        mixText.fontColor = UIColor.black
+        mixText.fontSize = 24
+        mixText.fontName = "Helvetica"
+        mixText.position = CGPoint(x: shuffleButton.position.x, y: shuffleButton.position.y-35)
+        self.addChild(mixText)
+        
+        let clockwiseButton = SKShapeNode(circleOfRadius: 20)
+        clockwiseButton.fillColor = UIColor.purple
+        clockwiseButton.position = CGPoint(x: -125, y: 125)
+        clockwiseButton.name="clockwise"
+        clockwiseButton.zPosition = 5
+        addChild(clockwiseButton)
+        let counterText = SKLabelNode(text: "counter")
+        counterText.fontColor = UIColor.black
+        counterText.name = "countertext"
+        counterText.fontSize = 24
+        counterText.fontName = "Helvetica"
+        counterText.position = CGPoint(x: clockwiseButton.position.x, y: clockwiseButton.position.y-35)
+        counterText.isHidden = true
+        let clockwiseText = SKLabelNode(text: "clockwise")
+        clockwiseText.fontColor = UIColor.black
+        clockwiseText.fontSize = 24
+        clockwiseText.fontName = "Helvetica"
+        clockwiseText.position = CGPoint(x: clockwiseButton.position.x, y: clockwiseButton.position.y-65)
+        
+        addChild(clockwiseText)
+        addChild(counterText)
+
+        genericmoves(pattern: startingPattern, len: 0.0)
+        // genericmoves(pattern: startingPattern)
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
@@ -142,28 +192,61 @@ class GameScene: SKScene {
                 if !inaction && theNodeName == "button1" {
                     // move1()
                     inaction = true
-                    genericmove(button: 1, top: 0, bottomleft: 1, bottomright: 2)
+                    // genericmove(button: 1, top: 0, bottomleft: 1, bottomright: 2)
+                    genericmoves(pattern: [0])
                     print(gamestate)
                 }
                 else if !inaction && theNodeName == "button2" {
                     // move2()
                     inaction = true
-                    genericmove(button:2, top: 1, bottomleft: 3, bottomright: 4)
+                    // genericmove(button:2, top: 1, bottomleft: 3, bottomright: 4)
+                    genericmoves(pattern: [1])
                     print(gamestate)
                 }
                 else if !inaction && theNodeName == "button3" {
                     // move3()
                     inaction = true
-                    genericmove(button: 3, top: 2, bottomleft: 4, bottomright: 5)
+                    genericmoves(pattern: [2])
+                    // genericmove(button: 3, top: 2, bottomleft: 4, bottomright: 5)
                     print(gamestate)
+                }
+                else if !inaction && theNodeName == "clockwise" {
+                    let counterText = self.childNode(withName: "countertext") as! SKLabelNode
+                    if clockwise {
+                        clockwise = false
+                        counterText.isHidden = false
+                        let cwButton: SKShapeNode = node as! SKShapeNode
+                        cwButton.fillColor = UIColor.blue
+                        multiplier = -1.0
+                    }
+                    else {
+                        clockwise = true
+                        counterText.isHidden = true
+                        let cwButton: SKShapeNode = node as! SKShapeNode
+                        cwButton.fillColor = UIColor.purple
+                        multiplier = 1.0
+
+                    }
+                    // move3()
+                    // inaction = true
+                    // genericmove(button: 3, top: 2, bottomleft: 4, bottomright: 5)
+                    // print(gamestate)
                 }
                 else if !inaction && theNodeName == "shuffle" {
                     var thePattern: [Int] = []
-                    for i in 0...10 {
-                        thePattern.append(Int.random(in: 0...2))
+
+                    for i in 1...12 {
+                        var randnum = Int.random(in: 0...5)
+                        if randnum < 3 {
+                            thePattern.append(randnum)
+                        }
+                        else {
+                            thePattern.append(randnum-3)
+                            thePattern.append(randnum-3)
+                        }
                     }
                     inaction = true
-                    genericmoves(pattern: thePattern)
+                    genericmoves(pattern: thePattern, len: 0.0)
                 }
                 else if theNodeName == "back" {
                     let scene = MainMenuScene(fileNamed: "MainMenuScene")
@@ -254,14 +337,22 @@ class GameScene: SKScene {
 
     }
     
-    func genericmoves(pattern: [Int]) { //button: Int, top: Int, bottomleft: Int, bottomright: Int) {
+    func genericmoves(pattern: [Int], len: TimeInterval = 0.5) { //button: Int, top: Int, bottomleft: Int, bottomright: Int) {
         if pattern.count > 0 {
             var thePattern: [Int] = Array(pattern)
             let maps: [[Int]] = [[0,1,2],[1,3,4],[2,4,5]]
+            var ccw: Int = 0
+            if !clockwise {
+                ccw = 3
+            }
             let button: Int = pattern[0]+1
             let top: Int = maps[pattern[0]][0]
-            let bottomleft: Int = maps[pattern[0]][1]
-            let bottomright: Int = maps[pattern[0]][2]
+            var bottomleft: Int = maps[pattern[0]][1]
+            var bottomright: Int = maps[pattern[0]][2]
+            if !clockwise {
+                bottomleft = maps[pattern[0]][2]
+                bottomright = maps[pattern[0]][1]
+            }
             let buttonname = "button"+String(button)
             print("generic move")
             let temp = gamestate[bottomright]
@@ -290,8 +381,7 @@ class GameScene: SKScene {
             nodelist[bottomright].position = CGPoint(x: nodelist[bottomright].position.x-buttonx, y: nodelist[bottomright].position.y-buttony)
             childNode(withName: buttonname)?.addChild(nodelist[bottomright])
             childNode(withName: buttonname)?.zPosition = 5
-            
-            let spinaction = SKAction.rotate(byAngle: -3.14*2/3, duration: 0.5)
+            let spinaction = SKAction.rotate(byAngle: -3.14*2/3*multiplier, duration: len)
             // childNode(withName: "button1")?.run(spinaction)
             if let mybutton = childNode(withName: buttonname) as? SKShapeNode {
                 mybutton.run(spinaction, completion: {
@@ -316,9 +406,9 @@ class GameScene: SKScene {
                     
                     // mybutton.run(SKAction.rotate(byAngle: 3.14*2/3, duration: 0))
                     
-                    mybutton.run(SKAction.rotate(byAngle: 3.14*2/3, duration: 0) , completion: {
+                    mybutton.run(SKAction.rotate(byAngle: 3.14*2/3*self.multiplier, duration: 0) , completion: {
                         thePattern.removeFirst()
-                        self.genericmoves(pattern: thePattern)}
+                        self.genericmoves(pattern: thePattern, len: len)}
                     )
                 })
             }
