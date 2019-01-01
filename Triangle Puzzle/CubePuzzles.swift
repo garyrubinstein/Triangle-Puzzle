@@ -1019,7 +1019,7 @@ class CubePuzzles: SKScene {
                     if let view = self.view as! SKView? {
                         if let scene = MainMenuScene(fileNamed: "MainMenuScene") {
                             // Set the scale mode to scale to fit the window
-                            scene.scaleMode = .aspectFit
+                            scene.scaleMode = .aspectFit 
                             // scene.scaleMode = .aspectFit
                             // Present the scene
                             view.presentScene(scene)

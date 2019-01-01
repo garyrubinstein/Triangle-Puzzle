@@ -12,6 +12,7 @@ class GameScene: SKScene {
     var gamestate = [1, 2, 3, 4, 5, 6]
     var inaction: Bool = false
     var nodelist: [SKShapeNode] = []
+    var originalPositionList: [CGPoint] = []
     var sidelen: CGFloat = 200
     var triside: CGFloat = 50
     var toppoint: CGFloat = 75
@@ -102,8 +103,10 @@ class GameScene: SKScene {
                 tri.position = CGPoint(x: 0+sidelen/2, y: toppoint-sidelen/2*1.73)
                 tri.fillColor = UIColor.purple
             }
+            originalPositionList.append(tri.position)
             
         }
+        print(originalPositionList)
         let button1 = SKShapeNode(circleOfRadius: buttonsize)
         button1.fillColor = UIColor.red
         button1.position = CGPoint(x: 0, y: toppoint-sidelen*0.33)
@@ -145,6 +148,22 @@ class GameScene: SKScene {
         mixText.fontName = "Helvetica"
         mixText.position = CGPoint(x: shuffleButton.position.x, y: shuffleButton.position.y-35)
         self.addChild(mixText)
+        
+        let solveButton = SKShapeNode(circleOfRadius: 20)
+        solveButton.fillColor = UIColor.black
+        solveButton.position = CGPoint(x: 100, y: -200)
+        solveButton.name="solve"
+        solveButton.zPosition = 5
+        addChild(solveButton)
+        let solveText = SKLabelNode(text: "solve")
+        solveText.fontColor = UIColor.black
+        solveText.fontSize = 24
+        solveText.fontName = "Helvetica"
+        solveText.position = CGPoint(x: solveButton.position.x, y: solveButton.position.y-35)
+        self.addChild(solveText)
+
+        
+        
         
         let clockwiseButton = SKShapeNode(circleOfRadius: 20)
         clockwiseButton.fillColor = UIColor.purple
@@ -231,6 +250,21 @@ class GameScene: SKScene {
                     // inaction = true
                     // genericmove(button: 3, top: 2, bottomleft: 4, bottomright: 5)
                     // print(gamestate)
+                }
+                else if !inaction && theNodeName == "solve" {
+                    print("solving")
+                    print(gamestate)
+                    print(originalPositionList)
+                    var tempnodelist: [SKShapeNode] = []
+                    for i in 1...6 {
+                        print(i)
+                        nodelist[gamestate.firstIndex(of: i)!].position = originalPositionList[i-1]
+                        tempnodelist.append(nodelist[gamestate.firstIndex(of: i)!])
+                    }
+                    nodelist=Array(tempnodelist)
+                    gamestate = Array([1,2,3,4,5,6])
+                    print("now gamestate is")
+                    print(gamestate)
                 }
                 else if !inaction && theNodeName == "shuffle" {
                     var thePattern: [Int] = []
@@ -354,7 +388,7 @@ class GameScene: SKScene {
                 bottomright = maps[pattern[0]][1]
             }
             let buttonname = "button"+String(button)
-            print("generic move")
+            // print("generic move")
             let temp = gamestate[bottomright]
             gamestate[bottomright]=gamestate[top]
             gamestate[top]=gamestate[bottomleft]
