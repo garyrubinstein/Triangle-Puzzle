@@ -45,6 +45,7 @@ class SwapNumbersScene: SKScene {
     var edgeSquares: [Int] = []
     var rotateCorners: Bool = false
     var moveArrayStrings: [String] = []
+    var makingMove: Bool = false
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -501,6 +502,7 @@ class SwapNumbersScene: SKScene {
         if instructionsBox.isHidden == false {
             instructionsBox.isHidden = true
         }
+        if !makingMove {
         if let touch = touches.first {
             let location = touch.location(in: self)
             // print(location)
@@ -767,6 +769,7 @@ class SwapNumbersScene: SKScene {
 
             }
         }
+        } // if !makingMove
 
     }
     
@@ -825,6 +828,7 @@ class SwapNumbersScene: SKScene {
     }
     
     func makemove(myarray: [Int], howLong: TimeInterval) {
+        makingMove = true
         // print("makemove \(myarray)")
     //func makemove(firstnum: Int, secondnum: Int, howLong: TimeInterval) {
         // print("makemove \(firstnum) \(secondnum) ")
@@ -835,6 +839,7 @@ class SwapNumbersScene: SKScene {
             customHowLong = 0.05
         }
         nodelist[0].run(SKAction.fadeAlpha(to: 1, duration: customHowLong), completion: {
+            self.makingMove = false
             let temppos = self.nodelist[myarray[0]].position
             if !self.fifteen {
                 self.nodelist[myarray[0]].fillColor = self.squareColor
