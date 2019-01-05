@@ -15,19 +15,31 @@ class MainMenuScene: SKScene {
     var theSize: CGFloat = 0
     var frameOffset: Int = 100
     var buttonOffset: Int = 200
+    var totalButtons: Int = 35
+    var buttonsOnSceen: Int = 26
     var sceneNames: [String] = []
+    var numberPuzzles: Int = 12
+    var trianglePuzzles: Int = 2
+    var cubePuzzles: Int = 12
+    var buttonArray: [SKShapeNode] = []
+    var buttonStringArray: [SKLabelNode] = []
+    var pageNum: Int = 1
     
     override func didMove(to view: SKView) {
         initialize()
     }
     func initialize() {
-        for _ in 0...11 {
+        for _ in 0...numberPuzzles-1 {
             sceneNames.append("SwapNumbersScene")
         }
-        sceneNames.append("GameScene")
-        sceneNames.append("GameScene")
-        for _ in 0...11 {
+        for _ in 0...trianglePuzzles-1 {
+            sceneNames.append("GameScene")
+        }
+        for _ in 0...cubePuzzles-1 {
             sceneNames.append("CubePuzzles")
+        }
+        for _ in 0...30 {
+            sceneNames.append("")
         }
         
         let button1 = SKShapeNode(rectOf: CGSize(width: 200.0, height: 100.0))
@@ -79,21 +91,26 @@ class MainMenuScene: SKScene {
         // add buttons to movebox
         let buttonWidth: CGFloat = 0.3*boxWidth
         let buttonHeight: CGFloat = 0.15*boxHeight
-        for i in 0..<26 {
+        for i in 0...buttonsOnSceen {
             let moveButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight))
             // let moveButton = SKShapeNode(rect: CGRect(x: CGFloat(i*20)+buttonWidth/2, y: CGFloat(i*20)-buttonHeight/2, width: buttonWidth, height: buttonHeight))
             moveButton.fillColor = UIColor.orange
             moveButton.name = "movebutton,"+String(i+1)
             moveButton.zPosition = 5
             // moveButton.position = convert(moveButton.position, from: moveBox)
+            buttonArray.append(moveButton)
             moveBox.addChild(moveButton)
             moveButton.position = CGPoint(x: -CGFloat(boxWidth)/3+CGFloat(boxWidth/3)*CGFloat(i%3), y: CGFloat(boxHeight)/3-boxHeight/4*CGFloat(Int(i/3))+boxHeight/16)
-            let buttonText = SKLabelNode(text: String(i+1))
+            var buttonText = SKLabelNode(text: String(i+1))
+            if i==buttonsOnSceen {
+                buttonText.text = "MORE"
+            }
             buttonText.fontName = "AvenirNext-Bold"
             buttonText.fontColor=UIColor.white
             buttonText.fontSize=48
             buttonText.position = CGPoint(x: -CGFloat(boxWidth)/3+CGFloat(boxWidth/3)*CGFloat(i%3)+boxCenter.x, y: CGFloat(boxHeight)/3-boxHeight/4*CGFloat(Int(i/3))+boxCenter.y)
             buttonText.zPosition = 10
+            buttonStringArray.append(buttonText)
             self.addChild(buttonText)
             // moveButton.position.x = 100
             // moveButton.position.y = 100
@@ -116,11 +133,27 @@ class MainMenuScene: SKScene {
                     print("The node name is \(nodeName)")
                     if nodeName.hasPrefix("movebutton") {
                         print("found a movebutton!")
+                        var offset: Int = 0
+                        if pageNum == 2 {
+                            offset = buttonsOnSceen
+                        }
                         let thenumberstring = Int(nodeName.components(separatedBy: ",")[1])
-                        let thenumber = Int(thenumberstring!)
+                        var thenumber = Int(thenumberstring!)
+                        if thenumber != 27 {
+                            thenumber=thenumber+offset
+                        }
+                        
+                        
+                        
                         print("move number \(thenumber)")
-                        scenename = sceneNames[thenumber-1]
-                        self.userData?.setValue(thenumber+1, forKey: "mode")
+                        if thenumber != 27 {
+                            scenename = sceneNames[thenumber-1]
+                            self.userData?.setValue(thenumber+1, forKey: "mode")
+                        }
+                        else {
+                            scenename = ""
+                            changePage()
+                        }
                     }
                 }
                 /* if Array(node.name!)[0] == "b" {
@@ -158,6 +191,33 @@ class MainMenuScene: SKScene {
         scene?.userData?.setValue(self.userData?.value(forKey: "mode"), forKey: "mode")
         
         self.view?.presentScene(scene)
+        }
+    }
+    func changePage() {
+        if pageNum==1 {
+            pageNum = 2
+        }
+        else if pageNum == 2 {
+            pageNum = 1
+        }
+        
+        if pageNum == 2 {
+            var numToShow: Int = totalButtons - buttonsOnSceen
+            for i in 0...numToShow-1 {
+                buttonStringArray[i].text = String(i+buttonsOnSceen+1)
+            }
+            for i in numToShow...buttonArray.count-2 {
+                // buttonStringArray[i].text = String("new")
+                buttonStringArray[i].isHidden = true
+                buttonArray[i].isHidden = true
+            }
+        }
+        else if pageNum == 1 {
+            for i in 0...buttonArray.count-2 {
+                buttonStringArray[i].text = String(i+1)
+                buttonStringArray[i].isHidden = false
+                buttonArray[i].isHidden = false
+            }
         }
     }
 }
