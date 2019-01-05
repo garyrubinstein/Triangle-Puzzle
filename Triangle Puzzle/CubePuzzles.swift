@@ -96,7 +96,7 @@ class CubePuzzles: SKScene {
         if let mode = self.userData?.value(forKey: "mode") {
             print("mode is \(mode)")
             var theMode = mode as! Int
-            theMode = theMode - 15 // to makeup for the fact that it is number 14 on the menu
+            // theMode = theMode // to makeup for the fact that it is number 14 on the menu
             print("cubemode \(theMode)")
             
             instructionsText.text = makeInstructions()[theMode-1]

@@ -24,11 +24,16 @@ class MainMenuScene: SKScene {
     var buttonArray: [SKShapeNode] = []
     var buttonStringArray: [SKLabelNode] = []
     var pageNum: Int = 1
+    var firstNumNumber: Int = 0
+    var firstTriNumber: Int = 0
+    var firstCubeNumber: Int = 0
     
     override func didMove(to view: SKView) {
         initialize()
     }
     func initialize() {
+        firstTriNumber = numberPuzzles+1
+        firstCubeNumber = numberPuzzles + trianglePuzzles + 1
         for _ in 0...numberPuzzles-1 {
             sceneNames.append("SwapNumbersScene")
         }
@@ -153,6 +158,12 @@ class MainMenuScene: SKScene {
                             scenename = sceneNames[adjustedMode-1]
                             // scenename = ""
                             // print(scenename)
+                            if scenename == "GameScene" {
+                                adjustedMode = adjustedMode - firstTriNumber
+                            }
+                            else if scenename == "CubePuzzles" {
+                                adjustedMode = adjustedMode - firstCubeNumber
+                            }
                             self.userData?.setValue(adjustedMode+1, forKey: "mode")
                         }
                         // var offset: Int = 0

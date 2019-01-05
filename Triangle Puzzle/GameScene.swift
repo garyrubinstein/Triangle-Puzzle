@@ -25,11 +25,11 @@ class GameScene: SKScene {
     // let button1 = SKShapeNode(circleOfRadius: 50)
     // let triangle = SKShapeNode()
     override func didMove(to view: SKView) {
-        print("hello")
+        // print("hello")
         if let mode = self.userData?.value(forKey: "mode") {
             print("mode is \(mode)")
             var theMode = mode as! Int
-            gamemode = theMode - 13 // to makeup for the fact that it is number 14 on the menu
+            gamemode = theMode // - 13 // to makeup for the fact that it is number 14 on the menu
             print("trianglegame \(gamemode)")
         }
         if gamemode == 1 {
@@ -62,8 +62,8 @@ class GameScene: SKScene {
         let screenSize: CGRect = UIScreen.main.bounds
         let screenWidth = screenSize.width
         let screenHeight = screenSize.height
-        print(screenWidth)
-        print(screenHeight)
+        // print(screenWidth)
+        // print(screenHeight)
         
         let path = UIBezierPath()
         path.move(to: CGPoint(x: 0.0, y: triside))
@@ -118,7 +118,7 @@ class GameScene: SKScene {
             originalPositionList.append(tri.position)
             
         }
-        print(originalPositionList)
+        // print(originalPositionList)
         let button1 = SKShapeNode(circleOfRadius: buttonsize)
         button1.fillColor = UIColor.red
         button1.position = CGPoint(x: 0, y: toppoint-sidelen*0.33)
@@ -222,12 +222,12 @@ class GameScene: SKScene {
                 instructionsBox.isHidden = true
             }
             let location = touch.location(in: self)
-            print(location)
+            // print(location)
             var theNodeName: String = ""
             let nodes = self.nodes(at: location)
             for node in nodes {
                 if let nodeName = node.name {
-                    print(nodeName)
+                    // print(nodeName)
                     theNodeName = nodeName
                 }
                 else {
@@ -346,8 +346,8 @@ class GameScene: SKScene {
     }
     
     func moves(pattern: [Int]) {
-        print("in moves")
-        print(pattern)
+        // print("in moves")
+        // print(pattern)
         var thePattern = Array(pattern)
         let maps: [[Int]] = [[0,1,2],[1,3,4],[2,4,5]]
         if pattern.count > 0 {
