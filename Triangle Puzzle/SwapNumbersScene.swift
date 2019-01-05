@@ -897,11 +897,11 @@ class SwapNumbersScene: SKScene {
     
     func makeInstructions()->[String] {
         var instructions: [String] = []
-        instructions.append("Select any two numbers\nto swap them")
+        instructions.append("Select any two numbers\nto swap them.\nThe goal is to get\nthe numbers in order\nfrom 1 to 16.")
         instructions.append("Select any three numbers\nto cycle them")
         instructions.append("Use swaps to solve\na 3-cycle")
         instructions.append("Use 3-cycles to solve\ntwo swaps")
-        instructions.append("Select two numbers to\nswap.  One must\nbe a 1")
+        instructions.append("Select two numbers to\nswap.  One must\nbe in position 1")
         instructions.append("Select position 16\nand it will cycle\npositions 11, 12, 15.\nSelect the number in\nposition 11, 12, or\n15 and then any\nother position besides\n11, 12, or 15\nand it will swap them.")
         instructions.append("Select a position\nthat is not on the\nright edge or\nthe bottom edge\nand it will 3-cycle with\nthe position to the\nright and the\nposition below.")
         instructions.append("Select a sqare that is\neither above, below,\nleft, or right of\nthe black space and\nit will move to\nthe black space")
