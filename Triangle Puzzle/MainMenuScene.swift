@@ -132,28 +132,59 @@ class MainMenuScene: SKScene {
                 if let nodeName = node.name {
                     print("The node name is \(nodeName)")
                     if nodeName.hasPrefix("movebutton") {
-                        print("found a movebutton!")
-                        var offset: Int = 0
-                        if pageNum == 2 {
-                            offset = buttonsOnSceen
-                        }
+                        // print("found a movebutton!")
                         let thenumberstring = Int(nodeName.components(separatedBy: ",")[1])
                         var thenumber = Int(thenumberstring!)
-                        if thenumber != 27 {
-                            thenumber=thenumber+offset
+                        print("thenumber is \(thenumber)")
+                        
+                        var adjustedMode: Int = 0
+                        if pageNum == 1 && thenumber < 27 {
+                            adjustedMode = thenumber
                         }
-                        
-                        
-                        
-                        print("move number \(thenumber)")
-                        if thenumber != 27 {
-                            scenename = sceneNames[thenumber-1]
-                            self.userData?.setValue(thenumber+1, forKey: "mode")
+                        else if pageNum == 2 && thenumber < 27 {
+                            adjustedMode = thenumber + 26
                         }
-                        else {
-                            scenename = ""
+                        // else adjusteMode stays at 0
+                        print("adjusted mode is now \(adjustedMode)")
+                        if adjustedMode == 0 {
                             changePage()
                         }
+                        else {
+                            scenename = sceneNames[adjustedMode-1]
+                            // scenename = ""
+                            // print(scenename)
+                            self.userData?.setValue(adjustedMode+1, forKey: "mode")
+                        }
+                        // var offset: Int = 0
+                        // if pageNum == 2 {
+                        // offset = buttonsOnSceen
+                        // }
+
+                        // if thenumber != 27 {
+                        //     thenumber=thenumber+offset+1
+                        // }
+                        
+                        
+                        
+                        // print("move number \(thenumber)")
+                        // if thenumber == 27 {
+                        //     scenename = ""
+                        //    changePage()
+                        // }
+/*                        else if thenumber < 27 {
+                            scenename = sceneNames[thenumber-1]
+                            scenename = ""
+                            print(scenename)
+                            self.userData?.setValue(thenumber, forKey: "mode")
+                            print("making mode \(thenumber-1)")
+                        } */
+/*                        else if thenumber > 27 {
+                            scenename = sceneNames[thenumber] // to make up for the fact that button 27 is the back button.
+                            scenename = ""
+                            self.userData?.setValue(thenumber, forKey: "mode")
+                            print("making mode \(thenumber)")
+                        }
+ */
                     }
                 }
                 /* if Array(node.name!)[0] == "b" {
