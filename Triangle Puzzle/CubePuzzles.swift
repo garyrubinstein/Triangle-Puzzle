@@ -941,7 +941,9 @@ class CubePuzzles: SKScene {
                     print(buttonNumber)
                     faceToRotate = Int(buttonNumber) ?? 0
                     // bugfix
-                    faceToRotate = centerState[faceToRotate]
+                    if faceToRotate != 7 {
+                        faceToRotate = centerState[faceToRotate]
+                    }
                     clockwise = false
                     
                 }
