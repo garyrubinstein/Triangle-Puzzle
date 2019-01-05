@@ -591,9 +591,9 @@ class SwapNumbersScene: SKScene {
                     if LShape {
                         if let pos = board.firstIndex(of: n+1) {
                             if pos/4 < 3 && pos%4 != 3 {
-                                nodelist[n].fillColor = UIColor.green
-                                nodelist[board[pos+1]-1].fillColor = UIColor.green
-                                nodelist[board[pos+4]-1].fillColor = UIColor.green
+                                nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) // UIColor.green
+                                nodelist[board[pos+1]-1].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) //UIColor.green
+                                nodelist[board[pos+4]-1].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) //UIColor.green
                                 makemove(myarray: [board[pos]-1,board[pos+1]-1,board[pos+4]-1], howLong: 0.5)
 
                             }
@@ -613,25 +613,25 @@ class SwapNumbersScene: SKScene {
                             // chosennumbers.append(n)
                             // nodelist[n].fillColor = UIColor.green
                             if board.firstIndex(of: n+1)==15 {
-                                nodelist[board[10]-1].fillColor = UIColor.green
-                                nodelist[board[11]-1].fillColor = UIColor.green
-                                nodelist[board[14]-1].fillColor = UIColor.green
+                                nodelist[board[10]-1].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) //UIColor.green
+                                nodelist[board[11]-1].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) //UIColor.green
+                                nodelist[board[14]-1].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) //UIColor.green
                                 makemoves(myarray: [[board[10]-1,board[11]-1,board[14]-1]])
                             }
                             else {
                                 chosennumbers.append(n)
-                                nodelist[n].fillColor = UIColor.green
+                                nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) // UIColor.green
                             }
                         }
                         else if chosennumbers.count == 1 {
                             if !([10,11,14].contains(board.firstIndex(of: chosennumbers[0]+1)))  && [10,11,14].contains(board.firstIndex(of: n+1)) {
                                 chosennumbers.append(n)
-                                nodelist[n].fillColor = UIColor.green
+                                nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) // UIColor.green
                                 makemove(myarray: chosennumbers, howLong: 0.5)
                             }
                             else if [10,11,14].contains(board.firstIndex(of: chosennumbers[0]+1))  && !([10,11,14].contains(board.firstIndex(of: n+1)))  {
                                 chosennumbers.append(n)
-                                nodelist[n].fillColor = UIColor.green
+                                nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) // UIColor.green
                                 makemove(myarray: chosennumbers, howLong: 0.5)
                             }
                         }
@@ -639,7 +639,7 @@ class SwapNumbersScene: SKScene {
                     else if swapWithOne {
                         if chosennumbers.count == 0 {
                             chosennumbers.append(n)
-                            nodelist[n].fillColor = UIColor.green
+                            nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
                         }
                         else if chosennumbers.count == 1 {
                             // print("chosen[0] firstindex chosen[0] firstindex(n)")
@@ -648,12 +648,12 @@ class SwapNumbersScene: SKScene {
                             // print(board.firstIndex(of: n+1))
                             if board.firstIndex(of: chosennumbers[0]+1) != 0 && board.firstIndex(of: n+1) == 0 {
                                 chosennumbers.append(n)
-                                nodelist[n].fillColor = UIColor.green
+                                nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
                                 makemove(myarray: chosennumbers, howLong: 0.5)
                             }
                             else if board.firstIndex(of: chosennumbers[0]+1) == 0 && board.firstIndex(of: n+1) != 0 {
                                 chosennumbers.append(n)
-                                nodelist[n].fillColor = UIColor.green
+                                nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
                                 makemove(myarray: chosennumbers, howLong: 0.5)
                             }
                         }
@@ -704,7 +704,7 @@ class SwapNumbersScene: SKScene {
                     else if !numcube && chosennumbers.count < moveSize {
                         if !chosennumbers.contains(n) {
                             chosennumbers.append(n)
-                            nodelist[n].fillColor = UIColor.green
+                            nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
                         }
                         if chosennumbers.count == moveSize {
                             // takesarray(myarray: chosennumbers)
@@ -720,7 +720,7 @@ class SwapNumbersScene: SKScene {
                     else if numcube && chosennumbers.count < moveSize {
                         if chosennumbers.count==0 && !chosennumbers.contains(n) && (cornerSquares.contains(n+1) || edgeSquares.contains(n+1)) {
                             chosennumbers.append(n)
-                            nodelist[n].fillColor = UIColor.green
+                            nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
                             if cornerSquares.contains(n+1) {
                                 rotateCorners = true
                             }
@@ -731,7 +731,7 @@ class SwapNumbersScene: SKScene {
                         else if chosennumbers.count<moveSize && !chosennumbers.contains(n) {
                             if (rotateCorners && cornerSquares.contains(n+1)) || (!rotateCorners && edgeSquares.contains(n+1)) {
                                 chosennumbers.append(n)
-                                nodelist[n].fillColor = UIColor.green
+                                nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
                             }
                         }
                         if chosennumbers.count == moveSize {
@@ -822,9 +822,18 @@ class SwapNumbersScene: SKScene {
     }
     
     func makemoves(myarray: [[Int]]) {
+        for i in 0...myarray.count-1 {
+            // var theColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
+            let colorArray: [UIColor] = [UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0), UIColor.red, UIColor.blue, UIColor.orange]
+            // make each cycle a differnt color
+            for j in myarray[i] {
+                self.nodelist[j].fillColor = colorArray[i]
+            }
+        }
         for i in myarray {
                 makemove(myarray: i, howLong: 0.5)
             }
+
     }
     
     func makemove(myarray: [Int], howLong: TimeInterval) {
