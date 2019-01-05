@@ -15,6 +15,7 @@ class SwapNumbersScene: SKScene {
     var puzzleWidth = 4
     var puzzleHeight = 4
     var moveSize = 0
+    var showMixButton: Bool = true
     var board: [Int] = []
     var restartboard: [Int] = []
     var moveArray: [[[Int]]] = []
@@ -122,7 +123,9 @@ class SwapNumbersScene: SKScene {
         // startOverText.color = UIColor.black
         shuffleText.zPosition = 6
         shuffleButton.addChild(shuffleText)
-        self.addChild(shuffleButton)
+        if showMixButton {
+            self.addChild(shuffleButton)
+        }
         
         let startOverButton = SKShapeNode(circleOfRadius: menuButtonSize)
         startOverButton.fillColor = UIColor.purple
@@ -148,7 +151,7 @@ class SwapNumbersScene: SKScene {
         myframe.zPosition = 3
         myframe.name = "frame"
         self.addChild(myframe)
-        print("framesize \(framesize)")
+        // print("framesize \(framesize)")
         for i in 0...(puzzleWidth*puzzleHeight-1) {
             // print(i)
             board.append(Int(i+1))
@@ -243,6 +246,7 @@ class SwapNumbersScene: SKScene {
             menuMoves = false
             var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13,15].shuffled()
             startPosition = [[shuffled[0],shuffled[1],shuffled[2]]]
+            showMixButton = false
         }
         if theMode == 3 {
             self.shuffleStart = false
@@ -250,6 +254,7 @@ class SwapNumbersScene: SKScene {
             moveSize = 3
             var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13,15].shuffled()
             startPosition = [[shuffled[0],shuffled[1]],[shuffled[2],shuffled[3]]]
+            showMixButton = false
         }
         if theMode == 4 {
             moveSize = 2
@@ -262,6 +267,7 @@ class SwapNumbersScene: SKScene {
             self.shuffleStart = false
             menuMoves = false
             swap111215 = true
+            showMixButton = false
             var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13,15].shuffled()
             startPosition = [[shuffled[0],shuffled[1],shuffled[2]]]
         }
@@ -289,6 +295,7 @@ class SwapNumbersScene: SKScene {
             // moveArray.append([[0,3],[4,7]])
             // moveArray.append([[3,7],[8,10,9,12],[11,15]])
             menuMoves = true
+            showMixButton = false
             moveArray.append([[1,3,10],[2,7],[5,8,11,13]])
             moveArrayStrings.append("A=(2,4,11)(3,8)(6,9,12,14)")
         }
@@ -332,6 +339,7 @@ class SwapNumbersScene: SKScene {
             moveArrayStrings.append("A inv")
             moveArrayStrings.append("B=(16,15,14,13)")
             moveArrayStrings.append("B inv")
+            showMixButton = false
             menuMoves = true
             
         }
@@ -348,6 +356,7 @@ class SwapNumbersScene: SKScene {
             moveArrayStrings.append("B=(4,8)(9,11,10,13)(12,16)")
             moveArrayStrings.append("B inv")
             menuMoves = true
+            showMixButton = false
             
         }
 /*        else if theMode == 4 {
