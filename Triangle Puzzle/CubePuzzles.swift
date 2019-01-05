@@ -940,6 +940,8 @@ class CubePuzzles: SKScene {
                     let buttonNumber = nodeName.split(separator: ",")[1]
                     print(buttonNumber)
                     faceToRotate = Int(buttonNumber) ?? 0
+                    // bugfix
+                    faceToRotate = centerState[faceToRotate]
                     clockwise = false
                     
                 }
@@ -1075,6 +1077,7 @@ class CubePuzzles: SKScene {
                     // self.solveMoves = []
                 }
                 else if nodeName.hasPrefix("gbutton") {
+                    // this part is working middle slice problem
                     let buttonNumber = nodeName.split(separator: ",")[1]
                     // print("custom button \(buttonNumber)")
                     var customButton = Int(buttonNumber) ?? 0
@@ -2504,6 +2507,8 @@ class CubePuzzles: SKScene {
     func rotateLayer(face: [Int], pauseTime: Float=0.5, rotateTime: Float=0.5) {
         // let face = 1
         // print("in rotateLayer with face \(face[0])")
+        // print("centerstate was")
+        // print(centerState)
         if face[0] == 14 {
             let temp: Int = centerState[2]
             centerState[2]=centerState[1]
@@ -2518,6 +2523,8 @@ class CubePuzzles: SKScene {
             centerState[5]=centerState[1]
             centerState[1]=temp
         }
+        // print("centerstate is")
+        // print(centerState)
         isMoving = true
         let cornerconversion: [Int] = [1,0,7,0,0,0,3,0,9,0,0,0,0,0,0,0,0,0,19,0,25,0,0,0,21,0,27]
         if rotateFlat && [2,8].contains(face[0]) {
