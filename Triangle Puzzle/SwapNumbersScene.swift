@@ -298,7 +298,7 @@ class SwapNumbersScene: SKScene {
             menuMoves = true
             showMixButton = false
             moveArray.append([[1,3,10],[2,7],[5,8,11,13]])
-            moveArrayStrings.append("A=(2,4,11)(3,8)(6,9,12,14)")
+            moveArrayStrings.append("A=(2 4 11)(3 8)(6 9 12 14)")
         }
         // need to change this one it is the same as 8
         else if theMode == 9 {
@@ -317,13 +317,13 @@ class SwapNumbersScene: SKScene {
             moveArray.append([[0,15,10,5]])
             moveArray.append([[12,9,6,3]])
             moveArray.append([[12,3,6,9]])
-            moveArrayStrings.append("A=(5,6,9,10)")
+            moveArrayStrings.append("A=(6 7 10 11)")
             moveArrayStrings.append("A inv")
-            moveArrayStrings.append("B=(0,1,2,3,7,11,15,14,13,12,8,4)")
+            moveArrayStrings.append("B=(1 2 3 4 8 12 16 15 14 13 9 5)")
             moveArrayStrings.append("B inv")
-            moveArrayStrings.append("C=(0,5,10,15)")
+            moveArrayStrings.append("C=(1 6 11 16)")
             moveArrayStrings.append("C inv")
-            moveArrayStrings.append("D=(12,9,6,3)")
+            moveArrayStrings.append("D=(13 10 7 4)")
             moveArrayStrings.append("D inv")
 
 
@@ -336,9 +336,9 @@ class SwapNumbersScene: SKScene {
             moveArray.append([[3,15],[1,9,8,4],[2,5,11]])
             moveArray.append([[15,14,13,12]])
             moveArray.append([[15,12,13,14]])
-            moveArrayStrings.append("A=(4,16)(2,5,9,10)(3,12,6)")
+            moveArrayStrings.append("A=(4 16)(2 5 9 10)(3 12 6)")
             moveArrayStrings.append("A inv")
-            moveArrayStrings.append("B=(16,15,14,13)")
+            moveArrayStrings.append("B=(16 15 14 13)")
             moveArrayStrings.append("B inv")
             showMixButton = false
             menuMoves = true
@@ -352,9 +352,9 @@ class SwapNumbersScene: SKScene {
             moveArray.append([[0,3],[4,7]])
             moveArray.append([[3,7],[8,10,9,12],[11,15]])
             moveArray.append([[3,7],[12,9,10,8],[15,11]])
-            moveArrayStrings.append("A=(1,4),(5,8)")
+            moveArrayStrings.append("A=(1 4),(5 8)")
             moveArrayStrings.append("A inv")
-            moveArrayStrings.append("B=(4,8)(9,11,10,13)(12,16)")
+            moveArrayStrings.append("B=(4 8)(9 11 10 13)(12 16)")
             moveArrayStrings.append("B inv")
             menuMoves = true
             showMixButton = false

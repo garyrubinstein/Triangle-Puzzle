@@ -15,7 +15,7 @@ class MainMenuScene: SKScene {
     var theSize: CGFloat = 0
     var frameOffset: Int = 100
     var buttonOffset: Int = 200
-    var totalButtons: Int = 35
+    var totalButtons: Int = 26
     var buttonsOnSceen: Int = 26
     var sceneNames: [String] = []
     var numberPuzzles: Int = 12
@@ -96,7 +96,11 @@ class MainMenuScene: SKScene {
         // add buttons to movebox
         let buttonWidth: CGFloat = 0.3*boxWidth
         let buttonHeight: CGFloat = 0.15*boxHeight
-        for i in 0...buttonsOnSceen {
+        var toMake: Int = buttonsOnSceen
+        if totalButtons <= buttonsOnSceen {
+            toMake = totalButtons-1
+        }
+        for i in 0...toMake {
             let moveButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight))
             // let moveButton = SKShapeNode(rect: CGRect(x: CGFloat(i*20)+buttonWidth/2, y: CGFloat(i*20)-buttonHeight/2, width: buttonWidth, height: buttonHeight))
             moveButton.fillColor = UIColor.orange
