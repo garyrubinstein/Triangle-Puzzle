@@ -521,8 +521,20 @@ class CubePuzzles: SKScene {
                         else if k==cubesToColor[2] {
                             stickerColor = UIColor.blue
                         }
+                        var textColor: UIColor = UIColor.black
+                        if hasFlat {
+                            if [1,3,7,9].contains(k) {
+                                textColor = UIColor.red
+                            }
+                            else if [2,4,6,8].contains(k) {
+                                textColor = UIColor.blue
+                            }
+                            else if k==5 {
+                                textColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
+                            }
+                        }
                         let image1 = stickerColor.image(CGSize(width: 96, height: 96))
-                        let image = textToImage(drawText: String(convertStickers[k-1]) as NSString, inImage: image1, atPoint: CGPoint(x: 32.0, y: 20.0))
+                        let image = textToImage(drawText: String(convertStickers[k-1]) as NSString, inImage: image1, atPoint: CGPoint(x: 32.0, y: 20.0), textColor: textColor)
                         imageMaterial.diffuse.contents = image
                         // image.images[0].tin
                         // myImageView.image = myImageView.image!.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
@@ -603,13 +615,22 @@ class CubePuzzles: SKScene {
                             stickerColor = UIColor.red
                         }
                         else if k==cubesToColor[1] {
-                            stickerColor = UIColor.green
+                            stickerColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
                         }
                         else if k==cubesToColor[2] {
                             stickerColor = UIColor.blue
                         }
+                        var textColor: UIColor = UIColor.black
+                        if hasFlat {
+                            if [10,12,16,18].contains(k) {
+                                textColor = UIColor.blue
+                            }
+                            else if [11,13,15,17].contains(k) {
+                                textColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
+                            }
+                        }
                         let image1 = stickerColor.image(CGSize(width: 96, height: 96))
-                        let image = textToImage(drawText: String(convertStickers[k-1]) as NSString, inImage: image1, atPoint: CGPoint(x: 15.0, y: 18.0))
+                        let image = textToImage(drawText: String(convertStickers[k-1]) as NSString, inImage: image1, atPoint: CGPoint(x: 15.0, y: 18.0), textColor: textColor)
                         imageMaterial.diffuse.contents = image
                         var materialArray: [SCNMaterial] = []
                         for i in 0...5 {
@@ -685,13 +706,25 @@ class CubePuzzles: SKScene {
                             stickerColor = UIColor.red
                         }
                         else if k==cubesToColor[1] {
-                            stickerColor = UIColor.green
+                            stickerColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
                         }
                         else if k==cubesToColor[2] {
                             stickerColor = UIColor.blue
                         }
+                        var textColor: UIColor = UIColor.black
+                        if hasFlat {
+                            if [19,21,25,27].contains(k) {
+                                textColor = UIColor.red
+                            }
+                            else if [20,22,24,26].contains(k) {
+                                textColor = UIColor.blue
+                            }
+                            else if k==23 {
+                                textColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0)
+                            }
+                        }
                         let image1 = stickerColor.image(CGSize(width: 96, height: 96))
-                        let image = textToImage(drawText: String(convertStickers[k-1]) as NSString, inImage: image1, atPoint: CGPoint(x: 15.0, y: 18.0))
+                        let image = textToImage(drawText: String(convertStickers[k-1]) as NSString, inImage: image1, atPoint: CGPoint(x: 15.0, y: 18.0), textColor: textColor)
                         imageMaterial.diffuse.contents = image
                         var materialArray: [SCNMaterial] = []
                         for i in 0...5 {
@@ -3744,10 +3777,10 @@ class CubePuzzles: SKScene {
         }
         return instructions
     }
-    func textToImage(drawText: NSString, inImage: UIImage, atPoint: CGPoint) -> UIImage{
+    func textToImage(drawText: NSString, inImage: UIImage, atPoint: CGPoint, textColor: UIColor = UIColor.black) -> UIImage{
         
         // Setup the font specific variables
-        var textColor = UIColor.black
+        // var textColor = UIColor.black
         var textFont = UIFont(name: "Helvetica Bold", size: 64)!
         // Setup the image context using the passed image
         let scale = UIScreen.main.scale
