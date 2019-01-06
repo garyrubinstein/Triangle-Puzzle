@@ -83,6 +83,7 @@ class CubePuzzles: SKScene {
     var centerState: [Int] = []
     var showMixButton: Bool = true
     var instructionsNode: SKNode = SKNode()
+    var cubesToColor: [Int] = [30,30,30]
     
     
     // can access any of the small cubies in this array
@@ -170,6 +171,7 @@ class CubePuzzles: SKScene {
                 // flipTwoCorners = true
                 showMixButton = false
                 startPattern = "DRUrdRur"
+                cubesToColor = [9,21,27]
             }
             else if theMode == 8 {
                 colors = true
@@ -194,6 +196,7 @@ class CubePuzzles: SKScene {
                 // flipOneCorner = true
                 startPattern = "dfEFDfeF" // fEFdfeFD"
                 showMixButton = false
+                cubesToColor = [16,24,26]
             }
             // put one corner in place
             else if theMode == 3 {
@@ -502,12 +505,30 @@ class CubePuzzles: SKScene {
                             }
                         }
                         cubeGeometry2.materials = materialArray
+                        // cubeGeometry2.firstMaterial?.diffuse.contents = UIColor.red
                     }
                     else {
                         // cubeGeometry2.materials = [blueMaterial, blueMaterial, blueMaterial, blueMaterial, blueMaterial, blueMaterial]
                         var imageMaterial = SCNMaterial()
-                        let image = UIImage(named: String(convertStickers[k-1])+"pic.png")
+                        // let image = UIImage(named: String(convertStickers[k-1])+"pic.png")
+                        var stickerColor: UIColor = UIColor.white
+                        if k==cubesToColor[0] {
+                            stickerColor = UIColor.red
+                        }
+                        else if k==cubesToColor[1] {
+                            stickerColor = UIColor.green
+                        }
+                        else if k==cubesToColor[2] {
+                            stickerColor = UIColor.blue
+                        }
+                        let image1 = stickerColor.image(CGSize(width: 96, height: 96))
+                        let image = textToImage(drawText: String(convertStickers[k-1]) as NSString, inImage: image1, atPoint: CGPoint(x: 32.0, y: 20.0))
                         imageMaterial.diffuse.contents = image
+                        // image.images[0].tin
+                        // myImageView.image = myImageView.image!.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                        // myImageView.tintColor = UIColor.blueColor()
+
+                        // imageMaterial.multiply.
                         var materialArray: [SCNMaterial] = []
                         for i in 0...5 {
                             if stickersArray[k-1].contains(i)  {
@@ -525,6 +546,7 @@ class CubePuzzles: SKScene {
                             }
                         }
                         cubeGeometry2.materials = materialArray // [imageMaterial, imageMaterial, imageMaterial, imageMaterial, imageMaterial, imageMaterial]
+                        
                     }
                     let cubeNode2 = SCNNode(geometry: cubeGeometry2)
                     cubieArray.append(cubeNode2)
@@ -575,7 +597,19 @@ class CubePuzzles: SKScene {
                         var imageMaterial = SCNMaterial()
                         var tileName: String = String(convertStickers[k-1])+"pic.png"
                         // print("the tilename is \(tileName)")
-                        var image = UIImage(named: tileName)
+                        //var image = UIImage(named: tileName)
+                        var stickerColor: UIColor = UIColor.white
+                        if k==cubesToColor[0] {
+                            stickerColor = UIColor.red
+                        }
+                        else if k==cubesToColor[1] {
+                            stickerColor = UIColor.green
+                        }
+                        else if k==cubesToColor[2] {
+                            stickerColor = UIColor.blue
+                        }
+                        let image1 = stickerColor.image(CGSize(width: 96, height: 96))
+                        let image = textToImage(drawText: String(convertStickers[k-1]) as NSString, inImage: image1, atPoint: CGPoint(x: 15.0, y: 18.0))
                         imageMaterial.diffuse.contents = image
                         var materialArray: [SCNMaterial] = []
                         for i in 0...5 {
@@ -645,7 +679,19 @@ class CubePuzzles: SKScene {
                         var imageMaterial = SCNMaterial()
                         var tileName: String = String(convertStickers[k-1])+"pic.png"
                         // print("the tilename is \(tileName)")
-                        var image = UIImage(named: tileName)
+                        // var image = UIImage(named: tileName)
+                        var stickerColor: UIColor = UIColor.white
+                        if k==cubesToColor[0] {
+                            stickerColor = UIColor.red
+                        }
+                        else if k==cubesToColor[1] {
+                            stickerColor = UIColor.green
+                        }
+                        else if k==cubesToColor[2] {
+                            stickerColor = UIColor.blue
+                        }
+                        let image1 = stickerColor.image(CGSize(width: 96, height: 96))
+                        let image = textToImage(drawText: String(convertStickers[k-1]) as NSString, inImage: image1, atPoint: CGPoint(x: 15.0, y: 18.0))
                         imageMaterial.diffuse.contents = image
                         var materialArray: [SCNMaterial] = []
                         for i in 0...5 {
@@ -3697,5 +3743,48 @@ class CubePuzzles: SKScene {
             instructions.append("this is for \(i)")
         }
         return instructions
+    }
+    func textToImage(drawText: NSString, inImage: UIImage, atPoint: CGPoint) -> UIImage{
+        
+        // Setup the font specific variables
+        var textColor = UIColor.black
+        var textFont = UIFont(name: "Helvetica Bold", size: 64)!
+        // Setup the image context using the passed image
+        let scale = UIScreen.main.scale
+        UIGraphicsBeginImageContextWithOptions(inImage.size, false, scale)
+        
+        // Setup the font attributes that will be later used to dictate how the text should be drawn
+        let textFontAttributes = [
+            NSAttributedStringKey.font: textFont,
+            NSAttributedStringKey.foregroundColor: textColor,
+            ]
+        
+        // Put the image into a rectangle as large as the original image
+        CGRect(x: 0, y: 0, width: inImage.size.width, height: inImage.size.height)
+        inImage.draw(in: CGRect(x: 0, y: 0, width: inImage.size.width, height: inImage.size.height))
+        
+        // Create a point within the space that is as bit as the image
+        var rect =  CGRect(x: atPoint.x, y: atPoint.y, width: inImage.size.width, height: inImage.size.height) // CGRectMake(atPoint.x, atPoint.y, inImage.size.width, inImage.size.height)
+        
+        // Draw the text into an image
+        drawText.draw(in: rect, withAttributes: textFontAttributes)
+        
+        // Create a new image out of the images we have created
+        var newImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        // End the context now that we have the image we need
+        UIGraphicsEndImageContext()
+        
+        //Pass the image back up to the caller
+        return newImage!
+        
+    }
+}
+extension UIColor {
+    func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { rendererContext in
+            self.setFill()
+            rendererContext.fill(CGRect(origin: .zero, size: size))
+        }
     }
 }

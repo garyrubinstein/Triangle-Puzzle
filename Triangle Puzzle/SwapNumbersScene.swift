@@ -269,7 +269,7 @@ class SwapNumbersScene: SKScene {
             menuMoves = false
             swap111215 = true
             showMixButton = false
-            var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13,15].shuffled()
+            var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13].shuffled()
             startPosition = [[shuffled[0],shuffled[1],shuffled[2]]]
         }
         if theMode == 6 {
@@ -937,4 +937,5 @@ class SwapNumbersScene: SKScene {
         }
         return instructions
     }
+
 }
