@@ -48,7 +48,15 @@ class GameScene: SKScene {
             }
             // startingPattern = [1,2,2,1,0]
         }
-        let instructionText: String = "The three red buttons\nrotate the triangles.\nPress the purple\nbutton to change\nto counterclockwise."
+        var instructionText: String = ""
+        if gamemode == 1 {
+            instructionText = "The three red buttons\nrotate the triangles.\nPress the purple\nbutton to change\nto counterclockwise.\nThis can be done in 5 moves."
+
+        }
+        else {
+            instructionText = "The three red buttons\nrotate the triangles.\nPress the purple\nbutton to change\nto counterclockwise."
+
+        }
         
         let instructionsNode = createMultiLineText(textToPrint: instructionText, color: UIColor.white, fontSize: 24, fontName: "Helvetica", fontPosition: CGPoint(x: 0.0, y: 200.0), fontLineSpace: 0.0)
         let inBox: SKShapeNode = SKShapeNode(rectOf: CGSize(width: 300, height: 500))

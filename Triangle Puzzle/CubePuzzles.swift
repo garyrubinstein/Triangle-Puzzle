@@ -845,7 +845,7 @@ class CubePuzzles: SKScene {
         let numcube: Bool = true
         var nodeName = ""
         print("touch")
-        if hasFlat {
+        if !isMoving && hasFlat {
             var mySprite: SKLabelNode = childNode(withName: "patternText") as! SKLabelNode
             if isSynced() {
                 mySprite.text = ""
@@ -1015,7 +1015,7 @@ class CubePuzzles: SKScene {
                 
                 
                 
-                if nodeName.hasPrefix("button") {
+                if !isMoving && nodeName.hasPrefix("button") {
                     let buttonNumber = nodeName.split(separator: ",")[1]
                     print(buttonNumber)
                     faceToRotate = Int(buttonNumber) ?? 0
@@ -1157,7 +1157,7 @@ class CubePuzzles: SKScene {
                     // rotateLayer(face: solveMoves.reversed(), )
                     // self.solveMoves = []
                 }
-                else if nodeName.hasPrefix("gbutton") {
+                else if !isMoving && nodeName.hasPrefix("gbutton") {
                     // this part is working middle slice problem
                     let buttonNumber = nodeName.split(separator: ",")[1]
                     // print("custom button \(buttonNumber)")
@@ -1444,6 +1444,16 @@ class CubePuzzles: SKScene {
                                 presetupinv = "f"
                                 cycleArray[cycleArray.firstIndex(of: 7)!]=11
                             }
+                            else if !cycleArray.contains(6) {
+                                presetup = "r"
+                                presetupinv = "R"
+                                cycleArray[cycleArray.firstIndex(of: 7)!]=10
+                            }
+                            else if !cycleArray.contains(5) {
+                                presetup = "L"
+                                presetupinv = "l"
+                                cycleArray[cycleArray.firstIndex(of: 8)!]=12
+                            }
                             inMiddle = 2
                             inBottom = 1
                         }
@@ -1717,6 +1727,9 @@ class CubePuzzles: SKScene {
                             inTop = 2
                             
                         }
+                        // bug
+                        // the issue is that it isn't enough to just look at the bottom piece.  Also need to consider the other middle piece.
+                        // I think I need all 6 cases
                         if inMiddle==2 && inBottom==1 {
                             // need to do a setup and then convert to
                             // inMiddle==1 && inBottom==2
@@ -1730,6 +1743,7 @@ class CubePuzzles: SKScene {
                                     middles.append(cycleArray[k])
                                 }
                             }
+                            
                             if middles.contains(8) {
                                 if bottomPiece==11 {
                                     setup = "L"
@@ -1766,6 +1780,8 @@ class CubePuzzles: SKScene {
                                     cycleArray[cycleArray.firstIndex(of: 6)!]=10
                                 }
                             }
+                            print("changed from 2 middle 1 bottom to 1 middle 2 bottom")
+                            print(cycleArray)
                             inMiddle=1
                             inBottom=2
                         }

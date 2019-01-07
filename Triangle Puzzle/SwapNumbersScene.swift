@@ -34,7 +34,8 @@ class SwapNumbersScene: SKScene {
     var theMode: Int = 0
     var instructionsNode: SKNode = SKNode()
     var instructionsBox = SKShapeNode()
-    var menuMoves: Bool = true
+    var menuMoves: Bool = false
+    var numClicks: Int = 0
     var LShape: Bool = false // for the L shape 15 like puzzle
     var fifteen: Bool = false // for 15 game
     var numcube: Bool = false // for number cube
@@ -45,7 +46,7 @@ class SwapNumbersScene: SKScene {
     var edgeSquares: [Int] = []
     var rotateCorners: Bool = false
     var moveArrayStrings: [String] = []
-    var makingMove: Bool = false
+    var makingMove: Bool = true
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -264,13 +265,41 @@ class SwapNumbersScene: SKScene {
             swapWithOne = true
         }
         if theMode == 5 {
-            moveSize = 2
+            /* moveSize = 2
             self.shuffleStart = false
             menuMoves = false
             swap111215 = true
             showMixButton = false
-            var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13].shuffled()
-            startPosition = [[shuffled[0],shuffled[1],shuffled[2]]]
+            */
+            
+            // moveSize = 0
+            self.shuffleStart = false
+            // startPosition = [[1,1]]
+            // moveArray.append([[0,3],[4,7]])
+            // moveArray.append([[0,3],[4,7]])
+            // moveArray.append([[3,7],[8,10,9,12],[11,15]])
+            menuMoves = true
+            moveArray.append([[3,14]])
+            moveArray.append([[3,14]])
+            moveArray.append([[8,11]])
+            moveArray.append([[8,11]])
+            moveArray.append([[9,10]])
+            moveArray.append([[9,10]])
+            moveArray.append([[10,11,14]])
+            // moveArray.append([[12,3,6,9]])
+            moveArrayStrings.append("A=(4 15)")
+            moveArrayStrings.append("A inv")
+            moveArrayStrings.append("B=(9 12)")
+            moveArrayStrings.append("B inv")
+            moveArrayStrings.append("C=(10 11)")
+            moveArrayStrings.append("C inv")
+            moveArrayStrings.append("D=(11 12 15)")
+            moveArrayStrings.append("D inv")
+            // var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13].shuffled()
+            // startPosition = [[shuffled[0],shuffled[1],shuffled[2]]]
+            startPosition = [[3,8,9]]
+            showMixButton = false
+            
         }
         if theMode == 6 {
             moveSize = 3
@@ -499,10 +528,12 @@ class SwapNumbersScene: SKScene {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // print("touch")
+        numClicks+=1
         if instructionsBox.isHidden == false {
             instructionsBox.isHidden = true
+            // makingMove = false
         }
-        if !makingMove {
+        if !makingMove && numClicks>1 {
         if let touch = touches.first {
             let location = touch.location(in: self)
             // print(location)
@@ -922,16 +953,16 @@ class SwapNumbersScene: SKScene {
         var instructions: [String] = []
         instructions.append("Select any two numbers\nto swap them.\nThe goal is to get\nthe numbers in order\nfrom 1 to 16.")
         instructions.append("Select any three numbers\nto cycle them")
-        instructions.append("Use swaps to solve\na 3-cycle")
-        instructions.append("Use 3-cycles to solve\ntwo swaps")
+        instructions.append("Use swaps to solve\na 3-cycle.\nIt can be done in 2 moves.")
+        instructions.append("Use 3-cycles to solve\ntwo swaps.\nIt can be done in 2 moves.")
         instructions.append("Select two numbers to\nswap.  One must\nbe in position 1")
-        instructions.append("Select position 16\nand it will cycle\npositions 11, 12, 15.\nSelect the number in\nposition 11, 12, or\n15 and then any\nother position besides\n11, 12, or 15\nand it will swap them.")
+        instructions.append("Use the buttons to make\nthe moves.  It can\nbe done in 7 moves.")
         instructions.append("Select a position\nthat is not on the\nright edge or\nthe bottom edge\nand it will 3-cycle with\nthe position to the\nright and the\nposition below.")
         instructions.append("Select a sqare that is\neither above, below,\nleft, or right of\nthe black space and\nit will move to\nthe black space")
         instructions.append("Push the orange button\nover and over.\nHow many times does\nit take to get back\nto the starting position?\nWhat happens if\nyou only push it\nhalf as many times?")
         instructions.append("Solve the puzzle\nusing the four possible\nmoves")
-        instructions.append("Try to make a 3-cycle\nof (4,16,13) by\nusing just the four\navailable moves.")
-        instructions.append("Try to make two swaps\n(1,5) (4,8) with\njust the four\navailable moves.")
+        instructions.append("Try to make a 3-cycle\nof (4,16,13) by\nusing just the four\navailable moves.\nIt can be done in 4 moves.")
+        instructions.append("Try to make two swaps\n(1,5) (4,8) with\njust the four\navailable moves.\nIt can be done in 4 moves.")
         for i in 0...20 {
             instructions.append("this is for \(i)")
         }
