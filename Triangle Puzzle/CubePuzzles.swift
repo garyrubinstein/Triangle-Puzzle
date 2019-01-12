@@ -1743,7 +1743,93 @@ class CubePuzzles: SKScene {
                                     middles.append(cycleArray[k])
                                 }
                             }
-                            
+                            // case 1 of 6
+                            if middles.contains(5) && middles.contains(6) {
+                                // print("in 5 6 edge situation")
+                                // print("topPiece \(topPiece)")
+                                if bottomPiece==10 {
+                                    setup = "l"
+                                    setupinv = "L"
+                                    cycleArray[cycleArray.firstIndex(of: 5)!]=12
+                                }
+                                else {
+                                    setup = "R"
+                                    setupinv = "r"
+                                    cycleArray[cycleArray.firstIndex(of: 6)!]=10
+                                }
+                            }
+                            // case 2 of 6
+                            if middles.contains(5) && middles.contains(7) {
+                                // print("in 5 6 edge situation")
+                                // print("topPiece \(topPiece)")
+                                if bottomPiece==12 {
+                                    setup = "B"
+                                    setupinv = "b"
+                                    cycleArray[cycleArray.firstIndex(of: 5)!]=9
+                                }
+                                else {
+                                    setup = "l"
+                                    setupinv = "L"
+                                    cycleArray[cycleArray.firstIndex(of: 5)!]=12
+                                }
+                            }
+                            // case 3 of 6
+                            if middles.contains(5) && middles.contains(8) {
+                                // print("in 5 6 edge situation")
+                                // print("topPiece \(topPiece)")
+                                if bottomPiece==9 {
+                                    setup = "f"
+                                    setupinv = "F"
+                                    cycleArray[cycleArray.firstIndex(of: 8)!]=11
+                                }
+                                else {
+                                    setup = "B"
+                                    setupinv = "b"
+                                    cycleArray[cycleArray.firstIndex(of: 5)!]=9
+                                }
+                            }
+                            // case 4 of 6
+                            if middles.contains(6) && middles.contains(7) {
+                                // print("in 5 6 edge situation")
+                                // print("topPiece \(topPiece)")
+                                if bottomPiece==11 {
+                                    setup = "b"
+                                    setupinv = "B"
+                                    cycleArray[cycleArray.firstIndex(of: 6)!]=9
+                                }
+                                else {
+                                    setup = "F"
+                                    setupinv = "f"
+                                    cycleArray[cycleArray.firstIndex(of: 7)!]=11
+                                }
+                            }
+                            // case 5 of 6
+                            if middles.contains(6) && middles.contains(8) {
+                                if bottomPiece==11 {
+                                    setup = "R"
+                                    setupinv = "r"
+                                    cycleArray[cycleArray.firstIndex(of: 8)!]=12
+                                }
+                                else {
+                                    setup = "f"
+                                    setupinv = "F"
+                                    cycleArray[cycleArray.firstIndex(of: 8)!]=11
+                                }
+                            }
+                            // case 6 of 6
+                            if middles.contains(7) && middles.contains(8) {
+                                if bottomPiece==10 {
+                                    setup = "L"
+                                    setupinv = "l"
+                                    cycleArray[cycleArray.firstIndex(of: 8)!]=12
+                                }
+                                else {
+                                    setup = "r"
+                                    setupinv = "R"
+                                    cycleArray[cycleArray.firstIndex(of: 7)!]=10
+                                }
+                            }
+                            /*
                             if middles.contains(8) {
                                 if bottomPiece==11 {
                                     setup = "L"
@@ -1780,6 +1866,7 @@ class CubePuzzles: SKScene {
                                     cycleArray[cycleArray.firstIndex(of: 6)!]=10
                                 }
                             }
+                            */
                             print("changed from 2 middle 1 bottom to 1 middle 2 bottom")
                             print(cycleArray)
                             inMiddle=1

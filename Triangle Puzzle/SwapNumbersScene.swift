@@ -310,9 +310,10 @@ class SwapNumbersScene: SKScene {
             // moveArray.append([[6,8,9]])
         }
         if theMode == 7 {
-            moveSize = 3
+            moveSize = 2
             self.fifteen = true
             self.shuffleStart = true
+            self.numShuffle = 15
             menuMoves = false
             // moveArray.append([[1,2,3],[4,5]])
             // moveArray.append([[6,8,9]])
@@ -504,9 +505,12 @@ class SwapNumbersScene: SKScene {
         //        print(numbers)
                 // let subarray = numbers[0...2]
                 for i in 0..<moveSize {
-                    movearray.append(numbers[i]-1)
+                    // need the position not the number ...
+                    let posOfNum: Int = board.firstIndex(of: numbers[i]-1) ?? 0
+                    // movearray.append(numbers[i]-1)
+                    movearray.append(posOfNum)
                 }
-                // print("about to make move \(movearray)")
+                // print("in mix about to make move \(movearray)")
                 makemove(myarray: movearray, howLong: 0.05) //0.05)
                 // print("in mix")
                 // print("after makemove")
@@ -540,7 +544,7 @@ class SwapNumbersScene: SKScene {
             let nodes = self.nodes(at: location)
             for node in nodes {
                 if let thename = node.name {
-                    print(thename)
+                    // print(thename)
                     if thename == "move" {
                         // need to make it so the positions are given
                         print(changesarray(myarray: [[1,2],[3,4,5]]))
