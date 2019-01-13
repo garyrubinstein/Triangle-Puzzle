@@ -146,6 +146,7 @@ class SwapNumbersScene: SKScene {
         if showMixButton {
             self.addChild(shuffleButton)
         }
+
         
         let startOverButton = SKShapeNode(circleOfRadius: menuButtonSize)
         startOverButton.fillColor = UIColor.purple

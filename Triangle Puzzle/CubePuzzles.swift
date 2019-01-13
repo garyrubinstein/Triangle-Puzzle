@@ -331,6 +331,26 @@ class CubePuzzles: SKScene {
 
         self.addChild(patternNode)
         self.addChild(menuText)
+        
+
+        let infoNode = SKShapeNode(circleOfRadius: 35.0)
+        infoNode.fillColor = UIColor.red
+        infoNode.position = CGPoint(x: -100+buttonOffset, y: 500)
+        infoNode.name = "info"
+        
+        let infoText = SKLabelNode(text: "?")
+        infoText.fontColor = UIColor.black
+        infoText.fontSize = 24
+        infoText.name = "ignore"
+        infoText.fontName = "Helvetica"
+        infoText.position = CGPoint(x: -100+buttonOffset, y: 500-60)
+        self.addChild(infoNode)
+        self.addChild(infoText)
+        
+        // self.addChild(patternNode)
+        // self.addChild(menuText)
+        
+        
         for i in 1...8 {
             let purpleNode = SKShapeNode(circleOfRadius: 35.0)
             purpleNode.fillColor = UIColor.white
@@ -1159,6 +1179,11 @@ class CubePuzzles: SKScene {
                     rotateLayer(face: solveMoves.reversed(), pauseTime: 0.0, rotateTime: 0.0)
                     // rotateLayer(face: solveMoves.reversed(), )
                     self.solveMoves = []
+                }
+                else if !isMoving && nodeName.hasPrefix("info") {
+                    numClicks = 0
+                    self.instructionsBox.isHidden = false
+                    
                 }
                 else if !isMoving && nodeName.hasPrefix("pattern") {
                     /* let nums: [Int] = doPattern(moves: "RUrDRurd", front: 1, top: 2)
