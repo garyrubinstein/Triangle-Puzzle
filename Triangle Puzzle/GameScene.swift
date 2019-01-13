@@ -50,7 +50,7 @@ class GameScene: SKScene {
         }
         var instructionText: String = ""
         if gamemode == 1 {
-            instructionText = "The three red buttons\nrotate the triangles.\nPress the purple\nbutton to change\nto counterclockwise.\nThis can be done in 5 moves."
+            instructionText = "The three red buttons\nrotate the triangles.\nPress the purple\nbutton to change\nto counterclockwise.\nThis can be done in 4 or 5 moves."
 
         }
         else {
@@ -305,6 +305,13 @@ class GameScene: SKScene {
                 }
                 else if !inaction && theNodeName == "redo" {
                     // print("solving")
+                    let counterText = self.childNode(withName: "countertext") as! SKLabelNode
+                        clockwise = true
+                        counterText.isHidden = true
+                        let cwButton: SKShapeNode = childNode(withName: "clockwise") as! SKShapeNode
+                        cwButton.fillColor = UIColor.purple
+                        multiplier = 1.0
+                        
                     // print(gamestate)
                     // print(originalPositionList)
                     var tempnodelist: [SKShapeNode] = []

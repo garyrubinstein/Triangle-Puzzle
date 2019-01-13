@@ -78,11 +78,11 @@ class SwapNumbersScene: SKScene {
         let screenSize: CGRect = UIScreen.main.bounds
         screenWidth = self.size.width //screenSize.width
         screenHeight = self.size.height // screenSize.height
-        print(screenWidth)
-        print(screenHeight)
-        print("self.size")
-        print(self.size.height)
-        print(self.size.width)
+        // print(screenWidth)
+        // print(screenHeight)
+        // print("self.size")
+        // print(self.size.height)
+        // print(self.size.width)
         theSize = min(screenWidth,screenHeight)
         print("theSize")
         print(theSize)
@@ -90,6 +90,24 @@ class SwapNumbersScene: SKScene {
         framesize = Int(2/3*theSize*scalePieces)
         let menuButtonSize: CGFloat = 50
         let menuButtonY: CGFloat = -520
+
+// instructions button
+        let instructionsButton = SKShapeNode(circleOfRadius: menuButtonSize)
+        instructionsButton.fillColor = UIColor.red //UIColor.green
+        instructionsButton.position = CGPoint(x: -200, y: menuButtonY)
+        instructionsButton.name="instructions"
+        let instructionsText = SKLabelNode(text: "?")
+        instructionsText.name = "instructionsmenu"
+        instructionsText.fontName = "AvenirNext-Bold"
+        instructionsText.fontSize = 24.0
+        // startOverText.color = UIColor.black
+        instructionsText.zPosition = 6
+        instructionsButton.addChild(instructionsText)
+        self.addChild(instructionsButton)
+
+
+
+
         let backButton = SKShapeNode(circleOfRadius: menuButtonSize)
         backButton.fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) //UIColor.green
         backButton.position = CGPoint(x: -100, y: menuButtonY)
@@ -313,7 +331,7 @@ class SwapNumbersScene: SKScene {
             moveSize = 2
             self.fifteen = true
             self.shuffleStart = true
-            self.numShuffle = 15
+            self.numShuffle = 25
             menuMoves = false
             // moveArray.append([[1,2,3],[4,5]])
             // moveArray.append([[6,8,9]])
@@ -362,11 +380,11 @@ class SwapNumbersScene: SKScene {
             // moveSize = 0
             self.shuffleStart = false
             startPosition = [[3,12,15]]
-            moveArray.append([[3,15],[1,4,8,9],[2,11,5]])
-            moveArray.append([[3,15],[1,9,8,4],[2,5,11]])
+            moveArray.append([[3,15,7,6],[1,4,8,9],[2,11,5]])
+            moveArray.append([[3,6,7,15],[1,9,8,4],[2,5,11]])
             moveArray.append([[15,14,13,12]])
             moveArray.append([[15,12,13,14]])
-            moveArrayStrings.append("A=(4 16)(2 5 9 10)(3 12 6)")
+            moveArrayStrings.append("A=(4 16 8 7)(2 5 9 10)(3 12 6)")
             moveArrayStrings.append("A inv")
             moveArrayStrings.append("B=(16 15 14 13)")
             moveArrayStrings.append("B inv")
@@ -563,6 +581,10 @@ class SwapNumbersScene: SKScene {
                         restartboard = Array(board)
                         print("restartboard after shuffle is")
                         print(restartboard)
+                    }
+                    else if thename == "instructions" {
+                        instructionsBox.isHidden = false
+                        numClicks = 0
                     }
                     else if thename == "solve" || thename == "startover" {
                         print(thename)

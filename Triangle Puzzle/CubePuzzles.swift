@@ -21,6 +21,7 @@ import GameplayKit
 class CubePuzzles: SKScene {
     // var scnScene: SCNScene
     var cubieArray: [SCNNode] = []
+    var numClicks: Int = 0
     var buttonOffset: Int = 0
     var showControls: Bool = false
     var colorArray: [UIColor] = []
@@ -381,23 +382,85 @@ class CubePuzzles: SKScene {
         middlebackNode.name = "middleback"
         middlebackNode.position = CGPoint(x: -200, y: 0)
         // self.addChild(middlebackNode)
-        let sizeFlipButton: CGFloat = 100.0
-        let xFlipButton: CGFloat = 310
+        let sizeFlipButton: CGFloat = 70.0
+        let xFlipButton: CGFloat = -200
+        let lwRatio: CGFloat = 3
+        let widthFlipButton: CGFloat = lwRatio*sizeFlipButton
         let yFlipButton: CGFloat = 0
-        let flipedgebutton = SKShapeNode(rectOf: CGSize(width: sizeFlipButton, height: sizeFlipButton)) // SKShapeNode(circleOfRadius: 30.0)
+        let flipedgebutton = SKShapeNode(rectOf: CGSize(width: lwRatio*sizeFlipButton, height: sizeFlipButton)) // SKShapeNode(circleOfRadius: 30.0)
         flipedgebutton.fillColor = UIColor.blue
         flipedgebutton.name = "flipedge"
         flipedgebutton.position = CGPoint(x: xFlipButton, y: yFlipButton)
         flipButtonList.append(flipedgebutton)
+        flipedgebutton.position = CGPoint(x: xFlipButton, y: 0)
+        let labelArray=["A","B","","A","B"]
+        for i in 0...4 {
+            let cgi: CGFloat = CGFloat(i)
+            let whiteSquare1 = SKShapeNode(rectOf: CGSize(width: widthFlipButton/5.4, height: widthFlipButton/5.4))
+            whiteSquare1.name = "ignore"
+            whiteSquare1.fillColor = UIColor.white
+            let text1 = SKLabelNode(text: labelArray[i])
+            text1.name = "ignore"
+            if i<2 {
+                text1.zRotation = 3.14
+            }
+            text1.fontName="Helvetica"
+            text1.fontSize = 48
+            text1.fontColor = UIColor.blue
+            whiteSquare1.addChild(text1)
+            if !(i==2) {
+                flipedgebutton.addChild(whiteSquare1)
+            }
+            whiteSquare1.position = CGPoint(x: -0.4*widthFlipButton+cgi*widthFlipButton/5.0, y: 0)
+            var tpos: CGFloat = 18
+            if i>2 {
+                tpos = -tpos
+            }
+            text1.position = CGPoint(x: 0, y: tpos)
+        }
         if showFlipButtons {
             self.addChild(flipedgebutton)
         }
         
-        let flipcornerbutton = SKShapeNode(rectOf: CGSize(width: sizeFlipButton, height: sizeFlipButton))
+        let flipcornerbutton = SKShapeNode(rectOf: CGSize(width: lwRatio*sizeFlipButton, height: sizeFlipButton))
         flipcornerbutton.fillColor = UIColor.red
         flipcornerbutton.name = "flipcorner"
         flipcornerbutton.position = CGPoint(x: xFlipButton, y: yFlipButton+150)
         flipButtonList.append(flipcornerbutton)
+        // let labelArray=["A","B","","A","B"]
+        for i in 0...4 {
+            let cgi: CGFloat = CGFloat(i)
+            let whiteSquare1 = SKShapeNode(rectOf: CGSize(width: widthFlipButton/5.4, height: widthFlipButton/5.4))
+            whiteSquare1.name = "ignore"
+            whiteSquare1.fillColor = UIColor.white
+            let text1 = SKLabelNode(text: labelArray[i])
+            text1.name = "ignore"
+            if i==0 {
+                text1.zRotation = 3.14*2/3
+            }
+            else if i==1 {
+                text1.zRotation = 3.14*4/3
+            }
+            text1.fontName="Helvetica"
+            text1.fontSize = 48
+            text1.fontColor = UIColor.red
+            whiteSquare1.addChild(text1)
+            if !(i==2) {
+                flipcornerbutton.addChild(whiteSquare1)
+            }
+            whiteSquare1.position = CGPoint(x: -0.4*widthFlipButton+cgi*widthFlipButton/5.0, y: 0)
+            var tpos: CGFloat = -18
+            var txpos: CGFloat = 0
+            if i==0 {
+                txpos = 13
+                tpos = 7
+            }
+            if i == 1 {
+                txpos = -13
+                tpos = 7
+            }
+            text1.position = CGPoint(x: txpos, y: tpos)
+        }
         if showFlipButtons {
             self.addChild(flipcornerbutton)
         }
@@ -858,6 +921,7 @@ class CubePuzzles: SKScene {
         // .text = "changed"
         // makemoves(myarray: [[2,3]])
         // figure out which button is pressed
+        if numClicks > 0 {
         for touch in touches {
             // let moveSize = 3
             // let numcube: Bool = true
@@ -873,6 +937,11 @@ class CubePuzzles: SKScene {
                     if nodeName2.hasPrefix("piece") {
                         done = true
                         node = i
+                        break outerLoop
+                    }
+                    if nodeName2.hasPrefix("flipedge") || nodeName2.hasPrefix("flipcorner") {
+                        node = i
+                        done = true
                         break outerLoop
                     }
                 }
@@ -2251,7 +2320,8 @@ class CubePuzzles: SKScene {
                 }
             }
         }
-        
+        } // if numClicks>0
+        numClicks=numClicks+1
         
         
         let gname = "cubeG"
@@ -2322,6 +2392,7 @@ class CubePuzzles: SKScene {
                 // self.rotateLayer(face: [faceToRotate]) //, 3, 4, 1])
             }
         })
+        numClicks+=1
     }
     
     func initializeStickerArray() {
@@ -3865,14 +3936,14 @@ class CubePuzzles: SKScene {
         var instructions: [String] = []
         instructions.append("Select any three blue\nnumbers to cycle the\nedges.  Select any\nthree red numbers to\ncycle the corners.\nSelect any green\nnumber to do a face\nrotation.")
         instructions.append("Select any three blue\nnumbers to cycle the\nedges.  Select any\nthree red numbers to\ncycle the corners.\nSelect any green\nnumber to do a face\nrotation.\nSelect the blue square\nand then any two\nblue numbers to flip them.\nSelect the red square\nand then any two\nred numbers to\nrotate one clockwise\nand the other\ncounterclockwise")
-        instructions.append("Find moves to\nmove the 27 next\nto the 26\nwithout disturbing\nthe other pieces\nin the bottom\nlayer")
-        instructions.append("Find moves to\nmove the 26 between\nthe 25 and 27\nwithout disturbing\nthe other pieces\nin the bottom\nlayer")
-        instructions.append("Fix the three\ncorners (9,27,25)")
-        instructions.append("Fix the three\nedges (12,26,24)")
-        instructions.append("Fix the red,\nwhite, green corner")
-        instructions.append("Fix the green\nand white edge")
-        instructions.append("Fix the two\ncorners")
-        instructions.append("Fix the two\nedges")
+        instructions.append("Find moves to\nmove the 27 next\nto the 26\nwithout disturbing\nthe other pieces\nin the bottom\nlayer.  It can be\ndone in 3 moves.")
+        instructions.append("Find moves to\nmove the 26 between\nthe 25 and 27\nwithout disturbing\nthe other pieces\nin the bottom\nlayer.  It can be done\nin 3 moves.")
+        instructions.append("Fix the three\ncorners (9,27,25).  It\ncan be done in 8 moves.")
+        instructions.append("Fix the three\nedges (12,26,24).  It\ncan be done in 8 moves.")
+        instructions.append("Fix the red,\nwhite, green corner.  It\ncan be done in 6 or 7 moves.")
+        instructions.append("Fix the green\nand white edge.  It\ncan be done in 11 moves.")
+        instructions.append("Fix the two\ncorners.  It can be done\nin 14 or 16 moves.")
+        instructions.append("Fix the two\nedges.  It can be done\nin 22 moves.")
         instructions.append("Solve the number cube")
         instructions.append("Solve the color cube")
         for i in 0...20 {
