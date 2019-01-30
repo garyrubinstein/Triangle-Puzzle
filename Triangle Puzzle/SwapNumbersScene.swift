@@ -42,11 +42,14 @@ class SwapNumbersScene: SKScene {
     var swapWithOne: Bool = false
     var swap111215: Bool = false
     var squareColor: UIColor = UIColor.yellow
+    var markedColor: UIColor = UIColor.red
+    var originalColors: [UIColor] = []
     var cornerSquares: [Int] = []
     var edgeSquares: [Int] = []
     var rotateCorners: Bool = false
     var moveArrayStrings: [String] = []
     var makingMove: Bool = true
+    var squaresToMark: [Int] = []
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -189,13 +192,23 @@ class SwapNumbersScene: SKScene {
             // let gamePiece = SKShapeNode(rect: CGRect(x: 0, y: 0, width: framesize/puzzleWidth, height: framesize/puzzleHeight))
             gamePiece.name = "piece,"+String(i)
             if !(theMode==4) {
-                gamePiece.fillColor = squareColor
+                
+                if squaresToMark.contains(i) {
+                    gamePiece.fillColor = markedColor
+                    originalColors.append(markedColor)
+                }
+                else {
+                    gamePiece.fillColor = squareColor
+                    originalColors.append(squareColor)
+                }
             }
             else {
                 gamePiece.fillColor = squareColor
+                originalColors.append(squareColor)
             }
             if fifteen && i==15 {
                 gamePiece.fillColor = UIColor.black
+                originalColors.append(UIColor.black)
             }
             gamePiece.strokeColor = UIColor.black
             gamePiece.zPosition = 4
@@ -255,11 +268,13 @@ class SwapNumbersScene: SKScene {
             moveSize = 2
             self.shuffleStart = true
             menuMoves = false
+            // squaresToMark = [1]
         }
         if theMode == 1 {
             moveSize = 3
             self.shuffleStart = true
             menuMoves = false
+            numShuffle = 20
         }
         if theMode == 2 {
             self.shuffleStart = false
@@ -267,6 +282,7 @@ class SwapNumbersScene: SKScene {
             menuMoves = false
             var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13,15].shuffled()
             startPosition = [[shuffled[0],shuffled[1],shuffled[2]]]
+            squaresToMark = [shuffled[0],shuffled[1],shuffled[2]]
             showMixButton = false
         }
         if theMode == 3 {
@@ -275,6 +291,7 @@ class SwapNumbersScene: SKScene {
             moveSize = 3
             var shuffled: [Int] = [0,1,2,3,4,5,6,7,8,9,12,13,15].shuffled()
             startPosition = [[shuffled[0],shuffled[1]],[shuffled[2],shuffled[3]]]
+            squaresToMark = [shuffled[0],shuffled[1],shuffled[2],shuffled[3]]
             showMixButton = false
         }
         if theMode == 4 {
@@ -381,6 +398,7 @@ class SwapNumbersScene: SKScene {
             // moveSize = 0
             self.shuffleStart = false
             startPosition = [[3,12,15]]
+            squaresToMark = [3,12,15]
             moveArray.append([[3,15,7,6],[1,4,8,9],[2,11,5]])
             moveArray.append([[3,6,7,15],[1,9,8,4],[2,5,11]])
             moveArray.append([[15,14,13,12]])
@@ -397,6 +415,7 @@ class SwapNumbersScene: SKScene {
             // moveSize = 0
             self.shuffleStart = false
             startPosition = [[0,4],[3,7]]
+            squaresToMark = [0,4,3,7]
             moveArray.append([[0,3],[4,7]])
             moveArray.append([[0,3],[4,7]])
             moveArray.append([[3,7],[8,10,9,12],[11,15]])
@@ -519,15 +538,31 @@ class SwapNumbersScene: SKScene {
                 for i in 1...puzzleWidth*puzzleHeight {
                     numbers.append(i)
                 }
+                // need to make the shuffle so that it only does an even number of swaps otherwise the 3-cycle game is not going to work
+                /* var swaps: Int = 0
+                var j = 0
+                while j < 4 {
+                    let rand1: Int = Int.random(in: 1...puzzleWidth*puzzleHeight)
+                    let rand2: Int = Int.random(in: 1...puzzleWidth*puzzleHeight)
+                    if !(rand1==rand2) {
+                        j=j+1
+                        let temp = numbers[rand1-1]
+                        numbers[rand1-1]=numbers[rand2-1]
+                        numbers[rand2-1]=temp
+                        print("j is \(j) swapped \(rand1) and \(rand2)")
+                    }
+                }
+ */
                 numbers.shuffle()
                 // print("in mix")
         //        print(numbers)
                 // let subarray = numbers[0...2]
                 for i in 0..<moveSize {
                     // need the position not the number ...
-                    let posOfNum: Int = board.firstIndex(of: numbers[i]-1) ?? 0
+                    let posOfNum: Int = board.firstIndex(of: numbers[i]) ?? 99
                     // movearray.append(numbers[i]-1)
                     movearray.append(posOfNum)
+                    
                 }
                 // print("in mix about to make move \(movearray)")
                 makemove(myarray: movearray, howLong: 0.05) //0.05)
@@ -909,19 +944,19 @@ class SwapNumbersScene: SKScene {
             self.makingMove = false
             let temppos = self.nodelist[myarray[0]].position
             if !self.fifteen {
-                self.nodelist[myarray[0]].fillColor = self.squareColor
+                self.nodelist[myarray[0]].fillColor = self.originalColors[myarray[0]] //self.squareColor
             }
             for j in 0..<myarray.count-1 {
                 // print("in makemove j= \(j)")
                 if !self.fifteen {
-                    self.nodelist[myarray[j]].fillColor = self.squareColor
+                    self.nodelist[myarray[j]].fillColor = self.originalColors[myarray[j]] //self.squareColor
                 }
                 self.nodelist[myarray[j]].position = self.nodelist[myarray[j+1]].position
             }
             // self.nodelist[myarray[1]].fillColor = UIColor.yellow
             self.nodelist[myarray[myarray.count-1]].position = temppos
             if !self.fifteen {
-                self.nodelist[myarray[myarray.count-1]].fillColor = self.squareColor
+                self.nodelist[myarray[myarray.count-1]].fillColor = self.originalColors[myarray[myarray.count-1]] //self.squareColor
             }
 
 
@@ -981,7 +1016,7 @@ class SwapNumbersScene: SKScene {
         instructions.append("Select any two numbers\nto swap them.\nThe goal is to get\nthe numbers in order\nfrom 1 to 16.")
         instructions.append("Select any three numbers\nto cycle them")
         instructions.append("Use swaps to solve\na 3-cycle.\nIt can be done in 2 moves.")
-        instructions.append("Use 3-cycles to solve\ntwo swaps.\nIt can be done in 2 moves.")
+        instructions.append("Use 3-cycles to solve\ntwo two-swaps.\nIt can be done in 2 moves.")
         instructions.append("Select two numbers to\nswap.  One must\nbe in position 1")
         instructions.append("Use the buttons to make\nthe moves.  It can\nbe done in 7 moves.")
         instructions.append("Select a position\nthat is not on the\nright edge or\nthe bottom edge\nand it will 3-cycle with\nthe position to the\nright and the\nposition below.")

@@ -972,13 +972,13 @@ class CubePuzzles: SKScene {
             if let nodeName = node.name {
                 print(nodeName)
                 
-                if !isMoving && !flipEdge && chosennumbers.count==0 && node.name?.hasPrefix("flipedge") ?? false {
+                if !isMoving && !flipEdge && !flipCorner && chosennumbers.count==0 && node.name?.hasPrefix("flipedge") ?? false {
                     print("flipedge")
                     flipEdge = true
                     moveSize=2
                     flipButtonList[0].fillColor = UIColor.green
                 }
-                if !isMoving && !flipCorner && chosennumbers.count==0 && node.name?.hasPrefix("flipcorner") ?? false {
+                if !isMoving && !flipCorner && !flipEdge && chosennumbers.count==0 && node.name?.hasPrefix("flipcorner") ?? false {
                     print("flipcorner")
                     flipCorner = true
                     flipButtonList[1].fillColor = UIColor.green
@@ -988,7 +988,10 @@ class CubePuzzles: SKScene {
                 if !isMoving && flipEdge && node.name?.hasPrefix("piece") ?? false {
                     let n=Int(node.name!.components(separatedBy: ",")[1])!
                     if !chosennumbers.contains(n) && [1,3,5,7,9,11,15,17,19,21,23,25].contains(n){
+                        print("in edgeflip")
+                        print("n is \(n)")
                         chosennumbers.append(n)
+                        print([1,3,5,7,9,11,15,17,19,21,23,25].contains(n))
                         nodelist[n].fillColor = UIColor.green
                     }
                     if chosennumbers.count == 2 {
@@ -1003,7 +1006,7 @@ class CubePuzzles: SKScene {
                     }
                 }
                 
-                if !isMoving && flipCorner && node.name?.hasPrefix("piece") ?? false {
+                else if !isMoving && flipCorner && node.name?.hasPrefix("piece") ?? false {
                     let n=Int(node.name!.components(separatedBy: ",")[1])!
                     if !chosennumbers.contains(n) && [0,2,6,8,18,20,24,26].contains(n){
                         chosennumbers.append(n)
