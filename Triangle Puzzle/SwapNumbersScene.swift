@@ -15,12 +15,14 @@ class SwapNumbersScene: SKScene {
     var puzzleWidth = 4
     var puzzleHeight = 4
     var moveSize = 0
+    var customclicks = 0
     var showMixButton: Bool = true
     var board: [Int] = []
     var restartboard: [Int] = []
     var moveArray: [[[Int]]] = []
     var startPosition: [[Int]] = []
     var nodelist: [SKShapeNode] = []
+    var textnodelist: [SKLabelNode] = []
     var chosennumbers: [Int] = []
     var originalPositions: [CGPoint] = []
     var nodesselected = 0
@@ -50,6 +52,8 @@ class SwapNumbersScene: SKScene {
     var moveArrayStrings: [String] = []
     var makingMove: Bool = true
     var squaresToMark: [Int] = []
+    var customMode: Bool = false
+    var showCustomButton: Bool = false
     // new comment
     // another new comment
     override func didMove(to view: SKView) {
@@ -165,6 +169,22 @@ class SwapNumbersScene: SKScene {
         startOverButton.addChild(startOverText)
         self.addChild(startOverButton)
         
+        let customButton = SKShapeNode(circleOfRadius: menuButtonSize)
+        customButton.fillColor = UIColor.gray
+        // startOverButton.alpha = 0.5
+        customButton.position = CGPoint(x: 300, y: menuButtonY)
+        customButton.name="custom"
+        let customText = SKLabelNode(text: "CUSTOM")
+        customText.name = "textcustom"
+        customText.fontName = "AvenirNext-Bold"
+        customText.fontSize = 18.0
+        // startOverText.color = UIColor.black
+        customText.zPosition = 6
+        customButton.addChild(customText)
+        if showCustomButton {
+            self.addChild(customButton)
+        }
+        
         let moveButton = SKShapeNode(circleOfRadius: 50)
         moveButton.fillColor = UIColor.blue
         moveButton.position = CGPoint(x: -100, y: -400)
@@ -237,6 +257,7 @@ class SwapNumbersScene: SKScene {
             tritext.position = CGPoint(x: framesize/(puzzleWidth*2), y: framesize/(puzzleWidth*2))
             tritext.name = "text"+String(i+1)
             tritext.zPosition = 1
+            textnodelist.append(tritext)
             gamePiece.addChild(tritext)
             nodelist.append(gamePiece)
             myframe.addChild(gamePiece)
@@ -268,6 +289,7 @@ class SwapNumbersScene: SKScene {
             moveSize = 2
             self.shuffleStart = true
             menuMoves = false
+            showCustomButton = true
             // squaresToMark = [1]
         }
         if theMode == 1 {
@@ -275,6 +297,7 @@ class SwapNumbersScene: SKScene {
             self.shuffleStart = true
             menuMoves = false
             numShuffle = 20
+            showCustomButton = true
         }
         if theMode == 2 {
             self.shuffleStart = false
@@ -299,6 +322,7 @@ class SwapNumbersScene: SKScene {
             self.shuffleStart = true
             menuMoves = false
             swapWithOne = true
+            showCustomButton = true
         }
         if theMode == 5 {
             /* moveSize = 2
@@ -344,6 +368,7 @@ class SwapNumbersScene: SKScene {
             self.LShape = true
             // moveArray.append([[1,2,3],[4,5]])
             // moveArray.append([[6,8,9]])
+            showCustomButton = true
         }
         if theMode == 7 {
             moveSize = 2
@@ -351,6 +376,7 @@ class SwapNumbersScene: SKScene {
             self.shuffleStart = true
             self.numShuffle = 25
             menuMoves = false
+            showCustomButton = true
             // moveArray.append([[1,2,3],[4,5]])
             // moveArray.append([[6,8,9]])
         }
@@ -622,6 +648,15 @@ class SwapNumbersScene: SKScene {
                         instructionsBox.isHidden = false
                         numClicks = 0
                     }
+                    else if thename == "custom" {
+                        customMode = true
+                        for i in textnodelist {
+                            i.isHidden = true
+                        }
+                        if fifteen {
+                            nodelist[15].fillColor = UIColor.yellow
+                        }
+                    }
                     else if thename == "solve" || thename == "startover" {
                         print(thename)
                         print(board)
@@ -681,7 +716,39 @@ class SwapNumbersScene: SKScene {
                     // print(n)
                     // print(chosennumbers.count)
                     // print(chosennumbers)
-                    if LShape {
+                    if customMode {
+                        // print("in custommode")
+                        // print("board is now")
+                        // print(board)
+                        // print("n \(n)")
+                        // print("customclicks \(customclicks)")
+                        if textnodelist[n].isHidden {
+                            // var temp = board[board.firstIndex(of: n) ?? 0]
+                            // board[n]=board[board.firstIndex(of: customclicks+1) ?? 0]
+                            // board[board.firstIndex(of: customclicks+1) ?? 0]=temp
+                            
+                            var tempnodepos = nodelist[n].position
+                            nodelist[n].position = nodelist[customclicks].position
+                            nodelist[customclicks].position=tempnodepos
+                            
+                            var firstboardpos = board.firstIndex(of: n+1) ?? 0
+                            var secondboardpos = board.firstIndex(of: customclicks+1) ?? 0
+                            var tempboardpos = board[firstboardpos]
+                            board[firstboardpos] = board[secondboardpos]
+                            board[secondboardpos] = tempboardpos
+                            textnodelist[customclicks].isHidden = false
+                            customclicks = customclicks + 1
+                            if customclicks == puzzleWidth*puzzleHeight {
+                                customMode = false
+                                if fifteen {
+                                    nodelist[15].fillColor = UIColor.black
+                                }
+                                // print("done with customMode")
+                                customclicks = 0
+                            }
+                        }
+                    }
+                    else if LShape {
                         if let pos = board.firstIndex(of: n+1) {
                             if pos/4 < 3 && pos%4 != 3 {
                                 nodelist[n].fillColor = UIColor(red: 0, green: 0.6392, blue: 0.0078, alpha: 1.0) // UIColor.green
