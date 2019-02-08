@@ -561,7 +561,11 @@ class SwapNumbersScene: SKScene {
             else if !menuMoves {
                 var movearray: [Int] = []
                 var numbers: [Int] = []
-                for i in 1...puzzleWidth*puzzleHeight {
+                var lastnum: Int = puzzleWidth*puzzleHeight
+                if fifteen {
+                    lastnum = lastnum - 1
+                }
+                for i in 1...lastnum {
                     numbers.append(i)
                 }
                 // need to make the shuffle so that it only does an even number of swaps otherwise the 3-cycle game is not going to work

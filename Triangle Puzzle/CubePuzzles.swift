@@ -85,6 +85,8 @@ class CubePuzzles: SKScene {
     var showMixButton: Bool = true
     var instructionsNode: SKNode = SKNode()
     var cubesToColor: [Int] = [30,30,30]
+    var node = SK3DNode()
+    var showRotators: Bool = true
     
     
     // can access any of the small cubies in this array
@@ -133,6 +135,7 @@ class CubePuzzles: SKScene {
                 showFlipButtons = true
                 showSolveButton = false
                 hasFlat = true
+                showRotators = false
             }
             else if theMode == 1 {
                 colors = false
@@ -148,6 +151,7 @@ class CubePuzzles: SKScene {
                 showSolveButton = false
                 hasFlat = true
                 showFlipButtons = false
+                showRotators = false
             }
             else if theMode == 7 {
                 colors = true
@@ -257,6 +261,16 @@ class CubePuzzles: SKScene {
         ccwText.fontName = "Helvetica"
         ccwText.name = "ignore"
         ccwText.position = CGPoint(x: -250, y: -500)
+        
+        let rotText: SKLabelNode = SKLabelNode(text: "Rotate")
+        rotText.fontSize = 36
+        rotText.fontColor = UIColor.black
+        rotText.fontName = "Helvetica"
+        rotText.name = "ignore"
+        rotText.position = CGPoint(x: -250, y: -625)
+        if showRotators {
+            self.addChild(rotText)
+        }
         if showFaceMoves {
             self.addChild(ccwText)
         }
@@ -490,13 +504,13 @@ class CubePuzzles: SKScene {
          middlebackNode.name = "middleback"
          middlebackNode.position = CGPoint(x: -200, y: 0)
          self.addChild(middlebackNode) */
-        for i in 1...6 {
+        for i in 1...5 {
             let purpleNode = SKShapeNode(circleOfRadius: 35.0)
             purpleNode.fillColor = UIColor.purple
             // purpleNode.fillColor = colorsList[i-1]
-            purpleNode.position = CGPoint(x: -200+i*70, y: -600)
+            purpleNode.position = CGPoint(x: -200+i*80, y: -600)
             purpleNode.name = "pbutton,"+String(i)
-            if showControls {
+            if showRotators {
                 self.addChild(purpleNode)
                 
             }
@@ -592,7 +606,7 @@ class CubePuzzles: SKScene {
                     }
                     else {
                         // cubeGeometry2.materials = [blueMaterial, blueMaterial, blueMaterial, blueMaterial, blueMaterial, blueMaterial]
-                        var imageMaterial = SCNMaterial()
+                        let imageMaterial = SCNMaterial()
                         // let image = UIImage(named: String(convertStickers[k-1])+"pic.png")
                         var stickerColor: UIColor = UIColor.white
                         if k==cubesToColor[0] {
@@ -855,7 +869,7 @@ class CubePuzzles: SKScene {
             return scnScene
         }()
         
-        let node = SK3DNode(viewportSize: CGSize(width: winSize, height: winSize))
+        node = SK3DNode(viewportSize: CGSize(width: winSize, height: winSize))
         node.scnScene = scnScene
         node.position = CGPoint(x: winPosx, y: winPosy)
         node.name = "3d"
@@ -946,7 +960,7 @@ class CubePuzzles: SKScene {
             // let moveSize = 3
             // let numcube: Bool = true
             let location = touch.location(in: self)
-            var node: SKNode = self.atPoint(location)
+            var node2: SKNode = self.atPoint(location)
             let nodesatpoint: [SKNode] = self.nodes(at: location)
             // go through all nodes on the list and stop when you get one with 'piece'
             var done: Bool = false
@@ -956,11 +970,11 @@ class CubePuzzles: SKScene {
                     print(nodeName)
                     if nodeName2.hasPrefix("piece") {
                         done = true
-                        node = i
+                        node2 = i
                         break outerLoop
                     }
                     if nodeName2.hasPrefix("flipedge") || nodeName2.hasPrefix("flipcorner") {
-                        node = i
+                        node2 = i
                         done = true
                         break outerLoop
                     }
@@ -969,7 +983,7 @@ class CubePuzzles: SKScene {
                     break
                 }
             }
-            if let nodeName = node.name {
+            if let nodeName = node2.name {
                 print(nodeName)
                 
                 if !isMoving && !flipEdge && !flipCorner && chosennumbers.count==0 && node.name?.hasPrefix("flipedge") ?? false {
@@ -2282,21 +2296,23 @@ class CubePuzzles: SKScene {
                     
                 else if nodeName.hasPrefix("pbutton") {
                     let buttonNumber = Int(nodeName.split(separator: ",")[1])
-                    print("purple \(buttonNumber)")
+                    // print("purple \(buttonNumber)")
                     if buttonNumber == 1 {
-                        moveCamera(d: 1.0)
+                    node.pointOfView?.transform = SCNMatrix4Rotate((node.pointOfView?.transform)!, Float(3.14159 / 12.0), 0, 1, 0)
+                        // moveCamera(d: 1.0)
                     }
                     else if buttonNumber == 2 {
-                        moveCamera(d: -1.0)
+                        node.pointOfView?.transform = SCNMatrix4Rotate((node.pointOfView?.transform)!, Float(-3.14159 / 12.0), 0, 1, 0)
                     }
                     else if buttonNumber == 3 {
-                        moveCameraUp(d: 1.0)
+                        node.pointOfView?.transform = SCNMatrix4Rotate((node.pointOfView?.transform)!, Float(3.14159 / 12.0), 1, 0, 0)
                     }
                     else if buttonNumber == 4 {
-                        moveCameraUp(d: -1.0)
+                        node.pointOfView?.transform = SCNMatrix4Rotate((node.pointOfView?.transform)!, Float(-3.14159 / 12.0), 1, 0, 0)
                     }
                     else if buttonNumber == 5 {
-                        moveCameraOver(d: 1.0)
+                        node.pointOfView?.position = SCNVector3(x: 23, y: Float(yHeight+23), z: 23)
+                        node.pointOfView?.rotation = SCNVector4(-4, 5, 1, 0.95)
                     }
                     else if buttonNumber == 6 {
                         moveCameraOver(d: -1.0)
