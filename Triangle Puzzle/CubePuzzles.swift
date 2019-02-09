@@ -986,21 +986,21 @@ class CubePuzzles: SKScene {
             if let nodeName = node2.name {
                 print(nodeName)
                 
-                if !isMoving && !flipEdge && !flipCorner && chosennumbers.count==0 && node.name?.hasPrefix("flipedge") ?? false {
+                if !isMoving && !flipEdge && !flipCorner && chosennumbers.count==0 && node2.name?.hasPrefix("flipedge") ?? false {
                     print("flipedge")
                     flipEdge = true
                     moveSize=2
                     flipButtonList[0].fillColor = UIColor.green
                 }
-                if !isMoving && !flipCorner && !flipEdge && chosennumbers.count==0 && node.name?.hasPrefix("flipcorner") ?? false {
+                if !isMoving && !flipCorner && !flipEdge && chosennumbers.count==0 && node2.name?.hasPrefix("flipcorner") ?? false {
                     print("flipcorner")
                     flipCorner = true
                     flipButtonList[1].fillColor = UIColor.green
                     
                     moveSize=2
                 }
-                if !isMoving && flipEdge && node.name?.hasPrefix("piece") ?? false {
-                    let n=Int(node.name!.components(separatedBy: ",")[1])!
+                if !isMoving && flipEdge && node2.name?.hasPrefix("piece") ?? false {
+                    let n=Int(node2.name!.components(separatedBy: ",")[1])!
                     if !chosennumbers.contains(n) && [1,3,5,7,9,11,15,17,19,21,23,25].contains(n){
                         print("in edgeflip")
                         print("n is \(n)")
@@ -1020,8 +1020,8 @@ class CubePuzzles: SKScene {
                     }
                 }
                 
-                else if !isMoving && flipCorner && node.name?.hasPrefix("piece") ?? false {
-                    let n=Int(node.name!.components(separatedBy: ",")[1])!
+                else if !isMoving && flipCorner && node2.name?.hasPrefix("piece") ?? false {
+                    let n=Int(node2.name!.components(separatedBy: ",")[1])!
                     if !chosennumbers.contains(n) && [0,2,6,8,18,20,24,26].contains(n){
                         chosennumbers.append(n)
                         nodelist[n].fillColor = UIColor.green
@@ -1038,9 +1038,9 @@ class CubePuzzles: SKScene {
                     }
                 }
                     
-                else if !isMoving && node.name?.hasPrefix("piece") ?? false {
-                    let n=Int(node.name!.components(separatedBy: ",")[1])!
-                    // print("piece \(n) is clicked")
+                else if !isMoving && node2.name?.hasPrefix("piece") ?? false {
+                    let n=Int(node2.name!.components(separatedBy: ",")[1])!
+                    print("piece \(n) is clicked")
                     if !numcube && chosennumbers.count < moveSize {
                         if !chosennumbers.contains(n) {
                             chosennumbers.append(n)
@@ -1073,6 +1073,7 @@ class CubePuzzles: SKScene {
                         // makemove(myarray: [18,19,20,23,26,25,24,21], howLong: 0.5)
                     }
                     else if numcube && chosennumbers.count < moveSize {
+                        print("should make flat board change")
                         if chosennumbers.count==0 && !chosennumbers.contains(n) && (cornerSquares.contains(n+1) || edgeSquares.contains(n+1)) {
                             chosennumbers.append(n)
                             nodelist[n].fillColor = UIColor.green

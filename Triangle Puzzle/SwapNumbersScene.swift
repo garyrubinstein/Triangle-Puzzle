@@ -43,7 +43,7 @@ class SwapNumbersScene: SKScene {
     var numcube: Bool = false // for number cube
     var swapWithOne: Bool = false
     var swap111215: Bool = false
-    var squareColor: UIColor = UIColor.yellow
+    var squareColor: UIColor = UIColor(red: 0.8392, green: 0.7961, blue: 0, alpha: 1.0) // UIColor.yellow
     var markedColor: UIColor = UIColor.red
     var originalColors: [UIColor] = []
     var cornerSquares: [Int] = []
@@ -658,7 +658,7 @@ class SwapNumbersScene: SKScene {
                             i.isHidden = true
                         }
                         if fifteen {
-                            nodelist[15].fillColor = UIColor.yellow
+                            nodelist[15].fillColor = squareColor
                         }
                     }
                     else if thename == "solve" || thename == "startover" {
@@ -742,10 +742,13 @@ class SwapNumbersScene: SKScene {
                             board[secondboardpos] = tempboardpos
                             textnodelist[customclicks].isHidden = false
                             customclicks = customclicks + 1
-                            if customclicks == puzzleWidth*puzzleHeight {
+                            if customclicks == puzzleWidth*puzzleHeight-1 {
                                 customMode = false
                                 if fifteen {
                                     nodelist[15].fillColor = UIColor.black
+                                }
+                                else {
+                                    textnodelist[customclicks].isHidden = false
                                 }
                                 // print("done with customMode")
                                 customclicks = 0
