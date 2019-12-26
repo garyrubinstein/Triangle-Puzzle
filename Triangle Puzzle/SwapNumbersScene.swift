@@ -10,6 +10,8 @@ import SpriteKit
 
 class SwapNumbersScene: SKScene {
     var framesize = 0
+    var movecount = 0
+    var showMoveCount = true
     var shuffleStart = true
     let puzzleSize = 4
     var puzzleWidth = 4
@@ -98,6 +100,15 @@ class SwapNumbersScene: SKScene {
         let menuButtonSize: CGFloat = 50
         let menuButtonY: CGFloat = -520
 
+        // movecount text
+        let moveCountText = SKLabelNode(text: "MOVES:")
+        moveCountText.name = "movecounttext"
+        moveCountText.fontName = "AvenirNext-Bold"
+        moveCountText.fontSize = 72.0
+        moveCountText.fontColor = UIColor.black
+        moveCountText.zPosition = 6
+        moveCountText.position = CGPoint(x: 0, y: 600)
+        self.addChild(moveCountText)
 // instructions button
         let instructionsButton = SKShapeNode(circleOfRadius: menuButtonSize)
         instructionsButton.fillColor = UIColor.red //UIColor.green
@@ -192,9 +203,16 @@ class SwapNumbersScene: SKScene {
         // self.addChild(moveButton)
         let myframe = SKShapeNode(rect: CGRect(x: -framesize/2-frameOffsetX, y: -framesize/2-frameOffset, width: framesize, height: framesize))
         myframe.fillColor = UIColor.red
-        myframe.zPosition = 3
+        myframe.zPosition = 3 // this was 3
         myframe.name = "frame"
         self.addChild(myframe)
+        
+        // flash when done
+        let myflash = SKShapeNode(rect: CGRect(x: -framesize/2-frameOffsetX, y: -framesize/2-frameOffset, width: framesize, height: framesize))
+        myflash.fillColor = UIColor.white
+        myflash.zPosition = 8 // this was 3
+        myflash.name = "flash"
+        // self.addChild(myflash)
         // print("framesize \(framesize)")
         for i in 0...(puzzleWidth*puzzleHeight-1) {
             // print(i)
@@ -262,16 +280,21 @@ class SwapNumbersScene: SKScene {
             nodelist.append(gamePiece)
             myframe.addChild(gamePiece)
             // tritext.position = CGPoint(x: 0, y: 0)
+            // self.addChild(myflash)
             
             
         }
+        myflash.alpha = 0.0
+        self.addChild(myflash)
         // print(board)
         if shuffleStart {
             mix(nummoves: numShuffle)
             restartboard = Array(board)
+            movecount = 0
         }
         else {
             makemoves(myarray: startPosition)
+            movecount = 0
         }
         // let testArray = [[1,2,3],[4,5]]
         // print("test array")
@@ -296,7 +319,7 @@ class SwapNumbersScene: SKScene {
             moveSize = 3
             self.shuffleStart = true
             menuMoves = false
-            numShuffle = 20
+            numShuffle = 20 
             showCustomButton = true
         }
         if theMode == 2 {
@@ -401,15 +424,15 @@ class SwapNumbersScene: SKScene {
             // moveArray.append([[0,3],[4,7]])
             // moveArray.append([[3,7],[8,10,9,12],[11,15]])
             menuMoves = true
-            moveArray.append([[5,6,9,10]])
-            moveArray.append([[5,10,9,6]])
+            moveArray.append([[5,6,10,9]])
+            moveArray.append([[5,9,10,6]])
             moveArray.append([[0,1,2,3,7,11,15,14,13,12,8,4]])
             moveArray.append([[0,4,8,12,13,14,15,11,7,3,2,1]])
             moveArray.append([[0,5,10,15]])
             moveArray.append([[0,15,10,5]])
             moveArray.append([[12,9,6,3]])
             moveArray.append([[12,3,6,9]])
-            moveArrayStrings.append("A=(6 7 10 11)")
+            moveArrayStrings.append("A=(6 7 11 10)")
             moveArrayStrings.append("A inv")
             moveArrayStrings.append("B=(1 2 3 4 8 12 16 15 14 13 9 5)")
             moveArrayStrings.append("B inv")
@@ -556,6 +579,7 @@ class SwapNumbersScene: SKScene {
                         makemove(myarray: [board[pos]-1,board[pos+1]-1,board[pos+4]-1], howLong: 0.5)
                         
                     }
+                    movecount = 0
                 }
             }
             else if !menuMoves {
@@ -596,6 +620,7 @@ class SwapNumbersScene: SKScene {
                 }
                 // print("in mix about to make move \(movearray)")
                 makemove(myarray: movearray, howLong: 0.05) //0.05)
+                movecount = 0
                 // print("in mix")
                 // print("after makemove")
                 // print("the board is now \(board)")
@@ -603,6 +628,7 @@ class SwapNumbersScene: SKScene {
             }
             else {
                 makemoves(myarray: moveArray.randomElement()!)
+                movecount = 0
                 // makemove(myarray: moveArray.randomElement(), howLong: 0.05)
             }
         }
@@ -612,6 +638,9 @@ class SwapNumbersScene: SKScene {
             makemove(myarray: [number1, number2], howLong: 0.05)
             // makemove(firstnum: number1, secondnum: number2, howLong: 0.05)
         } */
+        movecount = 0
+        let movecounttextnode = childNode(withName: "movecounttext") as! SKLabelNode
+        movecounttextnode.text = "MOVES: "+String(movecount)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -647,6 +676,9 @@ class SwapNumbersScene: SKScene {
                         restartboard = Array(board)
                         print("restartboard after shuffle is")
                         print(restartboard)
+                        movecount = 0
+                        let movecounttextnode = childNode(withName: "movecounttext") as! SKLabelNode
+                        movecounttextnode.text = "MOVES: "+String(movecount)
                     }
                     else if thename == "instructions" {
                         instructionsBox.isHidden = false
@@ -654,16 +686,23 @@ class SwapNumbersScene: SKScene {
                     }
                     else if thename == "custom" {
                         customMode = true
+                        customclicks=0
                         for i in textnodelist {
                             i.isHidden = true
                         }
                         if fifteen {
                             nodelist[15].fillColor = squareColor
                         }
+                        movecount = 0
+                        let movecounttextnode = childNode(withName: "movecounttext") as! SKLabelNode
+                        movecounttextnode.text = "MOVES: "+String(movecount)
                     }
                     else if thename == "solve" || thename == "startover" {
                         print(thename)
                         print(board)
+                        movecount = 0
+                        let movecounttextnode = childNode(withName: "movecounttext") as! SKLabelNode
+                        movecounttextnode.text = "MOVES: "+String(movecount)
                         for i in 0..<puzzleWidth*puzzleHeight {
                             // self.nodelist[i].position = originalPositions[self.nodelist[i]]
                             // print(i)
@@ -696,9 +735,15 @@ class SwapNumbersScene: SKScene {
                                     self.nodelist[restartboard[i]-1].position = self.originalPositions[i]
                                 }
                                 board = Array(restartboard)
+                                movecount = 0
+                                let movecounttextnode = childNode(withName: "movecounttext") as! SKLabelNode
+                                movecounttextnode.text = "MOVES: "+String(movecount)
                             }
                             else {
                                 makemoves(myarray: startPosition)
+                                movecount = 0
+                                let movecounttextnode = childNode(withName: "movecounttext") as! SKLabelNode
+                                movecounttextnode.text = "MOVES: "+String(movecount)
                             }
                         }
                     }
@@ -1000,7 +1045,10 @@ class SwapNumbersScene: SKScene {
         for i in myarray {
                 makemove(myarray: i, howLong: 0.5)
             }
-
+        movecount += 1
+        let movecounttextnode = childNode(withName: "movecounttext") as! SKLabelNode
+        movecounttextnode.text = "MOVES: "+String(movecount)
+        
     }
     
     func makemove(myarray: [Int], howLong: TimeInterval) {
@@ -1060,6 +1108,20 @@ class SwapNumbersScene: SKScene {
         // chosennumbers[1]=0
         chosennumbers.removeAll()
         nodesselected = 0
+
+        // print("movecount")
+        // print(movecount)
+        // print("board is now")
+        // print(board)
+        if board==[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] {
+            let toflash = childNode(withName: "flash")
+            // print("solved!")
+            // toflash!.alpha = 1
+            let fadein = SKAction.fadeAlpha(to: 1.0, duration: 0.4)
+            let fadeout = SKAction.fadeAlpha(to: 0.0, duration: 0.4)
+            let fadeinandout = SKAction.sequence([fadein,fadeout])
+            toflash?.run(fadeinandout)
+        }
     }
     func createMultiLineText(textToPrint:String, color:UIColor, fontSize:CGFloat, fontName:String, fontPosition:CGPoint, fontLineSpace:CGFloat)->SKNode{
         

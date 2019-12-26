@@ -206,6 +206,7 @@ class CubePuzzles: SKScene {
             // put one corner in place
             else if theMode == 3 {
                 colors = false
+                // colors = true
                 moveOneCorner = true
                 winPosx = 0
                 winPosy = 0
@@ -216,6 +217,7 @@ class CubePuzzles: SKScene {
             // put one edge in place
             else if theMode == 4 {
                 colors = false
+                // colors = true
                 winPosx = 0
                 winPosy = 0
                 moveOneEdge = true
@@ -920,6 +922,7 @@ class CubePuzzles: SKScene {
         // self.addChild(backgroundView)
         let backgroundSquare = SKShapeNode(rect: CGRect(x: -winSize/2+winPosx, y: -winSize/2+winPosy, width: winSize, height: winSize))
         backgroundSquare.fillColor = UIColor.brown
+        // backgroundSquare.fillColor = UIColor.white
         backgroundSquare.zPosition = 1
         self.addChild(backgroundSquare)
         if !(startPattern == "") {
