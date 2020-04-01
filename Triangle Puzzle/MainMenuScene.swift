@@ -33,8 +33,25 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
     let ProductID = "permutantunlock"
     
     override func didMove(to view: SKView) {
-        initialize()
+        
+        // UserDefaults.standard.removeObject(forKey: "tester")
+
+        if let getBool = UserDefaults.standard.value(forKey: "tester") as? Bool {
+            print("in tester was  ")
+            print(getBool)
+            plus = getBool
+            // plus = Bool(UserDefaults.standard.value(forKey: "tester"))
+        }
+        else {
+            print("was nothing in tester")
+            // first time
+            plus = false
+            UserDefaults.standard.set(false, forKey: "tester")
+            // plus = Bool(UserDefaults.standard.value(forKey: "tester"))
+        }
+
         SKPaymentQueue.default().add(self)
+        initialize()
     }
     func initialize() {
         if (plus) {
@@ -170,7 +187,9 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
                             active = true
                         }
                         if thenumber==27 {
-                             purchasePlus()
+                             purchasePlus2()
+                             // purchasePlus()
+
                         }
                         
                         // this is a part for if there are more than 26
@@ -316,6 +335,7 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
         }
     }
     
+    
     func purchasePlus() {
         if SKPaymentQueue.canMakePayments() {
             print("making payment")
@@ -326,6 +346,13 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
         else {
             print("payment failed")
         }
+        
+    }
+
+    func purchasePlus2() {
+        plus = true
+        UserDefaults.standard.set(true, forKey: "tester")
+
         
     }
 
