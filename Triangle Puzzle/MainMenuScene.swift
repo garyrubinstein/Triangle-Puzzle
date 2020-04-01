@@ -7,16 +7,17 @@
 //
 
 import SpriteKit
+import StoreKit
 
-class MainMenuScene: SKScene {
+class MainMenuScene: SKScene, SKPaymentTransactionObserver {
     var framesize = 0
     var screenWidth: CGFloat = 0
     var screenHeight: CGFloat = 0
     var theSize: CGFloat = 0
     var frameOffset: Int = 100
     var buttonOffset: Int = 200
-    var totalButtons: Int = 26
-    var buttonsOnSceen: Int = 26
+    var totalButtons: Int = 27
+    var buttonsOnSceen: Int = 27
     var sceneNames: [String] = []
     var numberPuzzles: Int = 12
     var trianglePuzzles: Int = 2
@@ -27,11 +28,18 @@ class MainMenuScene: SKScene {
     var firstNumNumber: Int = 0
     var firstTriNumber: Int = 0
     var firstCubeNumber: Int = 0
+    var plus = false
+    let ProductID = "permutantunlock"
     
     override func didMove(to view: SKView) {
         initialize()
+        SKPaymentQueue.default().add(self)
     }
     func initialize() {
+        if (plus) {
+            totalButtons = 26
+            buttonsOnSceen = 26
+        }
         firstTriNumber = numberPuzzles+1
         firstCubeNumber = numberPuzzles + trianglePuzzles + 1
         for _ in 0...numberPuzzles-1 {
@@ -100,10 +108,11 @@ class MainMenuScene: SKScene {
         if totalButtons <= buttonsOnSceen {
             toMake = totalButtons-1
         }
-        for i in 0...toMake {
+        for i in 0...toMake  { // take out the +1 later
             let moveButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight))
             // let moveButton = SKShapeNode(rect: CGRect(x: CGFloat(i*20)+buttonWidth/2, y: CGFloat(i*20)-buttonHeight/2, width: buttonWidth, height: buttonHeight))
             moveButton.fillColor = UIColor.orange
+            moveButton.alpha = 0.5
             moveButton.name = "movebutton,"+String(i+1)
             moveButton.zPosition = 5
             // moveButton.position = convert(moveButton.position, from: moveBox)
@@ -145,9 +154,16 @@ class MainMenuScene: SKScene {
                         let thenumberstring = Int(nodeName.components(separatedBy: ",")[1])
                         var thenumber = Int(thenumberstring!)
                         print("thenumber is \(thenumber)")
+                        if thenumber==27 {
+                             purchasePlus()
+                        }
+                        
+                        // this is a part for if there are more than 26
+                        // menu choices, there will be another page with numbers
+                        // from 27 to 53.  I'm taking this option out for now
                         
                         var adjustedMode: Int = 0
-                        if pageNum == 1 && thenumber < 27 {
+                        if pageNum == 1 && thenumber < 27 { //was no = before
                             adjustedMode = thenumber
                         }
                         else if pageNum == 2 && thenumber < 27 {
@@ -156,7 +172,10 @@ class MainMenuScene: SKScene {
                         // else adjusteMode stays at 0
                         print("adjusted mode is now \(adjustedMode)")
                         if adjustedMode == 0 {
-                            changePage()
+                            if !(thenumber==27) { // this is just for assuming one page of 27
+                                changePage()
+                            }
+                            // changePage()
                         }
                         else {
                             scenename = sceneNames[adjustedMode-1]
@@ -266,6 +285,31 @@ class MainMenuScene: SKScene {
             }
         }
     }
+    func paymentQueue(_ queue: SKPaymentQueue,
+                      updatedTransactions transactions: [SKPaymentTransaction]) {
+        for transaction in transactions {
+            // print("hi")
+            if transaction.transactionState == .purchased {
+                print("purchased")
+            } else if transaction.transactionState == .failed {
+                print("failed")
+            }
+        }
+    }
+    
+    func purchasePlus() {
+        if SKPaymentQueue.canMakePayments() {
+            print("making payment")
+            let paymentRequest = SKMutablePayment()
+            paymentRequest.productIdentifier = ProductID
+            SKPaymentQueue.default().add(paymentRequest)
+        }
+        else {
+            print("payment failed")
+        }
+        
+    }
+
 }
 
 

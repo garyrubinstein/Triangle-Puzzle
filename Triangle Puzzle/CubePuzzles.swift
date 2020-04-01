@@ -21,6 +21,7 @@ import GameplayKit
 class CubePuzzles: SKScene {
     // var scnScene: SCNScene
     var cubieArray: [SCNNode] = []
+    var distFromCamera: Float = 18
     var numClicks: Int = 0
     var buttonOffset: Int = 0
     var showControls: Bool = false
@@ -85,7 +86,7 @@ class CubePuzzles: SKScene {
     var showMixButton: Bool = true
     var instructionsNode: SKNode = SKNode()
     var cubesToColor: [Int] = [30,30,30]
-    var node = SK3DNode()
+    var d3node = SK3DNode()
     var showRotators: Bool = true
     
     
@@ -97,6 +98,12 @@ class CubePuzzles: SKScene {
     // after each move, the position array needs to change accordingly
     let sideLen: CGFloat = 5.0
     override func didMove(to view: SKView) {
+        if #available(iOS 11, *) {
+            print("11 or newer")// iOS 11 (or newer) Swift code
+        } else {
+            print("10 or older")
+            // iOS 10 or older code
+        }
         if let mode = self.userData?.value(forKey: "mode") {
             print("mode is \(mode)")
             var theMode = mode as! Int
@@ -871,16 +878,16 @@ class CubePuzzles: SKScene {
             return scnScene
         }()
         
-        node = SK3DNode(viewportSize: CGSize(width: winSize, height: winSize))
-        node.scnScene = scnScene
-        node.position = CGPoint(x: winPosx, y: winPosy)
-        node.name = "3d"
+        d3node = SK3DNode(viewportSize: CGSize(width: winSize, height: winSize))
+        d3node.scnScene = scnScene
+        d3node.position = CGPoint(x: winPosx, y: winPosy)
+        d3node.name = "3d"
         let ambientLight = SCNLight()
         ambientLight.type = .ambient
         ambientLight.intensity = 40
-        node.pointOfView?.light = ambientLight
+        d3node.pointOfView?.light = ambientLight
         // node.scnScene?.rootNode.addChildNode(ambientLight)
-        node.autoenablesDefaultLighting = false
+        d3node.autoenablesDefaultLighting = false
         let blueMaterial  = SCNMaterial()
         blueMaterial.diffuse.contents = UIColor.black
         // node.scnScene?.background.contents  = blueMaterial
@@ -889,7 +896,7 @@ class CubePuzzles: SKScene {
         let camera = SCNCamera()
         let cameraNode = SCNNode()
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3(x: 23, y: Float(yHeight+23), z: 23)
+        cameraNode.position = SCNVector3(x: distFromCamera, y: Float(yHeight)+distFromCamera, z: distFromCamera)
         if let lookAtTarget = scnScene.rootNode.childNode(withName: "cubesN", recursively: true) { //
             //scnScene.rootNode.childNodes.first {
             var abc = 7
@@ -898,14 +905,14 @@ class CubePuzzles: SKScene {
             // let constraint = SCNLookAtConstraint(target: lookAtTarget)
             // cameraNode.constraints = [ constraint ]
         }
-        node.pointOfView = cameraNode
+        d3node.pointOfView = cameraNode
         //cameraNode.constraints = [SCNLookAtConstraint(target: scnScene.rootNode.childNode(withName: "cubesN", recursively: true))]
         // node.scnScene.background =
         // node.pointOfView?.position = SCNVector3(x: 23, y: Float(yHeight+23), z: 23)
         // node.pointOfView?.constraints = [SCNLookAtConstraint(target: )]
-        node.pointOfView?.rotation = SCNVector4(-4, 5, 1, 0.95)
+        d3node.pointOfView?.rotation = SCNVector4(-4, 5, 1, 0.95)
         if #available(iOS 11.0, *) {
-            node.pointOfView?.camera?.fieldOfView = 45.0
+            // d3node.pointOfView?.camera?.fieldOfView = 45.0
         } else {
             // Fallback on earlier versions
         }
@@ -915,8 +922,8 @@ class CubePuzzles: SKScene {
         // ambientLight.intensity = 40
         // scnScene.rootNode.addChildNode(ambientLight)
         // self.addChild(ambientLight)
-        node.zPosition = 3
-        self.addChild(node)
+        d3node.zPosition = 3
+        self.addChild(d3node)
         // let backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
         // backgroundView.backgroundColor = UIColor.black
         // self.addChild(backgroundView)
@@ -2302,21 +2309,25 @@ class CubePuzzles: SKScene {
                     let buttonNumber = Int(nodeName.split(separator: ",")[1])
                     // print("purple \(buttonNumber)")
                     if buttonNumber == 1 {
-                    node.pointOfView?.transform = SCNMatrix4Rotate((node.pointOfView?.transform)!, Float(3.14159 / 12.0), 0, 1, 0)
+                    // d3node.pointOfView?.transform = SCNMatrix4Rotate((d3node.pointOfView?.transform)!, Float(3.14159 / 12.0), 0, 1, 0)
                         // moveCamera(d: 1.0)
+                    d3node.pointOfView?.transform = SCNMatrix4Mult(d3node.pointOfView!.transform, SCNMatrix4MakeRotation(Float(3.14159/12), 0, 1, 0));
                     }
                     else if buttonNumber == 2 {
-                        node.pointOfView?.transform = SCNMatrix4Rotate((node.pointOfView?.transform)!, Float(-3.14159 / 12.0), 0, 1, 0)
+                        // d3node.pointOfView?.transform = SCNMatrix4Rotate((d3node.pointOfView?.transform)!, Float(-3.14159 / 12.0), 0, 1, 0)
+                    d3node.pointOfView?.transform = SCNMatrix4Mult(d3node.pointOfView!.transform, SCNMatrix4MakeRotation(Float(-3.14159/12), 0, 1, 0));
                     }
                     else if buttonNumber == 3 {
-                        node.pointOfView?.transform = SCNMatrix4Rotate((node.pointOfView?.transform)!, Float(3.14159 / 12.0), 1, 0, 0)
+                        // d3node.pointOfView?.transform = SCNMatrix4Rotate((d3node.pointOfView?.transform)!, Float(3.14159 / 12.0), 1, 0, 0)
+                        d3node.pointOfView?.transform = SCNMatrix4Mult(d3node.pointOfView!.transform, SCNMatrix4MakeRotation(Float(3.14159/12), 1, 0, 0));
                     }
                     else if buttonNumber == 4 {
-                        node.pointOfView?.transform = SCNMatrix4Rotate((node.pointOfView?.transform)!, Float(-3.14159 / 12.0), 1, 0, 0)
+                        // d3node.pointOfView?.transform = SCNMatrix4Rotate((d3node.pointOfView?.transform)!, Float(-3.14159 / 12.0), 1, 0, 0)
+                        d3node.pointOfView?.transform = SCNMatrix4Mult(d3node.pointOfView!.transform, SCNMatrix4MakeRotation(Float(-3.14159/12), 1, 0, 0));
                     }
                     else if buttonNumber == 5 {
-                        node.pointOfView?.position = SCNVector3(x: 23, y: Float(yHeight+23), z: 23)
-                        node.pointOfView?.rotation = SCNVector4(-4, 5, 1, 0.95)
+                        d3node.pointOfView?.position = SCNVector3(x: distFromCamera, y: Float(yHeight)+distFromCamera, z: distFromCamera)
+                        d3node.pointOfView?.rotation = SCNVector4(-4, 5, 1, 0.95)
                     }
                     else if buttonNumber == 6 {
                         moveCameraOver(d: -1.0)

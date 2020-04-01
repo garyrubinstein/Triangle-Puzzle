@@ -11,7 +11,7 @@ import SpriteKit
 class SwapNumbersScene: SKScene {
     var framesize = 0
     var movecount = 0
-    var showMoveCount = true
+    var showMoveCount = false
     var shuffleStart = true
     let puzzleSize = 4
     var puzzleWidth = 4
@@ -108,7 +108,9 @@ class SwapNumbersScene: SKScene {
         moveCountText.fontColor = UIColor.black
         moveCountText.zPosition = 6
         moveCountText.position = CGPoint(x: 0, y: 600)
+        // This isn't quite working.
         self.addChild(moveCountText)
+        moveCountText.isHidden = true
 // instructions button
         let instructionsButton = SKShapeNode(circleOfRadius: menuButtonSize)
         instructionsButton.fillColor = UIColor.red //UIColor.green
