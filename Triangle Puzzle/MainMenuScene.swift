@@ -28,7 +28,8 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
     var firstNumNumber: Int = 0
     var firstTriNumber: Int = 0
     var firstCubeNumber: Int = 0
-    var plus = false
+    var plus = true
+    var active = true
     let ProductID = "permutantunlock"
     
     override func didMove(to view: SKView) {
@@ -112,7 +113,9 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
             let moveButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight))
             // let moveButton = SKShapeNode(rect: CGRect(x: CGFloat(i*20)+buttonWidth/2, y: CGFloat(i*20)-buttonHeight/2, width: buttonWidth, height: buttonHeight))
             moveButton.fillColor = UIColor.orange
-            moveButton.alpha = 0.5
+            if (!plus && i>15 && i<26) {
+                moveButton.alpha = 0.25
+            }
             moveButton.name = "movebutton,"+String(i+1)
             moveButton.zPosition = 5
             // moveButton.position = convert(moveButton.position, from: moveBox)
@@ -123,9 +126,15 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
             if i==buttonsOnSceen {
                 buttonText.text = "MORE"
             }
+            if i==26 {
+                buttonText.text = "$0.99"
+            }
             buttonText.fontName = "AvenirNext-Bold"
             buttonText.fontColor=UIColor.white
             buttonText.fontSize=48
+            if (!plus && i>15 && i<26) {
+                buttonText.alpha = 0.25
+            }
             buttonText.position = CGPoint(x: -CGFloat(boxWidth)/3+CGFloat(boxWidth/3)*CGFloat(i%3)+boxCenter.x, y: CGFloat(boxHeight)/3-boxHeight/4*CGFloat(Int(i/3))+boxCenter.y)
             buttonText.zPosition = 10
             buttonStringArray.append(buttonText)
@@ -154,6 +163,12 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
                         let thenumberstring = Int(nodeName.components(separatedBy: ",")[1])
                         var thenumber = Int(thenumberstring!)
                         print("thenumber is \(thenumber)")
+                        if (!plus && thenumber>16 && thenumber<27) {
+                            active = false
+                        }
+                        else {
+                            active = true
+                        }
                         if thenumber==27 {
                              purchasePlus()
                         }
@@ -254,8 +269,12 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
         scene!.scaleMode = .aspectFit
         scene?.userData = NSMutableDictionary()
         scene?.userData?.setValue(self.userData?.value(forKey: "mode"), forKey: "mode")
-        
-        self.view?.presentScene(scene)
+            if (active) {
+                self.view?.presentScene(scene)
+            }
+            
+            
+
         }
     }
     func changePage() {
