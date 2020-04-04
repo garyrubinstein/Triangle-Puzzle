@@ -52,7 +52,8 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
             UserDefaults.standard.set(false, forKey: "tester")
             // plus = Bool(UserDefaults.standard.value(forKey: "tester"))
         }
-
+        // take this out after the first clean up
+        // cleanUp()
         SKPaymentQueue.default().add(self)
         initialize()
     }
@@ -215,11 +216,12 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
                         }
                         else if nodeName.hasPrefix("iapbuy"){
                             print("buy")
-                            purchasePlus2()
+                            purchasePlus()
                             instructionsBox.isHidden = true
                         }
                         else {
                             print("restore")
+                            restorePlus()
                             instructionsBox.isHidden = true
                         }
                         // let tempNode = SKNode.
@@ -377,10 +379,34 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
                       updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
             // print("hi")
+            var doFinish = true
             if transaction.transactionState == .purchased {
                 print("purchased")
-            } else if transaction.transactionState == .failed {
-                print("failed")
+                plus = true
+                UserDefaults.standard.set(true, forKey: "tester")
+                let scene = MainMenuScene(fileNamed: "MainMenuScene")
+                scene!.scaleMode = .aspectFit
+                self.view?.presentScene(scene)
+            }
+            else if transaction.transactionState == .restored {
+                print("restored")
+                plus = true
+                UserDefaults.standard.set(true, forKey: "tester")
+                let scene = MainMenuScene(fileNamed: "MainMenuScene")
+                scene!.scaleMode = .aspectFit
+                self.view?.presentScene(scene)
+            }
+            else if transaction.transactionState == .failed {
+                print("failed!")
+                plus = false
+                UserDefaults.standard.set(false, forKey: "tester")
+            }
+            else {
+                print("transactionstate was not recognized")
+                doFinish = false
+            }
+            if doFinish {
+                SKPaymentQueue.default().finishTransaction(transaction)
             }
         }
     }
@@ -389,6 +415,8 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
     func purchasePlus() {
         if SKPaymentQueue.canMakePayments() {
             print("making payment")
+            // plus = true
+            // UserDefaults.standard.set(true, forKey: "tester")
             let paymentRequest = SKMutablePayment()
             paymentRequest.productIdentifier = ProductID
             SKPaymentQueue.default().add(paymentRequest)
@@ -397,6 +425,15 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
             print("payment failed")
         }
         
+        // UserDefaults.standard.set(true, forKey: "tester")
+        // let scene = MainMenuScene(fileNamed: "MainMenuScene")
+        // scene!.scaleMode = .aspectFit
+        // self.view?.presentScene(scene)
+    }
+    
+    func restorePlus() {
+        print("In restorePlus")
+        print(SKPaymentQueue.default().restoreCompletedTransactions())
     }
 
     func purchasePlus2() {
@@ -430,6 +467,13 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
         
         // return the sknode with all of the text in it
         return textBlock
+    }
+    func cleanUp() {
+
+        for transaction in SKPaymentQueue.default().transactions {
+
+            SKPaymentQueue.default().finishTransaction(transaction)
+        }
     }
 
 }
