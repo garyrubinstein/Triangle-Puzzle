@@ -352,6 +352,9 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
     func purchasePlus2() {
         plus = true
         UserDefaults.standard.set(true, forKey: "tester")
+        let scene = MainMenuScene(fileNamed: "MainMenuScene")
+        scene!.scaleMode = .aspectFit
+        self.view?.presentScene(scene)
 
         
     }
