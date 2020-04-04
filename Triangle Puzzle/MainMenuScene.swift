@@ -31,9 +31,12 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
     var plus = true
     var active = true
     let ProductID = "permutantunlock"
+    var instructionsNode: SKNode = SKNode()
+    var instructionsBox = SKShapeNode()
+    
     
     override func didMove(to view: SKView) {
-        
+        // this is for a fresh install without an in app purchase
         // UserDefaults.standard.removeObject(forKey: "tester")
 
         if let getBool = UserDefaults.standard.value(forKey: "tester") as? Bool {
@@ -103,6 +106,32 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
         print("theSize")
         print(theSize)
         addMoveList()
+        var instructionText: String =
+        "To unlock extra puzzles\n, click 'unlock' for $0.99\nIf you have previously\n unlocked, click 'restore'\nand you will not be\ncharged again."
+        instructionsNode = createMultiLineText(textToPrint: instructionText, color: UIColor.white, fontSize: 48, fontName: "Helvetica", fontPosition: CGPoint(x: 0.0, y: 250.0), fontLineSpace: 0.0)
+        let inBox: SKShapeNode = SKShapeNode(rectOf: CGSize(width: 600, height: 600))
+        inBox.fillColor = UIColor.purple
+        instructionsBox = inBox
+        instructionsBox.zPosition = 20
+        // instructionsBox.addChild(instructionsText)
+        instructionsBox.addChild(instructionsNode)
+        let iapCancelButton = SKShapeNode(rectOf: CGSize(width: 150, height: 60))
+        iapCancelButton.fillColor = UIColor.red
+        iapCancelButton.position = CGPoint(x: -200.0, y: -250.0)
+        iapCancelButton.name = "iapcancel"
+        instructionsBox.addChild(iapCancelButton)
+        let iapBuyButton = SKShapeNode(rectOf: CGSize(width: 150, height: 60))
+        iapBuyButton.fillColor = UIColor.green
+        iapBuyButton.position = CGPoint(x: 0.0, y: -250.0)
+        iapBuyButton.name = "iapbuy"
+        instructionsBox.addChild(iapBuyButton)
+        let iapRestoreButton = SKShapeNode(rectOf: CGSize(width: 150, height: 60))
+        iapRestoreButton.fillColor = UIColor.yellow
+        iapRestoreButton.position = CGPoint(x: 200.0, y: -250.0)
+        iapRestoreButton.name = "iaprestore"
+        instructionsBox.addChild(iapRestoreButton)
+        self.addChild(instructionsBox)
+        instructionsBox.isHidden = true
     }
     
     func addMoveList() {
@@ -144,11 +173,14 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
                 buttonText.text = "MORE"
             }
             if i==26 {
-                buttonText.text = "$0.99"
+                buttonText.text = "UNLOCK"
             }
             buttonText.fontName = "AvenirNext-Bold"
             buttonText.fontColor=UIColor.white
             buttonText.fontSize=48
+            if i==26 {
+                buttonText.fontSize=36
+            }
             if (!plus && i>15 && i<26) {
                 buttonText.alpha = 0.25
             }
@@ -175,7 +207,24 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
                 // print(node.name!)
                 if let nodeName = node.name {
                     print("The node name is \(nodeName)")
-                    if nodeName.hasPrefix("movebutton") {
+                    if nodeName.hasPrefix("iap") {
+                        print("prefix iap")
+                        if nodeName.hasPrefix("iapcancel") {
+                            print("iap cancel")
+                            instructionsBox.isHidden = true
+                        }
+                        else if nodeName.hasPrefix("iapbuy"){
+                            print("buy")
+                            purchasePlus2()
+                            instructionsBox.isHidden = true
+                        }
+                        else {
+                            print("restore")
+                            instructionsBox.isHidden = true
+                        }
+                        // let tempNode = SKNode.
+                                            }
+                    else if nodeName.hasPrefix("movebutton") {
                         // print("found a movebutton!")
                         let thenumberstring = Int(nodeName.components(separatedBy: ",")[1])
                         var thenumber = Int(thenumberstring!)
@@ -187,7 +236,8 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
                             active = true
                         }
                         if thenumber==27 {
-                             purchasePlus2()
+                            instructionsBox.isHidden = false
+                            // purchasePlus2()
                              // purchasePlus()
 
                         }
@@ -357,6 +407,29 @@ class MainMenuScene: SKScene, SKPaymentTransactionObserver {
         self.view?.presentScene(scene)
 
         
+    }
+    func createMultiLineText(textToPrint:String, color:UIColor, fontSize:CGFloat, fontName:String, fontPosition:CGPoint, fontLineSpace:CGFloat)->SKNode{
+        
+        // create node to hold the text block
+        var textBlock = SKNode()
+        
+        //create array to hold each line
+        let textArr = textToPrint.components(separatedBy: "\n")
+        
+        // loop through each line and place it in an SKNode
+        var lineNode: SKLabelNode
+        for line: String in textArr {
+            lineNode = SKLabelNode(fontNamed: fontName)
+            lineNode.text = line
+            lineNode.fontSize = fontSize
+            lineNode.fontColor = color
+            lineNode.fontName = fontName
+            lineNode.position = CGPoint(x: fontPosition.x, y: fontPosition.y - CGFloat(textBlock.children.count ) * fontSize + fontLineSpace)
+            textBlock.addChild(lineNode)
+        }
+        
+        // return the sknode with all of the text in it
+        return textBlock
     }
 
 }
